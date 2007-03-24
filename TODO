@@ -1,0 +1,2 @@
+* Create additional test cases to represent more RFC 2822 possibilities
+* Put plugin into its own namespace
