@@ -18,8 +18,8 @@ The unit tests for this plugin use an in-memory sqlite3 database.
 
 === Subversion
 
-* http://svn.multi-up.ca/validates_email_format_of
+* http://code.dunae.ca/validates_email_format_of
 
 == Credits
 
-Written by Alex Dunae <studio@multi-up.ca>.
+Written by Alex Dunae (dunae.ca), 2006.
