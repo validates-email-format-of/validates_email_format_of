@@ -1,0 +1,25 @@
+= Validates email format
+
+Validate various formats of email address against RFC 2822.
+
+== Usage
+
+ class Person < ActiveRecord::Base
+   validates_email_format_of :email
+ end
+
+== Testing
+
+To execute the unit tests run <tt>rake test</tt>.
+
+The unit tests for this plugin use an in-memory sqlite3 database.
+
+== Resources
+
+=== Subversion
+
+* http://svn.multi-up.ca/validates_email_format_of
+
+== Credits
+
+Written by Alex Dunae <studio@multi-up.ca>.
