@@ -63,12 +63,6 @@ class ValidatesEmailFormatOfTest < Test::Unit::TestCase
     assert_equal 'fails with custom message', p.errors.on(:email)
   end
 
-  def test_should_allow_custom_error_message
-    p = create_person(:email => @invalid_email)
-    save_fails(p)
-    assert_equal 'fails with custom message', p.errors.on(:email)
-  end
-
   protected
     def create_person(params)
       Person.new(params)
