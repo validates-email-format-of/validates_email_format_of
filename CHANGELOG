@@ -1,0 +1,12 @@
+= CHANGELOG
+
+== Version 1.0
+ * initial version
+
+== Version 1.1 (the Francis Hwang edition)
+ * moved Regexp out of class methods into the ValidatesEmailFormatOf module
+
+
+== TODO
+ * Create additional test cases to represent more RFC 2822 possibilities
+ * Package as gem
