@@ -1,3 +1,15 @@
+module ValidatesEmailFormatOf
+  Regex = /
+    ^(
+      ([A-Za-z0-9]+_+)|
+      ([A-Za-z0-9]+\-+)|
+      ([A-Za-z0-9]+\.+)|
+      ([A-Za-z0-9]+\++)
+    )*[A-Za-z0-9]+@
+    ((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,6}$
+  /ix
+end
+
 module ActiveRecord
   module Validations
     module ClassMethods
@@ -16,7 +28,7 @@ module ActiveRecord
       def validates_email_format_of(*attr_names)
         configuration = { :message => ' does not appear to be a valid e-mail address', 
                           :on => :save, 
-                          :with => /^(([A-Za-z0-9]+_+)|([A-Za-z0-9]+\-+)|([A-Za-z0-9]+\.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,6}$/i }
+                          :with => ValidatesEmailFormatOf::Regex }
 
         configuration.update(attr_names.pop) if attr_names.last.is_a?(Hash)
 
