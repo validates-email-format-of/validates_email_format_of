@@ -1,0 +1,8 @@
+= CHANGELOG
+
+== Version 1.0
+ * initial version
+
+== TODO
+ * Create additional test cases to represent more RFC 2822 possibilities
+ * Package as gem
