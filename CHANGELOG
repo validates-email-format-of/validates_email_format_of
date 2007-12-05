@@ -6,6 +6,8 @@
 == Version 1.1 (the Francis Hwang edition)
  * moved Regexp out of class methods into the ValidatesEmailFormatOf module
 
+Thanks to Francis Hwang at Diversion Media (http://diversionmedia.com/) for 
+this update.
 
 == TODO
  * Create additional test cases to represent more RFC 2822 possibilities
