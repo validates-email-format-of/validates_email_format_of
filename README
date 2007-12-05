@@ -22,4 +22,7 @@ The unit tests for this plugin use an in-memory sqlite3 database.
 
 == Credits
 
-Written by Alex Dunae (dunae.ca), 2006.
+Written by Alex Dunae (dunae.ca), 2006-07.
+
+Thanks to Francis Hwang at Diversion Media (http://diversionmedia.com/) for 
+creating the 1.1 update.
