@@ -10,5 +10,9 @@
  * added support for un-escaped and escaped special characters in the local part, per RFC 3696
  * added :allow_nil option
 
-== TODO
- * support quoted special characters in local part
+== Version 1.2.1 (the RTFM edition)
+ * added support for quoted local parts
+ * added length checks for domain and local parts
+ * corrected escaped character support for RFC 3696 Errata
+ * added :allow_blank option
+ * added :unless option
