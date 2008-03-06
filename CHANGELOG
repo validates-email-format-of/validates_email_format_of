@@ -6,6 +6,9 @@
 == Version 1.1 (the Francis Hwang edition)
  * moved Regexp out of class methods into the ValidatesEmailFormatOf module
 
+== Version 1.2
+ * added support for un-escaped and escaped special characters in the local part, per RFC 3696
+ * added :allow_nil option
+
 == TODO
- * Create additional test cases to represent more RFC 2822 possibilities
- * Package as gem
+ * support quoted special characters in local part
