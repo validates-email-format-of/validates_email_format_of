@@ -8,6 +8,19 @@ Validate various formats of email address against RFC 2822.
    validates_email_format_of :email
  end
 
+=== Options
+
+  :message
+     String. A custom error message (default is: " does not appear to be a valid e-mail address")
+  :on
+     Symbol. Specifies when this validation is active (default is :save, other options :create, :update)
+  :allow_nil
+     Boolean. Allow nil values (default is false)
+  :if
+     Specifies a method, proc or string to call to determine if the validation should occur 
+     (e.g. :if => :allow_validation, or :if => Proc.new { |user| user.signup_step > 2 }). The method, 
+     proc or string should return or evaluate to a true or false value. 
+
 == Testing
 
 To execute the unit tests run <tt>rake test</tt>.
