@@ -5,7 +5,7 @@ class ValidatesEmailFormatOfTest < Test::Unit::TestCase
 
   def setup
     @valid_email = 'valid@example.com'
-    @invalid_email = '_invalid@example.com'
+    @invalid_email = 'invalid@example.'
   end
   
   def test_should_allow_valid_email_addresses
@@ -18,23 +18,34 @@ class ValidatesEmailFormatOfTest < Test::Unit::TestCase
      'valid@example.co.uk',
      'v@example.com',
      'valid@example.ca',
+     'valid_@example.com',
      'valid123.456@example.org',
      'valid123.456@example.travel',
      'valid123.456@example.museum',
      'valid@example.mobi',
-     'valid@example.info'].each do |email|
+     'valid@example.info',
+     'valid-@example.com',
+# from RFC 3696, page 6
+     'customer/department=shipping@example.com',
+     '$A12345@example.com',
+     '!def!xyz%abc@example.com',
+     '_somename@example.com',
+# apostrophes and accents
+     "test'test@example.com",
+     ].each do |email|
       p = create_person(:email => email)
       save_passes(p, email)
     end
   end
 
   def test_should_not_allow_invalid_email_addresses
-    ['_invalid@example.com',
-     'invalid@example-com',
-     'invalid_@example.com',
-     'invalid-@example.com',
+    ['invalid@example-com',
+# period can not start local part
      '.invalid@example.com',
-     'invalid.@example.com',
+# period can not end local part
+     'invalid.@example.com', 
+# period can not appear twice consecutively
+     'invali..d@example.com',
      'invalid@example.com.',
      'invalid@example.com_',
      'invalid@example.com-',
@@ -48,19 +59,45 @@ class ValidatesEmailFormatOfTest < Test::Unit::TestCase
       save_fails(p, email)
     end
   end
-  
+
+  # from http://tools.ietf.org/html/rfc3696, page 5
+  def test_should_allow_escaped_characters
+    ['Fred\ Bloggs_@example.com',
+     'Abc\@def+@example.com',
+     'Joe.\\Blow@example.com'
+     ].each do |email|
+      p = create_person(:email => email)
+      save_passes(p, email)
+    end
+  end
+
+  def test_should_allow_quoted_characters
+    flunk
+    ['"Fred Bloggs"@example.com',     
+     '"Abc@def"@example.com'
+     ].each do |email|
+      p = create_person(:email => email)
+      save_passes(p, email)
+    end
+  end
+
   def test_should_respect_validate_on_option
     p = create_person(:email => @valid_email)
     save_passes(p)
     
     assert p.update_attributes(:email => @invalid_email)
-    assert_equal '_invalid@example.com', p.email
+    assert_equal @invalid_email, p.email
   end
   
   def test_should_allow_custom_error_message
     p = create_person(:email => @invalid_email)
     save_fails(p)
     assert_equal 'fails with custom message', p.errors.on(:email)
+  end
+
+  def test_should_allow_nil
+    p = create_person(:email => nil)
+    save_passes(p)
   end
 
   protected
