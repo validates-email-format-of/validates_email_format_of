@@ -16,3 +16,6 @@
  * corrected escaped character support for RFC 3696 Errata
  * added :allow_blank option
  * added :unless option
+
+== Unreleased
+ * Now available as a gem on GitHub
