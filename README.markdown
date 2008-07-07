@@ -13,20 +13,25 @@ Usage
 Options
 -------
 
-<dl>
-	<dt>:message</dt>
-    <dd>String. A custom error message (default is: " does not appear to be a valid e-mail address")
-  <dt>:on</dt>
-    <dd>Symbol. Specifies when this validation is active (default is :save, other options :create, :update)</dd>
-  <dt>:allow_nil</dt>
-    <dd>Boolean. Allow nil values (default is false)</dd>
-  <dt>:allow_blank</dt>
-    <dd>Boolean. Allow blank values (default is false)</dd>
-  <dt>:if</dt>
-    <dd>Specifies a method, proc or string to call to determine if the validation should occur (e.g. :if => :allow_validation, or :if => Proc.new { |user| user.signup_step > 2 }). The method, proc or string should return or evaluate to a true or false value.</dd>
-  <dt>:unless</dt>
-    <dd>See :if option.</dd>
-</dl>
+    :message =>
+      String. A custom error message (default is: " does not appear to be a valid e-mail address")
+
+    :on =>
+      Symbol. Specifies when this validation is active (default is :save, other options :create, :update)
+
+    :allow_nil =>
+      Boolean. Allow nil values (default is false)
+
+    :allow_blank =>
+      Boolean. Allow blank values (default is false)
+
+    :if =>
+      Specifies a method, proc or string to call to determine if the validation should occur 
+      (e.g. :if => :allow_validation, or :if => Proc.new { |user| user.signup_step > 2 }). The method, 
+      proc or string should return or evaluate to a true or false value. 
+
+    :unless =>
+      See :if option.
 
 Testing
 -------
