@@ -1,14 +1,19 @@
 $:.unshift(File.dirname(__FILE__) + '/../lib')
-RAILS_ROOT = File.dirname(__FILE__)
 
 require 'rubygems'
+require 'active_record'
+
+# Set up database with users table, email column
+
+ActiveRecord::Base.establish_connection(
+  :adapter  => 'sqlite3',
+  :database => "#{File.dirname(__FILE__)}/db/email_format_test.sqlite3")
+
+# Set up Feedback testing framework, a la carte
+
 require 'test/unit'
 require 'shoulda'
-require 'active_record'
 require "#{File.dirname(__FILE__)}/../init"
-
-config = YAML::load(IO.read(File.dirname(__FILE__) + '/database.yml'))
-ActiveRecord::Base.establish_connection(config[ENV['DB'] || 'email_format_test'])
 
 class Test::Unit::TestCase #:nodoc:
   
@@ -32,23 +37,6 @@ class Test::Unit::TestCase #:nodoc:
         assert !user.save, "Saved user with email set to \"#{v}\""
         assert user.errors.on(:email), "There are no errors set on email after being set to \"#{v}\""
       end
-    end
-  end
-  
-  def self.should_pass_validation(user)
-    should 'pass validation' do
-      assert user.valid?
-      assert user.save
-      assert_nil user.errors.on(:email)
-    end
-  end
-  
-  def self.should_fail_validation(user)
-    should 'fail validation' do
-      assert !user.valid?
-      assert !user.save
-      assert user.errors.on(:email)
-      assert_equal 'fails with custom message', user.errors.on(:email)
     end
   end
   

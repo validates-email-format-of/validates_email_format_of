@@ -95,12 +95,21 @@ class ValidatesEmailFormatOfTest < Test::Unit::TestCase
       @user.update_attribute :email, '..dcroak@thoughtbot.com'
     end
       
-    should_pass_validation @user
+    should 'pass validation' do
+      assert @user.valid?
+      assert @user.save
+      assert_nil @user.errors.on(:email)
+    end
   end
   
   context 'A user with a nil email' do
     setup { @user = User.new(:email => nil) }
-    should_pass_validation @user
+    
+    should 'pass validation' do
+      assert @user.valid?
+      assert @user.save
+      assert_nil @user.errors.on(:email)
+    end
   end
 
 end

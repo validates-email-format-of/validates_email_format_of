@@ -1,3 +1,0 @@
-email_format_test:
-  adapter: sqlite3
-  database: ":memory:"
