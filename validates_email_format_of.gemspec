@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.date = %q{2008-07-02}
   s.description = %q{Validate e-mail addreses against RFC 2822 and RFC 3696}
   s.email = %q{code@code.dunae.ca}
-  s.extra_rdoc_files = ["CHANGELOG", "lib/validates_email_format_of.rb", "README"]
+  s.extra_rdoc_files = ["CHANGELOG", "lib/validates_email_format_of.rb", "README.markdown"]
   s.files = ["CHANGELOG", "init.rb", "lib/validates_email_format_of.rb", "MIT-LICENSE", "rails/init.rb", "rakefile", "README", "test/database.yml", "test/fixtures/people.yml", "test/fixtures/person.rb", "test/schema.rb", "test/test_helper.rb", "test/validates_email_format_of_test.rb", "Rakefile", "Manifest", "validates_email_format_of.gemspec"]
   s.has_rdoc = true
   s.homepage = %q{http://code.dunae.ca/validates_email_format_of.html}
