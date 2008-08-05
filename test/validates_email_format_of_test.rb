@@ -1,8 +1,6 @@
 require File.dirname(__FILE__) + '/test_helper'
 
 class ValidatesEmailFormatOfTest < Test::Unit::TestCase
-  fixtures :people
-
   @@valid_email = 'valid@example.com'
   @@invalid_email = 'invalid@example.'
   
