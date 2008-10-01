@@ -3,11 +3,21 @@ $:.unshift(File.dirname(__FILE__) + '/../lib')
 require 'rubygems'
 require 'active_record'
 
-# Set up database with users table, email column
+require 'validates_email_format_of'
 
 ActiveRecord::Base.establish_connection(
   :adapter  => 'sqlite3',
-  :database => "#{File.dirname(__FILE__)}/db/email_format_test.sqlite3")
+  :database => ':memory:')
+
+ActiveRecord::Schema.define(:version => 0) do
+  create_table :users, :force => true do |t|
+    t.column 'email', :string
+  end
+end
+
+class Person < ActiveRecord::Base
+  validates_email_format_of :email, :on => :create, :message => 'fails with custom message', :allow_nil => true
+end
 
 require 'test/unit'
 require 'shoulda'
