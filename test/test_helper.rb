@@ -9,8 +9,6 @@ ActiveRecord::Base.establish_connection(
   :adapter  => 'sqlite3',
   :database => "#{File.dirname(__FILE__)}/db/email_format_test.sqlite3")
 
-# Set up Feedback testing framework, a la carte
-
 require 'test/unit'
 require 'shoulda'
 require "#{File.dirname(__FILE__)}/../init"

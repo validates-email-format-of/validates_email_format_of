@@ -2,8 +2,8 @@ require File.dirname(__FILE__) + '/test_helper'
 
 class User < ActiveRecord::Base
   validates_email_format_of :email, 
-    :on => :create, 
-    :message => 'fails with custom message', 
+    :on        => :create, 
+    :message   => 'fails with custom message', 
     :allow_nil => true
 end
 
