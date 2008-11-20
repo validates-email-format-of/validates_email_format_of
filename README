@@ -18,6 +18,8 @@ Validate various formats of email address against RFC 2822.
      Boolean. Allow nil values (default is false)
   :allow_blank
      Boolean. Allow blank values (default is false)
+  :check_mx
+     Boolean. Check domain for a valid MX record (default is false)
   :if
      Specifies a method, proc or string to call to determine if the validation should occur 
      (e.g. :if => :allow_validation, or :if => Proc.new { |user| user.signup_step > 2 }). The method, 
@@ -35,10 +37,12 @@ The unit tests for this plugin use an in-memory sqlite3 database.
 
 === Subversion
 
-* http://code.dunae.ca/validates_email_format_of
+* http://code.dunae.ca/validates_email_format_of.html
 
 == Credits
 
-Written by Alex Dunae (dunae.ca), 2006-07.
+Written by Alex Dunae (dunae.ca), 2006-08.
 
 Thanks to Francis Hwang (http://fhwang.net/) at Diversion Media for creating the 1.1 update.
+
+Thanks to  Travis Sinnott for creating the 1.3 update.

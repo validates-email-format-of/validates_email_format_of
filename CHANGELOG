@@ -16,3 +16,7 @@
  * corrected escaped character support for RFC 3696 Errata
  * added :allow_blank option
  * added :unless option
+
+== Version 1.3 (the Travis Sinnott edition)
+ * added optional MX record check
+ * now available as a gem

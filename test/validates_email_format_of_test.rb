@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/test_helper'
 
 class ValidatesEmailFormatOfTest < Test::Unit::TestCase
-  fixtures :people
+  fixtures :people, :peoplemx
 
   def setup
     @valid_email = 'valid@example.com'
@@ -110,6 +110,14 @@ class ValidatesEmailFormatOfTest < Test::Unit::TestCase
   def test_should_allow_nil
     p = create_person(:email => nil)
     save_passes(p)
+  end
+
+  def test_check_mx
+    pmx = MxRecord.new(:email => 'test@dunae.ca')
+    save_passes(pmx)
+
+    pmx = MxRecord.new(:email => 'test@example.com')
+    save_fails(pmx)
   end
 
   protected

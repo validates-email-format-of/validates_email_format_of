@@ -5,8 +5,6 @@ require 'rubygems'
 require 'test/unit'
 require 'active_record'
 require 'active_record/fixtures'
-require 'active_support/binding_of_caller'
-require 'active_support/breakpoint'
 require "#{File.dirname(__FILE__)}/../init"
 
 
