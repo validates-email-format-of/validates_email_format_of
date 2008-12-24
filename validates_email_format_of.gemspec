@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.summary = "Validate e-mail addreses against RFC 2822 and RFC 3696."
   s.email = "dcroak@thoughtbot.com"
   s.description = "Validate e-mail addreses against RFC 2822 and RFC 3696."
-  s.authors = ["Alex Dunae", "Dan Croak"]
+  s.authors = ["Alex Dunae", "Dan Croak", "Mike Burns"]
   s.extra_rdoc_files = ["CHANGELOG", 
     "lib/validates_email_format_of.rb", 
     "README.markdown"]

@@ -19,3 +19,4 @@
 
 == Unreleased
  * Now available as a gem on GitHub
+ * added should_validate_email_format_of

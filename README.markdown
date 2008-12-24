@@ -5,6 +5,10 @@ Validate various formats of email address against RFC 2822.
 
 Usage
 -----
+  
+    class PersonTest < ActiveSupport::TestCase
+      should_validate_email_format_of :email
+    end
 
     class Person < ActiveRecord::Base
       validates_email_format_of :email
