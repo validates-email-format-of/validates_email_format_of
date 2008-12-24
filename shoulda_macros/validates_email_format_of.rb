@@ -1,6 +1,13 @@
 module ValidatesEmailFormatOf
   module Shoulda
     def should_validate_email_format_of(field)
+      metaclass = (class << self; self; end)
+      metaclass.send(:define_method,:should_allow_values) do |klass,*values|
+        should_allow_values_for(field, *values)
+      end
+      metaclass.send(:define_method,:should_not_allow_values) do |klass, *values|
+        should_not_allow_values_for(field, values, :message => /valid e-mail/)
+      end
       should_validate_email_format_of_klass(model_class, field)
     end
 
@@ -82,30 +89,6 @@ module ValidatesEmailFormatOf
         should_not_allow_values(klass,
           "#{'a' * 65}@example.com",
           "test@#{'a'*252}.com")
-      end
-      
-      context 'An invalid user on update' do
-        setup do
-          @user = klass.new(field => 'dcroak@thoughtbot.com')
-          @user.save
-          @user.update_attribute field, '..dcroak@thoughtbot.com'
-        end
-          
-        should 'pass validation' do
-          assert @user.valid?
-          assert @user.save
-          assert_nil @user.errors.on(field)
-        end
-      end
-      
-      context 'A user with a nil email' do
-        setup { @user = klass.new(field => nil) }
-        
-        should 'pass validation' do
-          assert @user.valid?
-          assert @user.save
-          assert_nil @user.errors.on(field)
-        end
       end
     end
   end

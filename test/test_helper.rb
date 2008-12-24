@@ -24,9 +24,7 @@ require 'shoulda'
 require "#{File.dirname(__FILE__)}/../init"
 
 class Test::Unit::TestCase #:nodoc:
-  
   def self.should_allow_values(klass,*good_values)
-    get_options!(good_values)
     good_values.each do |v|
       should "allow email to be set to #{v.inspect}" do
         user = klass.new(:email => v)
@@ -37,8 +35,6 @@ class Test::Unit::TestCase #:nodoc:
   end
 
   def self.should_not_allow_values(klass,*bad_values)
-    message = get_options!(bad_values, :message)
-    message ||= /invalid/
     bad_values.each do |v|
       should "not allow email to be set to #{v.inspect}" do
         user = klass.new(:email => v)
@@ -47,13 +43,4 @@ class Test::Unit::TestCase #:nodoc:
       end
     end
   end
-  
-  def self.get_options!(args, *wanted)
-    ret  = []
-    opts = (args.last.is_a?(Hash) ? args.pop : {})
-    wanted.each {|w| ret << opts.delete(w)}
-    raise ArgumentError, "Unsuported options given: #{opts.keys.join(', ')}" unless opts.keys.empty?
-    return *ret
-  end
-  
 end
