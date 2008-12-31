@@ -1,13 +1,16 @@
 spec = Gem::Specification.new do |s|
   s.name = 'validates_email_format_of'
-  s.version = '1.3'
-  s.summary = "Validate various formats of email address against RFC 2822."
-  s.description = %{Validate various formats of email address against RFC 2822.}
-  s.files = Dir['*'] + Dir['lib/**/*.rb'] + Dir['test/**/*.rb']
+  s.version = '1.3.1'
+  s.summary = 'Validate e-mail addresses against RFC 2822 and RFC 3696.'
+  s.description = s.summary
+  s.extra_rdoc_files = ['README.rdoc', 'CHANGELOG', 'MIT-LICENSE']
+  s.test_files = ['test/validates_email_format_of_test.rb','test/test_helper.rb','test/schema.rb','test/fixtures/person.rb', 'test/fixtures/people.yml']
+  s.files = ['init.rb','rakefile.rb', 'lib/validates_email_format_of.rb','rails/init.rb']
+  s.files << s.test_files
+  s.files << s.extra_rdoc_files
   s.require_path = 'lib'
   s.has_rdoc = true
-  s.extra_rdoc_files = Dir['[A-Z]*']
-  s.rdoc_options << '--title' <<  'validates_email_format_of plugin'
+  s.rdoc_options << '--title' <<  'validates_email_format_of'
   s.author = "Alex Dunae"
   s.email = "code@dunae.ca"
   s.homepage = "http://code.dunae.ca/validates_email_format_of.html"
