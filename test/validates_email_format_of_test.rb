@@ -7,7 +7,13 @@ class ValidatesEmailFormatOfTest < Test::Unit::TestCase
     @valid_email = 'valid@example.com'
     @invalid_email = 'invalid@example.'
   end
-  
+
+  def test_without_activerecord
+    assert_nil ValidatesEmailFormatOf::validate_email_format('valid@example.com')
+    err = ValidatesEmailFormatOf::validate_email_format('valid@example-com')
+    assert_equal 1, err.size
+  end
+
   def test_should_allow_valid_email_addresses
     ['valid@example.com',
      'Valid@test.example.com',

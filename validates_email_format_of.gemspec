@@ -1,9 +1,9 @@
 spec = Gem::Specification.new do |s|
   s.name = 'validates_email_format_of'
-  s.version = '1.3.1'
+  s.version = '1.4'
   s.summary = 'Validate e-mail addresses against RFC 2822 and RFC 3696.'
   s.description = s.summary
-  s.extra_rdoc_files = ['README.rdoc', 'CHANGELOG', 'MIT-LICENSE']
+  s.extra_rdoc_files = ['README.rdoc', 'CHANGELOG.rdoc', 'MIT-LICENSE']
   s.test_files = ['test/validates_email_format_of_test.rb','test/test_helper.rb','test/schema.rb','test/fixtures/person.rb', 'test/fixtures/people.yml']
   s.files = ['init.rb','rakefile.rb', 'lib/validates_email_format_of.rb','rails/init.rb']
   s.files << s.test_files
