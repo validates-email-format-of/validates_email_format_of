@@ -11,7 +11,7 @@ Installing as a gem:
 
 Installing as a Ruby on Rails plugin:
 
-  ./script/plugin install git://github.com/alexdunae/validates_email_format_of.git
+  ./script/plugin install http://github.com/alexdunae/validates_email_format_of.git
 
 
 == Usage
