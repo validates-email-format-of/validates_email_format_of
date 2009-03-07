@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/test_helper'
 
-class ValidatesEmailFormatOfTest < Test::Unit::TestCase
+class ValidatesEmailFormatOfTest < TEST_CASE
   fixtures :people, :peoplemx
 
   def setup
