@@ -2,6 +2,7 @@ $:.unshift(File.dirname(__FILE__) + '/../lib')
 
 require 'rubygems'
 require 'active_record'
+require 'active_record/base'
 
 require 'validates_email_format_of'
 
