@@ -59,12 +59,12 @@ module ActiveRecord
       #   end
       #
       # Configuration options:
-      # * <tt>message</tt> - A custom error message (default is: " does not appear to be a valid e-mail address")
+      # * <tt>message</tt> - A custom error message (default is: "does not appear to be a valid e-mail address")
       # * <tt>on</tt> - Specifies when this validation is active (default is :save, other options :create, :update)
       # * <tt>allow_nil</tt> - Allow nil values (default is false)
       # * <tt>allow_blank</tt> - Allow blank values (default is false)
       # * <tt>check_mx</tt> - Check for MX records (default is false)
-      # * <tt>mx_message</tt> - A custom error message when an MX record validation fails (default is: " is not routable.")
+      # * <tt>mx_message</tt> - A custom error message when an MX record validation fails (default is: "is not routable.")
       # * <tt>if</tt> - Specifies a method, proc or string to call to determine if the validation should
       #   occur (e.g. :if => :allow_validation, or :if => Proc.new { |user| user.signup_step > 2 }).  The
       #   method, proc or string should return or evaluate to a true or false value.
