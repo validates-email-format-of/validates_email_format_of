@@ -18,14 +18,14 @@ module ValidatesEmailFormatOf
   # containing one or more validation error messages.
   #
   # Configuration options:
-  # * <tt>message</tt> - A custom error message (default is: " does not appear to be a valid e-mail address")
+  # * <tt>message</tt> - A custom error message (default is: "does not appear to be a valid e-mail address")
   # * <tt>check_mx</tt> - Check for MX records (default is false)
-  # * <tt>mx_message</tt> - A custom error message when an MX record validation fails (default is: " is not routable.")
+  # * <tt>mx_message</tt> - A custom error message when an MX record validation fails (default is: "is not routable.")
   # * <tt>with</tt> The regex to use for validating the format of the email address (default is ValidatesEmailFormatOf::Regex)</tt>
   def self.validate_email_format(email, options={})
-      default_options = { :message => ' does not appear to be a valid e-mail address', 
+      default_options = { :message => 'does not appear to be a valid e-mail address', 
                           :check_mx => false,
-                          :mx_message => ' is not routable.',
+                          :mx_message => 'is not routable.',
                           :with => ValidatesEmailFormatOf::Regex }
       options.merge!(default_options) {|key, old, new| old}  # merge the default options into the specified options, retaining all specified options
             
