@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name = "validates_email_format_of"
-  s.version = "1.2.2"
-  s.date = "2008-10-01"
+  s.version = "1.3.0"
+  s.date = "2009-06-08"
   s.summary = "Validate e-mail addreses against RFC 2822 and RFC 3696."
   s.email = "dcroak@thoughtbot.com"
   s.description = "Validate e-mail addreses against RFC 2822 and RFC 3696."
