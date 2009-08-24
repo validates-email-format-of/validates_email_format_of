@@ -26,7 +26,7 @@ module ActiveRecord
       #   method, proc or string should return or evaluate to a true or false value.
       # * <tt>unless</tt> - See <tt>:if</tt>
       def validates_email_format_of(*attr_names)
-        options = { :message => ' does not appear to be a valid e-mail address', 
+        options = { :message => :invalid_email_format,
                     :on => :save, 
                     :allow_nil => false,
                     :allow_blank => false,

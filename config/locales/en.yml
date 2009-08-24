@@ -1,0 +1,5 @@
+en:
+  activerecord:
+    errors:
+      messages:
+        invalid_email_format: " does not appear to be a valid e-mail address"
