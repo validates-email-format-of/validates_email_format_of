@@ -52,6 +52,8 @@ class ValidatesEmailFormatOfTest < TEST_CASE
      'invalid.@example.com', 
   # period can not appear twice consecutively in local part
      'invali..d@example.com',
+  # should not allow underscores in domain names
+     'invalid@ex_mple.com',
      'invalid@example.com.',
      'invalid@example.com_',
      'invalid@example.com-',
