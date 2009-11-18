@@ -18,14 +18,14 @@ module ValidatesEmailFormatOf
   # containing one or more validation error messages.
   #
   # Configuration options:
-  # * <tt>message</tt> - A custom error message (default is: " does not appear to be a valid e-mail address")
+  # * <tt>message</tt> - A custom error message (default is: "does not appear to be a valid e-mail address")
   # * <tt>check_mx</tt> - Check for MX records (default is false)
-  # * <tt>mx_message</tt> - A custom error message when an MX record validation fails (default is: " is not routable.")
+  # * <tt>mx_message</tt> - A custom error message when an MX record validation fails (default is: "is not routable.")
   # * <tt>with</tt> The regex to use for validating the format of the email address (default is ValidatesEmailFormatOf::Regex)</tt>
   def self.validate_email_format(email, options={})
-      default_options = { :message => ' does not appear to be a valid e-mail address', 
+      default_options = { :message => 'does not appear to be a valid e-mail address', 
                           :check_mx => false,
-                          :mx_message => ' is not routable.',
+                          :mx_message => 'is not routable.',
                           :with => ValidatesEmailFormatOf::Regex }
       options.merge!(default_options) {|key, old, new| old}  # merge the default options into the specified options, retaining all specified options
             
@@ -59,12 +59,12 @@ module ActiveRecord
       #   end
       #
       # Configuration options:
-      # * <tt>message</tt> - A custom error message (default is: " does not appear to be a valid e-mail address")
+      # * <tt>message</tt> - A custom error message (default is: "does not appear to be a valid e-mail address")
       # * <tt>on</tt> - Specifies when this validation is active (default is :save, other options :create, :update)
       # * <tt>allow_nil</tt> - Allow nil values (default is false)
       # * <tt>allow_blank</tt> - Allow blank values (default is false)
       # * <tt>check_mx</tt> - Check for MX records (default is false)
-      # * <tt>mx_message</tt> - A custom error message when an MX record validation fails (default is: " is not routable.")
+      # * <tt>mx_message</tt> - A custom error message when an MX record validation fails (default is: "is not routable.")
       # * <tt>if</tt> - Specifies a method, proc or string to call to determine if the validation should
       #   occur (e.g. :if => :allow_validation, or :if => Proc.new { |user| user.signup_step > 2 }).  The
       #   method, proc or string should return or evaluate to a true or false value.
