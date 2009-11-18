@@ -1,5 +1,10 @@
 = CHANGELOG
 
+== Version 1.4.1 (the George Anderson and 'history' edition)
+ * don't allow domains with underscores
+ * removed extra spaces in validation messages
+ * updated tests for Rails 2.3+
+
 == Version 1.4 (the Denis Ahearn edition)
  * added ability to run validation tests without touching ActiveRecord or a database
 

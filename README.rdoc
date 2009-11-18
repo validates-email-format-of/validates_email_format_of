@@ -73,3 +73,5 @@ Thanks to Francis Hwang (http://fhwang.net/) at Diversion Media for creating the
 Thanks to Travis Sinnott for creating the 1.3 update.
 
 Thanks to Denis Ahearn at Riverock Technologies (http://www.riverocktech.com/) for creating the 1.4 update.
+
+Thanks to George Anderson (http://github.com/george) and 'history' (http://github.com/history) for creating the 1.4.1 update.
