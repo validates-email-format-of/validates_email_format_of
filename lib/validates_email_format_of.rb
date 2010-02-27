@@ -23,7 +23,7 @@ module ValidatesEmailFormatOf
   # * <tt>mx_message</tt> - A custom error message when an MX record validation fails (default is: "is not routable.")
   # * <tt>with</tt> The regex to use for validating the format of the email address (default is ValidatesEmailFormatOf::Regex)</tt>
   def self.validate_email_format(email, options={})
-      default_options = { :message => 'does not appear to be a valid e-mail address', 
+      default_options = { :message => I18n.t(:invalid_email_address, :scope => [:activerecord, :errors, :messages], :default => 'does not appear to be a valid e-mail address'),
                           :check_mx => false,
                           :mx_message => 'is not routable.',
                           :with => ValidatesEmailFormatOf::Regex }
