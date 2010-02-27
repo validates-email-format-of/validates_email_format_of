@@ -25,7 +25,7 @@ module ValidatesEmailFormatOf
   def self.validate_email_format(email, options={})
       default_options = { :message => I18n.t(:invalid_email_address, :scope => [:activerecord, :errors, :messages], :default => 'does not appear to be a valid e-mail address'),
                           :check_mx => false,
-                          :mx_message => 'is not routable.',
+                          :mx_message => I18n.t(:email_address_not_routable, :scope => [:activerecord, :errors, :messages], :default => 'is not routable'),
                           :with => ValidatesEmailFormatOf::Regex }
       options.merge!(default_options) {|key, old, new| old}  # merge the default options into the specified options, retaining all specified options
             
