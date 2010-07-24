@@ -31,6 +31,7 @@ class ValidatesEmailFormatOfTest < TEST_CASE
      'valid@example.mobi',
      'valid@example.info',
      'valid-@example.com',
+     'valid@example.w-dash.sch.uk',
   # from RFC 3696, page 6
      'customer/department=shipping@example.com',
      '$A12345@example.com',

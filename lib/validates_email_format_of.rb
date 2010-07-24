@@ -4,7 +4,7 @@ module ValidatesEmailFormatOf
   LocalPartSpecialChars = Regexp.escape('!#$%&\'*-/=?+-^_`{|}~')
   LocalPartUnquoted = '(([[:alnum:]' + LocalPartSpecialChars + ']+[\.\+]+))*[[:alnum:]' + LocalPartSpecialChars + '+]+'
   LocalPartQuoted = '\"(([[:alnum:]' + LocalPartSpecialChars + '\.\+]*|(\\\\[\x00-\xFF]))*)\"'
-  Regex = Regexp.new('^((' + LocalPartUnquoted + ')|(' + LocalPartQuoted + ')+)@(((\w+\-+[^_])|(\w+\.[^_]))*([a-z0-9-]{1,63})\.[a-z]{2,6}$)', Regexp::EXTENDED | Regexp::IGNORECASE, 'n')
+  Regex = Regexp.new('^((' + LocalPartUnquoted + ')|(' + LocalPartQuoted + ')+)@(((\w+\-+[^_])|(\w+\.[^_]))*([a-z0-9-]{1,63})\.[a-z]{2,6}(?:\.[a-z]{2,6})?$)', Regexp::EXTENDED | Regexp::IGNORECASE, 'n')
 
   def self.validate_email_domain(email)
     domain = email.match(/\@(.+)/)[1]
