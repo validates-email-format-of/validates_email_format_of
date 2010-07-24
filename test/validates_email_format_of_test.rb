@@ -124,7 +124,7 @@ class ValidatesEmailFormatOfTest < TEST_CASE
     pmx = MxRecord.new(:email => 'test@dunae.ca')
     save_passes(pmx)
 
-    pmx = MxRecord.new(:email => 'test@example.com')
+    pmx = MxRecord.new(:email => 'test@somethingthathasntbeenregistered.com')
     save_fails(pmx)
   end
 
