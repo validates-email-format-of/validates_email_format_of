@@ -70,6 +70,8 @@ class ValidatesEmailFormatOfTest < TEST_CASE
   # should not allow special chars after a period in the domain
      'local@sub.)domain.com',
      'local@sub.#domain.com',
+  # one at a time
+     "foo@example.com\nexample@gmail.com",
      'invalid@example.'].each do |email|
       p = create_person(:email => email)
       save_fails(p, email)
