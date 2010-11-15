@@ -6,12 +6,15 @@ Validate e-mail addresses against RFC 2822 and RFC 3696.
 
 Installing as a gem:
 
-  gem sources -a http://gems.github.com
-  gem install alexdunae-validates_email_format_of
+  gem install validates_email_format_of
 
-Installing as a Ruby on Rails plugin:
+Installing as a Ruby on Rails 2 plugin:
 
   ./script/plugin install http://github.com/alexdunae/validates_email_format_of.git
+
+Or in your Rails 3 Gemfile
+
+  gem 'validates_email_format_of', :git => 'git://github.com/alexdunae/validates_email_format_of.git'
 
 
 == Usage
@@ -61,12 +64,13 @@ The unit tests for this plugin use an in-memory sqlite3 database.
 
 == Resources
 
-* http://github.com/alexdunae/validates_email_format_of
-* http://code.dunae.ca/validates_email_format_of.html
+* https://github.com/alexdunae/validates_email_format_of
 
 == Credits
 
-Written by Alex Dunae (dunae.ca), 2006-09.
+Written by Alex Dunae (dunae.ca), 2006-10.
+
+Many thanks to the plugin's recent contributors: https://github.com/alexdunae/validates_email_format_of/contributors
 
 Thanks to Francis Hwang (http://fhwang.net/) at Diversion Media for creating the 1.1 update.
 
