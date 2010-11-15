@@ -1,3 +1,5 @@
 pkg
 test/debug.log
 *.gem
+*.sqlite3
+*.swp

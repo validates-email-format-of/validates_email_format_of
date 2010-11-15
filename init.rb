@@ -1,1 +1,1 @@
-require 'validates_email_format_of'
+require File.expand_path(File.dirname(__FILE__) + '/rails/init')

@@ -4,7 +4,6 @@ class ValidatesEmailFormatOfTest < TEST_CASE
   fixtures :people, :peoplemx
 
   def setup
-#    puts Rails.inspect
     @valid_email = 'valid@example.com'
     @invalid_email = 'invalid@example.'
   end
