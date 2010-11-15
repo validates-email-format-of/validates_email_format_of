@@ -4,6 +4,7 @@ class ValidatesEmailFormatOfTest < TEST_CASE
   fixtures :people, :peoplemx
 
   def setup
+#    puts Rails.inspect
     @valid_email = 'valid@example.com'
     @invalid_email = 'invalid@example.'
   end
@@ -113,7 +114,11 @@ class ValidatesEmailFormatOfTest < TEST_CASE
   def test_should_allow_custom_error_message
     p = create_person(:email => @invalid_email)
     save_fails(p)
-    assert_equal 'fails with custom message', p.errors.on(:email)
+    if ActiveRecord::VERSION::MAJOR >= 3
+      assert_equal 'fails with custom message', p.errors[:email].first
+    else
+      assert_equal 'fails with custom message', p.errors.on(:email)
+    end
   end
 
   def test_should_allow_nil
@@ -137,12 +142,20 @@ class ValidatesEmailFormatOfTest < TEST_CASE
     def save_passes(p, email = '')
       assert p.valid?, " validating #{email}"
       assert p.save
-      assert_nil p.errors.on(:email)
+      if ActiveRecord::VERSION::MAJOR >= 3
+        assert p.errors[:email].empty?
+      else
+        assert_nil p.errors.on(:email)
+      end
     end
     
     def save_fails(p, email = '')
       assert !p.valid?, " validating #{email}"
       assert !p.save
-      assert p.errors.on(:email)
+      if ActiveRecord::VERSION::MAJOR >= 3
+        assert_equal 1, p.errors[:email].size
+      else
+        assert p.errors.on(:email)
+      end
     end
 end

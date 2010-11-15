@@ -7,7 +7,6 @@ require 'active_record'
 require 'active_record/fixtures'
 require "#{File.dirname(__FILE__)}/../init"
 
-
 config = YAML::load(IO.read(File.dirname(__FILE__) + '/database.yml'))
 ActiveRecord::Base.logger = Logger.new(File.dirname(__FILE__) + "/debug.log")
 ActiveRecord::Base.establish_connection(config[ENV['DB'] || 'plugin_test'])
@@ -22,7 +21,7 @@ else
 end
 
 TEST_CASE.fixture_path = File.dirname(__FILE__) + "/fixtures/"
-$LOAD_PATH.unshift(TEST_CASE.fixture_path)
+$:.unshift(TEST_CASE.fixture_path)
 
 class TEST_CASE #:nodoc:
   def create_fixtures(*table_names)
