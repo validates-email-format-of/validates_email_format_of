@@ -32,6 +32,9 @@ class ValidatesEmailFormatOfTest < TEST_CASE
      'valid@example.mobi',
      'valid@example.info',
      'valid-@example.com',
+  # allow single character domain parts
+     'valid@mail.x.example.com',
+     'valid@x.com',
      'valid@example.w-dash.sch.uk',
   # from RFC 3696, page 6
      'customer/department=shipping@example.com',
