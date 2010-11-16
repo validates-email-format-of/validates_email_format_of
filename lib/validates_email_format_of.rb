@@ -5,7 +5,7 @@ module ValidatesEmailFormatOf
   LocalPartSpecialChars = Regexp.escape('!#$%&\'*-/=?+-^_`{|}~')
   LocalPartUnquoted = '(([[:alnum:]' + LocalPartSpecialChars + ']+[\.\+]+))*[[:alnum:]' + LocalPartSpecialChars + '+]+'
   LocalPartQuoted = '\"(([[:alnum:]' + LocalPartSpecialChars + '\.\+]*|(\\\\[\x00-\xFF]))*)\"'
-  Regex = Regexp.new('^((' + LocalPartUnquoted + ')|(' + LocalPartQuoted + ')+)@(((\w+\-+[^_])|(\w+\.[a-z0-9-]*))*([a-z0-9-]{1,63})\.[a-z]{2,6}(?:\.[a-z]{2,6})?$)', Regexp::EXTENDED | Regexp::IGNORECASE, 'n')
+  Regex = Regexp.new('\A((' + LocalPartUnquoted + ')|(' + LocalPartQuoted + ')+)@(((\w+\-+[^_])|(\w+\.[a-z0-9-]*))*([a-z0-9-]{1,63})\.[a-z]{2,6}(?:\.[a-z]{2,6})?\Z)', Regexp::EXTENDED | Regexp::IGNORECASE, 'n')
 
   def self.validate_email_domain(email)
     domain = email.match(/\@(.+)/)[1]
@@ -31,7 +31,6 @@ module ValidatesEmailFormatOf
       options.merge!(default_options) {|key, old, new| old}  # merge the default options into the specified options, retaining all specified options
 
       email.strip!
-      email.gsub!(/[\n\r]*/, '')
 
       # local part max is 64 chars, domain part max is 255 chars
       # TODO: should this decode escaped entities before counting?
