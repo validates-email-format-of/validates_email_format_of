@@ -3,9 +3,9 @@ module ValidatesEmailFormatOf
   require 'resolv'
   
   LocalPartSpecialChars = Regexp.escape('!#$%&\'*-/=?+-^_`{|}~')
-  LocalPartUnquoted = '(([[:alnum:]' + LocalPartSpecialChars + ']+[\.\+]+))*[[:alnum:]' + LocalPartSpecialChars + '+]+'
-  LocalPartQuoted = '\"(([[:alnum:]' + LocalPartSpecialChars + '\.\+]*|(\\\\[\x00-\xFF]))*)\"'
-  Regex = Regexp.new('\A((' + LocalPartUnquoted + ')|(' + LocalPartQuoted + ')+)@(((\w+\-+[^_])|(\w+\.[a-z0-9-]*))*([a-z0-9-]{1,63})\.[a-z]{2,6}(?:\.[a-z]{2,6})?\Z)', Regexp::EXTENDED | Regexp::IGNORECASE, 'n')
+  LocalPartUnquoted = '([[:alnum:]' + LocalPartSpecialChars + ']+[\.\+]+)*[[:alnum:]' + LocalPartSpecialChars + '+]+'
+  LocalPartQuoted = '\"([[:alnum:]' + LocalPartSpecialChars + '\.\+]|\\\\[\x00-\xFF])*\"'
+  Regex = Regexp.new('\A(' + LocalPartUnquoted + '|' + LocalPartQuoted + '+)@(((\w+\-+[^_])|(\w+\.[a-z0-9-]*))*([a-z0-9-]{1,63})\.[a-z]{2,6}(?:\.[a-z]{2,6})?\Z)', Regexp::EXTENDED | Regexp::IGNORECASE, 'n')
 
   def self.validate_email_domain(email)
     domain = email.match(/\@(.+)/)[1]

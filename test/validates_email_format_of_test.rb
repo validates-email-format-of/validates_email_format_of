@@ -65,6 +65,8 @@ class ValidatesEmailFormatOfTest < TEST_CASE
      'invalid@example.b#r.com',
      'invalid@example.c',
      'invali d@example.com',
+  # unclosed quote
+      "\"a-17180061943-10618354-1993365053",
      'invalidexample.com',
   # should not allow special chars after a period in the domain
      'local@sub.)domain.com',
@@ -87,7 +89,7 @@ class ValidatesEmailFormatOfTest < TEST_CASE
       save_passes(p, email)
     end
   end
-
+  
   # from http://tools.ietf.org/html/rfc3696, page 5
   # corrected in http://www.rfc-editor.org/errata_search.php?rfc=3696
   def test_should_not_allow_escaped_characters_without_quotes
