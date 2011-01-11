@@ -30,7 +30,7 @@ module ValidatesEmailFormatOf
                           :with => ValidatesEmailFormatOf::Regex ,
                           :domain_length=>255,
                           :local_length=>64
-                          :}
+                          }
       options.merge!(default_options) {|key, old, new| old}  # merge the default options into the specified options, retaining all specified options
 
       email.strip!
