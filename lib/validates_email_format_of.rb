@@ -27,7 +27,10 @@ module ValidatesEmailFormatOf
       default_options = { :message => I18n.t(:invalid_email_address, :scope => [:activerecord, :errors, :messages], :default => 'does not appear to be a valid e-mail address'),
                           :check_mx => false,
                           :mx_message => I18n.t(:email_address_not_routable, :scope => [:activerecord, :errors, :messages], :default => 'is not routable'),
-                          :with => ValidatesEmailFormatOf::Regex }
+                          :with => ValidatesEmailFormatOf::Regex ,
+                          :domain_length=>255,
+                          :local_length=>64
+                          :}
       options.merge!(default_options) {|key, old, new| old}  # merge the default options into the specified options, retaining all specified options
 
       email.strip!
@@ -40,7 +43,7 @@ module ValidatesEmailFormatOf
         return [ options[:message] ]
       end
 
-      unless email =~ options[:with] and not email =~ /\.\./ and domain.length <= 255 and local.length <= 64
+      unless email =~ options[:with] and not email =~ /\.\./ and domain.length <= options[:domain_length] and local.length <= options[:local_length]
         return [ options[:message] ]
       end
       
