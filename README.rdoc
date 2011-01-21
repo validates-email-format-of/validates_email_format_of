@@ -55,6 +55,11 @@ e-mail address or an array of error messages for invalid addresses.
      proc or string should return or evaluate to a true or false value. 
   :unless
      See :if option.
+  :local_length
+    Maximum number of characters allowed in the local part (default is 64)
+  :domain_length
+    Maximum number of characters allowed in the domain part (default is 255)
+
 
 == Testing
 
@@ -68,7 +73,7 @@ The unit tests for this plugin use an in-memory sqlite3 database.
 
 == Credits
 
-Written by Alex Dunae (dunae.ca), 2006-10.
+Written by Alex Dunae (dunae.ca), 2006-11.
 
 Many thanks to the plugin's recent contributors: https://github.com/alexdunae/validates_email_format_of/contributors
 
