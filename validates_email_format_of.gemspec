@@ -2,7 +2,7 @@ require 'rake'
 
 spec = Gem::Specification.new do |s|
   s.name = 'validates_email_format_of'
-  s.version = '1.4.4'
+  s.version = '1.4.5'
   s.summary = 'Validate e-mail addresses against RFC 2822 and RFC 3696.'
   s.description = s.summary
   s.extra_rdoc_files = ['README.rdoc', 'CHANGELOG.rdoc', 'MIT-LICENSE']
