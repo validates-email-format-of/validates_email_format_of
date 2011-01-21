@@ -66,7 +66,9 @@ class ValidatesEmailFormatOfTest < TEST_CASE
      'invalid@example.c',
      'invali d@example.com',
   # unclosed quote
-      "\"a-17180061943-10618354-1993365053",
+     "\"a-17180061943-10618354-1993365053",
+  # too many special chars used to cause the regexp to hang
+     "-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++@foo",
      'invalidexample.com',
   # should not allow special chars after a period in the domain
      'local@sub.)domain.com',
