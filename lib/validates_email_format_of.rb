@@ -23,13 +23,15 @@ module ValidatesEmailFormatOf
   # * <tt>check_mx</tt> - Check for MX records (default is false)
   # * <tt>mx_message</tt> - A custom error message when an MX record validation fails (default is: "is not routable.")
   # * <tt>with</tt> The regex to use for validating the format of the email address (default is ValidatesEmailFormatOf::Regex)</tt>
+  # * <tt>local_length</tt> Maximum number of characters allowed in the local part (default is 24)
+  # * <tt>domain_length</tt> Maximum number of characters allowed in the domain part (default is 255)
   def self.validate_email_format(email, options={})
       default_options = { :message => I18n.t(:invalid_email_address, :scope => [:activerecord, :errors, :messages], :default => 'does not appear to be a valid e-mail address'),
                           :check_mx => false,
                           :mx_message => I18n.t(:email_address_not_routable, :scope => [:activerecord, :errors, :messages], :default => 'is not routable'),
                           :with => ValidatesEmailFormatOf::Regex ,
-                          :domain_length=>255,
-                          :local_length=>64
+                          :domain_length => 255,
+                          :local_length => 64
                           }
       options.merge!(default_options) {|key, old, new| old}  # merge the default options into the specified options, retaining all specified options
 

@@ -110,6 +110,11 @@ class ValidatesEmailFormatOfTest < TEST_CASE
       save_fails(p, email)
     end
   end
+  
+  def test_overriding_length_checks
+    assert_not_nil ValidatesEmailFormatOf::validate_email_format('valid@example.com', :local_length => 1)
+    assert_not_nil ValidatesEmailFormatOf::validate_email_format('valid@example.com', :domain_length => 1)
+  end
 
   def test_should_respect_validate_on_option
     p = create_person(:email => @valid_email)
