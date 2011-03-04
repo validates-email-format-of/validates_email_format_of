@@ -17,12 +17,11 @@ Rake::TestTask.new(:test) do |t|
   t.verbose = true
 end
 
-desc 'Generate documentation for the validates_email_format_of plugin.'
+desc 'Generate documentation for the validates_email_format_of plugin and gem.'
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title    = 'validates_email_format_of plugin'
+  rdoc.title    = 'validates_email_format_of plugin and gem'
   rdoc.options << '--line-numbers --inline-source'
-  rdoc.rdoc_files.include('README')
-  rdoc.rdoc_files.include('TODO')
+  rdoc.rdoc_files.include('README.rdoc')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end

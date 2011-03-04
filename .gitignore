@@ -1,5 +1,6 @@
 pkg
 test/debug.log
+rdoc
 *.gem
 *.sqlite3
 *.swp

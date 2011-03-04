@@ -23,6 +23,11 @@ Or in your Rails 3 Gemfile
    validates_email_format_of :email
  end
 
+ # Rails 3
+ class Person < ActiveRecord::Base
+   validates :email, :email_format => {:message => 'is not looking good'}
+ end
+
 As of version 1.4, it's possible to run e-mail validation tests (including MX 
 checks) without using ActiveRecord or even touching a database.  The 
 <tt>validate_email_format</tt> method will return <tt>nil</tt> on a valid 
