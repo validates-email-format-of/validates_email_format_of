@@ -21,7 +21,7 @@ module ValidatesEmailFormatOf
   # containing one or more validation error messages.
   #
   # Configuration options:
-  # * <tt>message</tt> - A custom error message (default is: "does not appear to be a valid e-mail address")
+  # * <tt>message</tt> - A custom error message (default is: "does not appear to be valid")
   # * <tt>check_mx</tt> - Check for MX records (default is false)
   # * <tt>mx_message</tt> - A custom error message when an MX record validation fails (default is: "is not routable.")
   # * <tt>with</tt> The regex to use for validating the format of the email address (default is ValidatesEmailFormatOf::Regex)</tt>
@@ -35,7 +35,7 @@ module ValidatesEmailFormatOf
                           :domain_length => 255,
                           :local_length => 64
                           }
-      options.merge!(default_options) {|key, old, new| old}  # merge the default options into the specified options, retaining all specified options
+      opts = options.merge(default_options) {|key, old, new| old}  # merge the default options into the specified options, retaining all specified options
 
       email.strip!
 
@@ -44,15 +44,15 @@ module ValidatesEmailFormatOf
       begin
         domain, local = email.reverse.split('@', 2)
       rescue
-        return [ options[:message] ]
+        return [ opts[:message] ]
       end
 
-      unless email =~ options[:with] and not email =~ /\.\./ and domain.length <= options[:domain_length] and local.length <= options[:local_length]
-        return [ options[:message] ]
+      unless email =~ opts[:with] and not email =~ /\.\./ and domain.length <= opts[:domain_length] and local.length <= opts[:local_length]
+        return [ opts[:message] ]
       end
 
-      if options[:check_mx] and !ValidatesEmailFormatOf::validate_email_domain(email)
-        return [ options[:mx_message] ]
+      if opts[:check_mx] and !ValidatesEmailFormatOf::validate_email_domain(email)
+        return [ opts[:mx_message] ]
       end
 
       return nil    # represents no validation errors
@@ -66,7 +66,7 @@ module ValidatesEmailFormatOf
     #   end
     #
     # Configuration options:
-    # * <tt>message</tt> - A custom error message (default is: "does not appear to be a valid e-mail address")
+    # * <tt>message</tt> - A custom error message (default is: "does not appear to be valid")
     # * <tt>on</tt> - Specifies when this validation is active (default is :save, other options :create, :update)
     # * <tt>allow_nil</tt> - Allow nil values (default is false)
     # * <tt>allow_blank</tt> - Allow blank values (default is false)
@@ -76,7 +76,7 @@ module ValidatesEmailFormatOf
     #   occur (e.g. :if => :allow_validation, or :if => Proc.new { |user| user.signup_step > 2 }).  The
     #   method, proc or string should return or evaluate to a true or false value.
     # * <tt>unless</tt> - See <tt>:if</tt>
-    def validates_email_format_of(*attr_names)
+    def validates_email_format_of(*attr_names)    
       options = { :on => :save,
         :allow_nil => false,
         :allow_blank => false }
@@ -94,11 +94,22 @@ module ValidatesEmailFormatOf
 end
 
 if defined?(ActiveModel)
+  class EmailFormatValidator < ActiveModel::EachValidator
+    def validate_each(record, attribute, value)
+      err = ValidatesEmailFormatOf::validate_email_format(value, options)
+      record.errors[attribute] << err unless err.nil?
+      record.errors[attribute].flatten!
+    end
+  end
+
   module ActiveModel::Validations::HelperMethods
-    include ValidatesEmailFormatOf::Validations
+    def validates_email_format_of(*attr_names)
+      validates_with EmailFormatValidator, _merge_attributes(attr_names)
+    end
   end
 else
   class ActiveRecord::Base
     extend ValidatesEmailFormatOf::Validations
   end
 end
+
