@@ -156,6 +156,17 @@ class ValidatesEmailFormatOfTest < TEST_CASE
     pmx = MxRecord.new(:email => 'test@code.dunae.ca')
     save_passes(pmx)
   end
+  
+  def test_shorthand
+    if ActiveRecord::VERSION::MAJOR >= 3
+      s = Shorthand.new(:email => 'invalid')
+      assert !s.save
+      assert_equal 2, s.errors[:email].size
+      assert s.errors[:email].any? do |err|
+        err =~ /fails with shorthand message/
+      end
+    end
+  end
 
   protected
     def create_person(params)
