@@ -31,6 +31,7 @@ class ValidatesEmailFormatOfTest < TEST_CASE
      'valid@example.mobi',
      'valid@example.info',
      'valid-@example.com',
+     'fake@p-t.k12.ok.us',
   # allow single character domain parts
      'valid@mail.x.example.com',
      'valid@x.com',
@@ -58,6 +59,8 @@ class ValidatesEmailFormatOfTest < TEST_CASE
      'invali..d@example.com',
   # should not allow underscores in domain names
      'invalid@ex_mple.com',
+     'invalid@e..example.com',
+     'invalid@p-t..example.com',
      'invalid@example.com.',
      'invalid@example.com_',
      'invalid@example.com-',
