@@ -7,7 +7,6 @@ spec = Gem::Specification.new do |s|
   s.test_files = Dir['test/**/*.rb', 'test/**/*.yml']
   s.files = Dir['MIT-LICENSE', '*.rb', '*.rdoc', 'lib/**/*.rb', 'test/**/*.rb', 'test/**/*.yml']
   s.require_path = 'lib'
-  s.has_rdoc = true
   s.rdoc_options << '--title' <<  'validates_email_format_of'
   s.author = "Alex Dunae"
   s.email = "code@dunae.ca"
