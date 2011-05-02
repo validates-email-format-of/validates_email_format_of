@@ -180,8 +180,10 @@ class ValidatesEmailFormatOfTest < TEST_CASE
       s = Shorthand.new(:email => 'invalid')
       assert !s.save
       assert_equal 2, s.errors[:email].size
-      assert s.errors[:email].any? do |err|
+      assert_block do
+        s.errors[:email].any? do |err|
         err =~ /fails with shorthand message/
+      end
       end
     end
   end
