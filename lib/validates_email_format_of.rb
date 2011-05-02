@@ -55,6 +55,26 @@ module ValidatesEmailFormatOf
         return [ opts[:mx_message] ]
       end
 
+      local.reverse!
+          
+      # check for proper escaping
+
+      if local[0] == '"'
+        local.gsub!(/\A\"|\"\Z/, '')
+        escaped = false
+        local.each_char do |c|
+          if escaped
+            escaped = false
+          elsif c == '"' # can't have a double quote without a preceding backslash
+            return [ opts[:mx_message] ]
+          else
+            escaped = c == '\\'
+          end
+        end
+
+        return [ opts[:mx_message] ] if escaped
+      end
+
       return nil    # represents no validation errors
   end
 

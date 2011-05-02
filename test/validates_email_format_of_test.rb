@@ -83,7 +83,7 @@ class ValidatesEmailFormatOfTest < TEST_CASE
       save_fails(p, email)
     end
   end
-
+  
   # from http://www.rfc-editor.org/errata_search.php?rfc=3696
   def test_should_allow_quoted_characters
     ['"Abc\@def"@example.com',     
@@ -93,6 +93,21 @@ class ValidatesEmailFormatOfTest < TEST_CASE
       p = create_person(:email => email)
       save_passes(p, email)
     end
+  end
+  
+  def test_should_required_balanced_quoted_characters
+    email = %!"example\\\\\\""@example.com!
+    p = create_person(:email => email)
+    save_passes(p, email)
+
+    email = %!"example\\\\"@example.com!
+    p = create_person(:email => email)
+    save_passes(p, email)
+
+
+    email = %!"example\\\\""example.com!
+    p = create_person(:email => email)
+    save_fails(p, email)
   end
   
   # from http://tools.ietf.org/html/rfc3696, page 5
@@ -177,7 +192,7 @@ class ValidatesEmailFormatOfTest < TEST_CASE
     end
 
     def save_passes(p, email = '')
-      assert p.valid?, " validating #{email}"
+      assert p.valid?, " #{email} should pass"
       assert p.save
       if ActiveRecord::VERSION::MAJOR >= 3
         assert p.errors[:email].empty?
@@ -187,7 +202,7 @@ class ValidatesEmailFormatOfTest < TEST_CASE
     end
     
     def save_fails(p, email = '')
-      assert !p.valid?, " validating #{email}"
+      assert !p.valid?, " #{email} should fail"
       assert !p.save
       if ActiveRecord::VERSION::MAJOR >= 3
         assert_equal 1, p.errors[:email].size
