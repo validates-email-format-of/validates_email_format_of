@@ -8,10 +8,17 @@ class ValidatesEmailFormatOfTest < TEST_CASE
     @invalid_email = 'invalid@example.'
   end
 
+  def test_with_activerecord
+    p = create_person(:email => @valid_email)
+    save_passes(p)
+
+    p = create_person(:email => @invalid_email)
+    save_fails(p)
+  end
+
   def test_without_activerecord
-    assert_nil ValidatesEmailFormatOf::validate_email_format('valid@example.com')
-    err = ValidatesEmailFormatOf::validate_email_format('valid@example-com')
-    assert_equal 1, err.size
+    assert_valid(@valid_email)
+    assert_invalid(@invalid_email)
   end
 
   def test_should_allow_valid_email_addresses
@@ -44,8 +51,7 @@ class ValidatesEmailFormatOfTest < TEST_CASE
   # apostrophes
      "test'test@example.com",
      ].each do |email|
-      p = create_person(:email => email)
-      save_passes(p, email)
+      assert_valid(email)
     end
   end
 
@@ -79,8 +85,7 @@ class ValidatesEmailFormatOfTest < TEST_CASE
   # one at a time
      "foo@example.com\nexample@gmail.com",
      'invalid@example.'].each do |email|
-      p = create_person(:email => email)
-      save_fails(p, email)
+      assert_invalid(email)
     end
   end
   
@@ -90,24 +95,14 @@ class ValidatesEmailFormatOfTest < TEST_CASE
      '"Fred\ Bloggs"@example.com',
      '"Joe.\\Blow"@example.com',
      ].each do |email|
-      p = create_person(:email => email)
-      save_passes(p, email)
+      assert_valid(email)
     end
   end
   
   def test_should_required_balanced_quoted_characters
-    email = %!"example\\\\\\""@example.com!
-    p = create_person(:email => email)
-    save_passes(p, email)
-
-    email = %!"example\\\\"@example.com!
-    p = create_person(:email => email)
-    save_passes(p, email)
-
-
-    email = %!"example\\\\""example.com!
-    p = create_person(:email => email)
-    save_fails(p, email)
+    assert_valid(%!"example\\\\\\""@example.com!)
+    assert_valid(%!"example\\\\"@example.com!)
+    assert_invalid(%!"example\\\\""example.com!)
   end
   
   # from http://tools.ietf.org/html/rfc3696, page 5
@@ -117,8 +112,7 @@ class ValidatesEmailFormatOfTest < TEST_CASE
      'Abc\@def+@example.com',
      'Joe.\\Blow@example.com'
      ].each do |email|
-      p = create_person(:email => email)
-      save_fails(p, email)
+      assert_invalid(email)
     end
   end
 
@@ -126,8 +120,7 @@ class ValidatesEmailFormatOfTest < TEST_CASE
     ['aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@example.com',
      'test@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.com'
      ].each do |email|
-      p = create_person(:email => email)
-      save_fails(p, email)
+      assert_invalid(email)
     end
   end
   
@@ -191,6 +184,15 @@ class ValidatesEmailFormatOfTest < TEST_CASE
   protected
     def create_person(params)
       Person.new(params)
+    end
+    
+    def assert_valid(email)
+      assert_nil ValidatesEmailFormatOf::validate_email_format(email)
+    end
+    
+    def assert_invalid(email)
+      err = ValidatesEmailFormatOf::validate_email_format(email)
+      assert_equal 1, err.size
     end
 
     def save_passes(p, email = '')
