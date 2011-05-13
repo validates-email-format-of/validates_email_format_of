@@ -2,6 +2,8 @@
 module ValidatesEmailFormatOf
   require 'resolv'
 
+  VERSION = '1.4.7'
+
   MessageScope = defined?(ActiveModel) ? :activemodel : :activerecord
 
   LocalPartSpecialChars = Regexp.escape('!#$%&\'*-/=?+-^_`{|}~')
