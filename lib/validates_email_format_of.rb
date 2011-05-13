@@ -37,7 +37,7 @@ module ValidatesEmailFormatOf
                           }
       opts = options.merge(default_options) {|key, old, new| old}  # merge the default options into the specified options, retaining all specified options
 
-      email.strip!
+      email.strip! if email.present?
 
       # local part max is 64 chars, domain part max is 255 chars
       # TODO: should this decode escaped entities before counting?
