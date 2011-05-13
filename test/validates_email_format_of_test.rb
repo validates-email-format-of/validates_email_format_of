@@ -151,6 +151,9 @@ class ValidatesEmailFormatOfTest < TEST_CASE
   def test_should_allow_nil
     p = create_person(:email => nil)
     save_passes(p)
+    
+    p = PersonForbidNil.new(:email => nil)
+    save_fails(p)
   end
 
   # TODO: find a future-proof way to check DNS records

@@ -5,6 +5,15 @@ class Person < ActiveRecord::Base
                             :allow_nil => true
 end
 
+class PersonForbidNil < ActiveRecord::Base
+  set_table_name 'people'
+
+  validates_email_format_of :email,
+                            :on => :create,
+                            :allow_nil => false
+end
+
+
 class MxRecord < ActiveRecord::Base
   set_table_name 'people'
   
