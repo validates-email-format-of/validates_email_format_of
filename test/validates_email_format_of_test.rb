@@ -50,6 +50,10 @@ class ValidatesEmailFormatOfTest < TEST_CASE
      '_somename@example.com',
   # apostrophes
      "test'test@example.com",
+  # international domain names
+     'test@xn--bcher-kva.ch',
+     'test@example.xn--0zwm56d',
+     'test@192.192.192.1'
      ].each do |email|
       assert_valid(email)
     end
@@ -64,18 +68,20 @@ class ValidatesEmailFormatOfTest < TEST_CASE
   # period can not appear twice consecutively in local part
      'invali..d@example.com',
   # should not allow underscores in domain names
-     'invalid@ex_mple.com',
-     'invalid@e..example.com',
-     'invalid@p-t..example.com',
-     'invalid@example.com.',
-     'invalid@example.com_',
-     'invalid@example.com-',
-     'invalid-example.com',
-     'invalid@example.b#r.com',
-     'invalid@example.c',
-     'invali d@example.com',
+    'invalid@ex_mple.com',
+    'invalid@e..example.com',
+    'invalid@p-t..example.com',
+    'invalid@example.com.',
+    'invalid@example.com_',
+    'invalid@example.com-',
+    'invalid-example.com',
+    'invalid@example.b#r.com',
+    'invalid@example.c',
+    'invali d@example.com',
+  # TLD can not be only numeric
+    'invalid@example.123',
   # unclosed quote
-     "\"a-17180061943-10618354-1993365053",
+     "\"a-17180061943-10618354-1993365053@example.com",
   # too many special chars used to cause the regexp to hang
      "-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++@foo",
      'invalidexample.com',
@@ -84,7 +90,9 @@ class ValidatesEmailFormatOfTest < TEST_CASE
      'local@sub.#domain.com',
   # one at a time
      "foo@example.com\nexample@gmail.com",
-     'invalid@example.'].each do |email|
+     'invalid@example.',
+     "\"foo\\\\\"\"@bar.com"
+     ].each do |email|
       assert_invalid(email)
     end
   end
@@ -127,6 +135,10 @@ class ValidatesEmailFormatOfTest < TEST_CASE
   def test_overriding_length_checks
     assert_not_nil ValidatesEmailFormatOf::validate_email_format('valid@example.com', :local_length => 1)
     assert_not_nil ValidatesEmailFormatOf::validate_email_format('valid@example.com', :domain_length => 1)
+  end
+
+  def test_validating_with_custom_regexp
+    assert_nil ValidatesEmailFormatOf::validate_email_format('012345@789', :with => /[0-9]+\@[0-9]+/)
   end
 
   def test_should_respect_validate_on_option

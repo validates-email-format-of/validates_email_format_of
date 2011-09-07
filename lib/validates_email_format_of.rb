@@ -6,10 +6,7 @@ module ValidatesEmailFormatOf
 
   MessageScope = defined?(ActiveModel) ? :activemodel : :activerecord
 
-  LocalPartSpecialChars = Regexp.escape('!#$%&\'*-/=?+-^_`{|}~')
-  LocalPartUnquoted = '([[:alnum:]' + LocalPartSpecialChars + ']+[\.]+)*[[:alnum:]' + LocalPartSpecialChars + '+]+'
-  LocalPartQuoted = '\"([[:alnum:]' + LocalPartSpecialChars + '\.]|\\\\[\x00-\xFF])*\"'
-  Regex = Regexp.new('\A(' + LocalPartUnquoted + '|' + LocalPartQuoted + '+)@(((\w+\-+[^_])|(\w+\.[a-z0-9-]*))*([a-z0-9\-\.]{1,63})\.[a-z]{2,6}(?:\.[a-z]{2,6})?\Z)', Regexp::EXTENDED | Regexp::IGNORECASE, 'n')
+  LocalPartSpecialChars = /[\!\#\$\%\&\'\*\-\/\=\?\+\-\^\_\`\{\|\}\~]/
 
   def self.validate_email_domain(email)
     domain = email.match(/\@(.+)/)[1]
@@ -26,14 +23,13 @@ module ValidatesEmailFormatOf
   # * <tt>message</tt> - A custom error message (default is: "does not appear to be valid")
   # * <tt>check_mx</tt> - Check for MX records (default is false)
   # * <tt>mx_message</tt> - A custom error message when an MX record validation fails (default is: "is not routable.")
-  # * <tt>with</tt> The regex to use for validating the format of the email address (default is ValidatesEmailFormatOf::Regex)</tt>
+  # * <tt>with</tt> The regex to use for validating the format of the email address (deprecated)
   # * <tt>local_length</tt> Maximum number of characters allowed in the local part (default is 64)
   # * <tt>domain_length</tt> Maximum number of characters allowed in the domain part (default is 255)
   def self.validate_email_format(email, options={})
       default_options = { :message => I18n.t(:invalid_email_address, :scope => [MessageScope, :errors, :messages], :default => 'does not appear to be valid'),
                           :check_mx => false,
                           :mx_message => I18n.t(:email_address_not_routable, :scope => [MessageScope, :errors, :messages], :default => 'is not routable'),
-                          :with => ValidatesEmailFormatOf::Regex ,
                           :domain_length => 255,
                           :local_length => 64
                           }
@@ -41,43 +37,98 @@ module ValidatesEmailFormatOf
 
       email = email.strip if email
 
-      # local part max is 64 chars, domain part max is 255 chars
-      # TODO: should this decode escaped entities before counting?
       begin
         domain, local = email.reverse.split('@', 2)
       rescue
         return [ opts[:message] ]
       end
 
-      unless email =~ opts[:with] and not email =~ /\.\./ and domain.length <= opts[:domain_length] and local.length <= opts[:local_length]
-        return [ opts[:message] ]
+      # need local and domain parts
+      return [ opts[:message] ] unless local and domain
+
+      # check lengths
+      return [ opts[:message] ] unless domain.length <= opts[:domain_length] and local.length <= opts[:local_length]
+
+      local.reverse!
+      domain.reverse!
+
+      if opts.has_key?(:with) # holdover from versions <= 1.4.7
+        return [ opts[:message] ] unless email =~ opts[:with]
+      else
+        return [ opts[:message] ] unless self.validate_local_part_syntax(local) and self.validate_domain_part_syntax(domain)
       end
 
-      if opts[:check_mx] and !ValidatesEmailFormatOf::validate_email_domain(email)
+      if opts[:check_mx] and !self.validate_email_domain(email)
         return [ opts[:mx_message] ]
       end
 
-      local.reverse!
+      return nil    # represents no validation errors
+  end
+  
 
-      # check for proper escaping
+  def self.validate_local_part_syntax(local)
+    in_quoted_pair = false
+    in_quoted_string = false
 
-      if local[0] == '"'
-        local.gsub!(/\A\"|\"\Z/, '')
-        escaped = false
-        local.each_char do |c|
-          if escaped
-            escaped = false
-          elsif c == '"' # can't have a double quote without a preceding backslash
-            return [ opts[:mx_message] ]
-          else
-            escaped = c == '\\'
-          end
-        end
+    (0..local.length-1).each do |i|
+      ord = local[i].ord
 
-        return [ opts[:mx_message] ] if escaped
+      # accept anything if it's got a backslash before it
+      if in_quoted_pair 
+        in_quoted_pair = false
+        next
+      end
+        
+      # backslash signifies the start of a quoted pair
+      if ord == 92 and i < local.length - 1
+        return false if not in_quoted_string # must be in quoted string per http://www.rfc-editor.org/errata_search.php?rfc=3696
+        in_quoted_pair = true
+        next
+      end
+        
+      # double quote delimits quoted strings
+      if ord == 34
+        in_quoted_string = !in_quoted_string
+        next
+      end    
+
+      next if local[i] =~ /[[:alnum:]]/
+      next if local[i] =~ LocalPartSpecialChars
+      
+      # period must be followed by something
+      if ord == 46
+        return false if i == 0 or i == local.length - 1 # can't be first or last char
+        next unless local[i+1].ord == 46 # can't be followed by a period
       end
 
-      return nil    # represents no validation errors
+      return false
+    end
+    
+    return false if in_quoted_string # unbalanced quotes
+
+    return true
+  end
+  
+  def self.validate_domain_part_syntax(domain)
+    parts = domain.downcase.split('.', -1)
+    
+    return false if parts.length <= 1 # Only one domain part
+
+    # Empty parts (double period) or invalid chars
+    return false if parts.any? { 
+      |part| 
+        part.nil? or 
+        part.empty? or 
+        not part =~ /\A[[:alnum:]\-]+\Z/ or
+        part[0] == '-' or part[-1] == '-' # hyphen at beginning or end of part
+    } 
+        
+    # ipv4
+    return true if parts.length == 4 and parts.all? { |part| part =~ /\A[0-9]+\Z/ and part.to_i.between?(0, 255) }
+        
+    return false if parts[-1].length < 2 or not parts[-1] =~ /[a-z\-]/ # TLD is too short or does not contain a char or hyphen
+    
+    return true
   end
 
   module Validations
