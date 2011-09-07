@@ -88,23 +88,23 @@ class ValidatesEmailFormatOfTest < TEST_CASE
       assert_invalid(email)
     end
   end
-  
+
   # from http://www.rfc-editor.org/errata_search.php?rfc=3696
   def test_should_allow_quoted_characters
-    ['"Abc\@def"@example.com',     
+    ['"Abc\@def"@example.com',
      '"Fred\ Bloggs"@example.com',
      '"Joe.\\Blow"@example.com',
      ].each do |email|
       assert_valid(email)
     end
   end
-  
+
   def test_should_required_balanced_quoted_characters
     assert_valid(%!"example\\\\\\""@example.com!)
     assert_valid(%!"example\\\\"@example.com!)
     assert_invalid(%!"example\\\\""example.com!)
   end
-  
+
   # from http://tools.ietf.org/html/rfc3696, page 5
   # corrected in http://www.rfc-editor.org/errata_search.php?rfc=3696
   def test_should_not_allow_escaped_characters_without_quotes
@@ -123,7 +123,7 @@ class ValidatesEmailFormatOfTest < TEST_CASE
       assert_invalid(email)
     end
   end
-  
+
   def test_overriding_length_checks
     assert_not_nil ValidatesEmailFormatOf::validate_email_format('valid@example.com', :local_length => 1)
     assert_not_nil ValidatesEmailFormatOf::validate_email_format('valid@example.com', :domain_length => 1)
@@ -132,12 +132,12 @@ class ValidatesEmailFormatOfTest < TEST_CASE
   def test_should_respect_validate_on_option
     p = create_person(:email => @valid_email)
     save_passes(p)
-    
+
     # we only asked to validate on :create so this should fail
     assert p.update_attributes(:email => @invalid_email)
     assert_equal @invalid_email, p.email
   end
-  
+
   def test_should_allow_custom_error_message
     p = create_person(:email => @invalid_email)
     save_fails(p)
@@ -151,7 +151,7 @@ class ValidatesEmailFormatOfTest < TEST_CASE
   def test_should_allow_nil
     p = create_person(:email => nil)
     save_passes(p)
-    
+
     p = PersonForbidNil.new(:email => nil)
     save_fails(p)
   end
@@ -170,7 +170,7 @@ class ValidatesEmailFormatOfTest < TEST_CASE
     pmx = MxRecord.new(:email => 'test@code.dunae.ca')
     save_passes(pmx)
   end
-  
+
   def test_shorthand
     if ActiveRecord::VERSION::MAJOR >= 3
       s = Shorthand.new(:email => 'invalid')
@@ -184,15 +184,20 @@ class ValidatesEmailFormatOfTest < TEST_CASE
     end
   end
 
+  def test_frozen_string
+    assert_valid("  #{@valid_email}  ".freeze)
+    assert_invalid("  #{@invalid_email}  ".freeze)
+  end
+
   protected
     def create_person(params)
       Person.new(params)
     end
-    
+
     def assert_valid(email)
       assert_nil ValidatesEmailFormatOf::validate_email_format(email)
     end
-    
+
     def assert_invalid(email)
       err = ValidatesEmailFormatOf::validate_email_format(email)
       assert_equal 1, err.size
@@ -207,7 +212,7 @@ class ValidatesEmailFormatOfTest < TEST_CASE
         assert_nil p.errors.on(:email)
       end
     end
-    
+
     def save_fails(p, email = '')
       assert !p.valid?, " #{email} should fail"
       assert !p.save
