@@ -39,7 +39,7 @@ module ValidatesEmailFormatOf
                           }
       opts = options.merge(default_options) {|key, old, new| old}  # merge the default options into the specified options, retaining all specified options
 
-      email.strip! if email
+      email = email.strip if email
 
       # local part max is 64 chars, domain part max is 255 chars
       # TODO: should this decode escaped entities before counting?
@@ -58,7 +58,7 @@ module ValidatesEmailFormatOf
       end
 
       local.reverse!
-          
+
       # check for proper escaping
 
       if local[0] == '"'
@@ -98,7 +98,7 @@ module ValidatesEmailFormatOf
     #   occur (e.g. :if => :allow_validation, or :if => Proc.new { |user| user.signup_step > 2 }).  The
     #   method, proc or string should return or evaluate to a true or false value.
     # * <tt>unless</tt> - See <tt>:if</tt>
-    def validates_email_format_of(*attr_names)    
+    def validates_email_format_of(*attr_names)
       options = { :on => :save,
         :allow_nil => false,
         :allow_blank => false }
