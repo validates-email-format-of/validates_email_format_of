@@ -91,7 +91,8 @@ class ValidatesEmailFormatOfTest < TEST_CASE
   # one at a time
      "foo@example.com\nexample@gmail.com",
      'invalid@example.',
-     "\"foo\\\\\"\"@bar.com"
+     "\"foo\\\\\"\"@bar.com",
+     "foo@mail.com\r\nfoo@mail.com"
      ].each do |email|
       assert_invalid(email)
     end
