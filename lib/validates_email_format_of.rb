@@ -92,8 +92,8 @@ module ValidatesEmailFormatOf
         next
       end    
 
-      next if local[i] =~ /[[:alnum:]]/
-      next if local[i] =~ LocalPartSpecialChars
+      next if local[i,1] =~ /[[:alnum:]]/
+      next if local[i,1] =~ LocalPartSpecialChars
       
       # period must be followed by something
       if ord == 46
@@ -120,7 +120,7 @@ module ValidatesEmailFormatOf
         part.nil? or 
         part.empty? or 
         not part =~ /\A[[:alnum:]\-]+\Z/ or
-        part[0] == '-' or part[-1] == '-' # hyphen at beginning or end of part
+        part[0,1] == '-' or part[-1,1] == '-' # hyphen at beginning or end of part
     } 
         
     # ipv4
