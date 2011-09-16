@@ -2,7 +2,7 @@
 module ValidatesEmailFormatOf
   require 'resolv'
 
-  VERSION = '1.5.1'
+  VERSION = '1.5.2'
 
   MessageScope = defined?(ActiveModel) ? :activemodel : :activerecord
 

@@ -1,6 +1,6 @@
 spec = Gem::Specification.new do |s|
   s.name = 'validates_email_format_of'
-  s.version = '1.5.1'
+  s.version = '1.5.2'
   s.summary = 'Validate e-mail addresses against RFC 2822 and RFC 3696.'
   s.description = s.summary
   s.extra_rdoc_files = ['README.rdoc', 'MIT-LICENSE']
