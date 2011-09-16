@@ -1,6 +1,7 @@
 pkg
 test/debug.log
 rdoc
+Gemfile.lock
 *.gem
 *.sqlite3
 *.swp
