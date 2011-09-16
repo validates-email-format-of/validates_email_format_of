@@ -44,7 +44,7 @@ module ValidatesEmailFormatOf
       end
 
       # need local and domain parts
-      return [ opts[:message] ] unless local and domain
+      return [ opts[:message] ] unless local and not local.empty? and domain and not domain.empty?
 
       # check lengths
       return [ opts[:message] ] unless domain.length <= opts[:domain_length] and local.length <= opts[:local_length]
