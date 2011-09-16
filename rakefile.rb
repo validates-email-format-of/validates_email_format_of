@@ -13,7 +13,7 @@ end
 desc 'Test the validates_email_format_of plugin.'
 Rake::TestTask.new(:test) do |t|
   t.libs << 'lib'
-  t.pattern = 'test/**/*_test.rb'
+  t.pattern = FileList['test/**/*_test.rb']
   t.verbose = true
 end
 
