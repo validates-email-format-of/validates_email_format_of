@@ -210,12 +210,11 @@ class ValidatesEmailFormatOfTest < TEST_CASE
     end
 
     def assert_valid(email)
-      assert_nil ValidatesEmailFormatOf::validate_email_format(email)
+      assert_nil ValidatesEmailFormatOf::validate_email_format(email), "#{email} should be considered valid"
     end
 
     def assert_invalid(email)
-      err = ValidatesEmailFormatOf::validate_email_format(email)
-      assert_equal 1, err.size
+      assert_not_nil ValidatesEmailFormatOf::validate_email_format(email), "#{email} should not be considered valid"
     end
 
     def save_passes(p, email = '')
