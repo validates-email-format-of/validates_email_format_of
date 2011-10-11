@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require File.expand_path(File.dirname(__FILE__) + '/test_helper')
 
 class ValidatesEmailFormatOfTest < TEST_CASE
@@ -95,7 +96,8 @@ class ValidatesEmailFormatOfTest < TEST_CASE
      "foo@mail.com\r\nfoo@mail.com",
      '@example.com',
      'foo@',
-     'foo'
+     'foo',
+     'Iñtërnâtiônàlizætiøn@hasnt.happened.to.email'
      ].each do |email|
       assert_invalid(email)
     end

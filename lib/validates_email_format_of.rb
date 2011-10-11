@@ -92,7 +92,7 @@ module ValidatesEmailFormatOf
         next
       end    
 
-      next if local[i,1] =~ /[[:alnum:]]/
+      next if local[i,1] =~ /[a-z0-9]/i
       next if local[i,1] =~ LocalPartSpecialChars
       
       # period must be followed by something
