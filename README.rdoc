@@ -72,6 +72,8 @@ To execute the unit tests run <tt>rake test</tt>.
 
 The unit tests for this plugin use an in-memory sqlite3 database.
 
+Tested in Ruby 1.8.7, 1.9.2, 1.9.3-rc1, JRuby and REE 1.8.7.
+
 == Resources
 
 * https://github.com/alexdunae/validates_email_format_of
