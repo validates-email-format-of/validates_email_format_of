@@ -181,8 +181,10 @@ if defined?(ActiveModel)
     end
   end
 else
-  class ActiveRecord::Base
-    extend ValidatesEmailFormatOf::Validations
+  if defined?(ActiveRecord)
+    class ActiveRecord::Base
+      extend ValidatesEmailFormatOf::Validations
+    end
   end
 end
 
