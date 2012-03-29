@@ -173,9 +173,9 @@ if defined?(ActiveModel)
         record.errors[attribute] << err
         record.errors[attribute].flatten!
       end
-      if record.errors.messages[attribute] == [] or record.errors.messages[attribute].nil?
-        record.errors.delete(attribute)
-      end
+      #if record.errors.messages[attribute] == [] or record.errors.messages[attribute].nil?
+      #  record.errors.delete(attribute)
+      #end
     end
   end
 
