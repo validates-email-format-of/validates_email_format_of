@@ -224,7 +224,7 @@ class ValidatesEmailFormatOfTest < TEST_CASE
       assert p.valid?, " #{email} should pass"
       assert p.save
       if ActiveRecord::VERSION::MAJOR >= 3
-        assert p.errors[:email].empty?
+        assert p.errors[:email].empty? && !p.errors.include?(:email)
       else
         assert_nil p.errors.on(:email)
       end

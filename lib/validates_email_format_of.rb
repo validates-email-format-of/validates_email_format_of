@@ -36,7 +36,7 @@ module ValidatesEmailFormatOf
       opts = options.merge(default_options) {|key, old, new| old}  # merge the default options into the specified options, retaining all specified options
 
       email = email.strip if email
-
+      
       begin
         domain, local = email.reverse.split('@', 2)
       rescue
@@ -156,8 +156,7 @@ module ValidatesEmailFormatOf
       options.update(attr_names.pop) if attr_names.last.is_a?(Hash)
 
       validates_each(attr_names, options) do |record, attr_name, value|
-        v = value.to_s
-        errors = ValidatesEmailFormatOf::validate_email_format(v, options)
+        errors = ValidatesEmailFormatOf::validate_email_format(value.to_s, options)
         errors.each do |error|
           record.errors.add(attr_name, error)
         end unless errors.nil?
@@ -170,8 +169,13 @@ if defined?(ActiveModel)
   class EmailFormatValidator < ActiveModel::EachValidator
     def validate_each(record, attribute, value)
       err = ValidatesEmailFormatOf::validate_email_format(value, options)
-      record.errors[attribute] << err unless err.nil?
-      record.errors[attribute].flatten!
+      unless err.nil?
+        record.errors[attribute] << err
+        record.errors[attribute].flatten!
+      end
+      if record.errors.messages[attribute] == [] or record.errors.messages[attribute].nil?
+        record.errors.delete(attribute)
+      end
     end
   end
 
