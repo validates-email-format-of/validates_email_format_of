@@ -54,7 +54,10 @@ class ValidatesEmailFormatOfTest < TEST_CASE
   # international domain names
      'test@xn--bcher-kva.ch',
      'test@example.xn--0zwm56d',
-     'test@192.192.192.1'
+     'test@192.192.192.1',
+  # & and | characters in local parts
+     'test&test@example.com',
+     'test|test@example.com'
      ].each do |email|
       assert_valid(email)
     end
