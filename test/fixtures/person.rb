@@ -22,6 +22,13 @@ class MxRecord < ActiveRecord::Base
                             :check_mx => true
 end
 
+class PersonWithStrict < ActiveRecord::Base
+  self.table_name = 'people'
+
+  validates_email_format_of :email,
+                            :strict => true
+end
+
 if ActiveRecord::VERSION::MAJOR >= 3
   class Shorthand < ActiveRecord::Base
     self.table_name = 'people'

@@ -55,9 +55,9 @@ class ValidatesEmailFormatOfTest < TEST_CASE
      'test@xn--bcher-kva.ch',
      'test@example.xn--0zwm56d',
      'test@192.192.192.1',
-  # & and | characters in local parts
+  # & and ! characters in local parts
      'test&test@example.com',
-     'test|test@example.com'
+     'test!test@example.com'
      ].each do |email|
       assert_valid(email)
     end
@@ -208,6 +208,14 @@ class ValidatesEmailFormatOfTest < TEST_CASE
   def test_frozen_string
     assert_valid("  #{@valid_email}  ".freeze)
     assert_invalid("  #{@invalid_email}  ".freeze)
+  end
+
+  def test_with_strict
+    ws = PersonWithStrict.new(:email => 'test&test@example.com')
+    save_fails(ws)
+
+    ws = PersonWithStrict.new(:email => 'test!test@example.com')
+    save_fails(ws)
   end
 
   protected
