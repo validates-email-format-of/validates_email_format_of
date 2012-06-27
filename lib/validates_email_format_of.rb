@@ -2,11 +2,19 @@
 module ValidatesEmailFormatOf
   require 'resolv'
 
+  @@restrict_special_chars = false
+  @@restricted_special_chars = /[&!`#\?]/
+
   VERSION = '1.5.3'
 
   MessageScope = defined?(ActiveModel) ? :activemodel : :activerecord
 
   LocalPartSpecialChars = /[\!\#\$\%\&\'\*\-\/\=\?\+\-\^\_\`\{\|\}\~]/
+
+  def self.restrict_special_chars; @@restrict_special_chars; end
+  def self.restrict_special_chars=(value); @@restrict_special_chars = value; end
+  def self.restricted_special_chars; @@restricted_special_chars; end
+  def self.restricted_special_chars=(value); @@restricted_special_chars = value; end
 
   def self.validate_email_domain(email)
     domain = email.match(/\@(.+)/)[1]
@@ -33,7 +41,7 @@ module ValidatesEmailFormatOf
                           :mx_message => I18n.t(:email_address_not_routable, :scope => [MessageScope, :errors, :messages], :default => 'is not routable'),
                           :domain_length => 255,
                           :local_length => 64,
-                          :strict => false
+                          :restrict_special_chars => false
                           }
       opts = options.merge(default_options) {|key, old, new| old}  # merge the default options into the specified options, retaining all specified options
 
@@ -64,7 +72,8 @@ module ValidatesEmailFormatOf
         return [ opts[:mx_message] ]
       end
 
-      if opts[:restrict_special_chars] && local =~ /[&!`#\?]/
+      if (self.restrict_special_chars || opts[:restrict_special_chars]) && 
+          local =~ self.restricted_special_chars
         return [ opts[:message] ]
       end
 

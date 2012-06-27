@@ -214,21 +214,65 @@ class ValidatesEmailFormatOfTest < TEST_CASE
   end
 
   def test_restrict_special_chars
-    ws = PersonRestrictSpecialChars.new(:email => 'test&test@example.com')
-    save_fails(ws)
+    rsc = PersonRestrictSpecialChars.new(:email => 'test&test@example.com')
+    save_fails(rsc)
 
-    ws = PersonRestrictSpecialChars.new(:email => 'test!test@example.com')
-    save_fails(ws)
+    rsc = PersonRestrictSpecialChars.new(:email => 'test!test@example.com')
+    save_fails(rsc)
 
-    ws = PersonRestrictSpecialChars.new(:email => 'test`test@example.com')
-    save_fails(ws)
+    rsc = PersonRestrictSpecialChars.new(:email => 'test`test@example.com')
+    save_fails(rsc)
 
-    ws = PersonRestrictSpecialChars.new(:email => 'test#test@example.com')
-    save_fails(ws)
+    rsc = PersonRestrictSpecialChars.new(:email => 'test#test@example.com')
+    save_fails(rsc)
 
-    ws = PersonRestrictSpecialChars.new(:email => 'test?test@example.com')
-    save_fails(ws)
+    rsc = PersonRestrictSpecialChars.new(:email => 'test?test@example.com')
+    save_fails(rsc)
+  end
 
+  def test_restrict_special_chars_globally
+    ValidatesEmailFormatOf.restrict_special_chars = true
+    
+    rsc = create_person(:email => 'test&test@example.com')
+    save_fails(rsc)
+    
+    rsc = create_person(:email => 'test!test@example.com')
+    save_fails(rsc)
+
+    rsc = create_person(:email => 'test`test@example.com')
+    save_fails(rsc)
+
+    rsc = create_person(:email => 'test#test@example.com')
+    save_fails(rsc)
+
+    rsc = create_person(:email => 'test?test@example.com')
+    save_fails(rsc)
+
+    #change special chars
+    old_chars = ValidatesEmailFormatOf.restricted_special_chars
+    ValidatesEmailFormatOf.restricted_special_chars = /[!&a]/
+
+    rsc = create_person(:email => 'test&test@example.com')
+    save_fails(rsc)
+    
+    rsc = create_person(:email => 'test!test@example.com')
+    save_fails(rsc)
+
+    rsc = create_person(:email => 'test`test@example.com')
+    save_passes(rsc)
+
+    rsc = create_person(:email => 'test#test@example.com')
+    save_passes(rsc)
+
+    rsc = create_person(:email => 'test?test@example.com')
+    save_passes(rsc)
+    
+    rsc = create_person(:email => 'testatest@example.com')
+    save_fails(rsc)
+    
+    #reset
+    ValidatesEmailFormatOf.restrict_special_chars = false
+    ValidatesEmailFormatOf.restricted_special_chars = old_chars
   end
 
   protected
