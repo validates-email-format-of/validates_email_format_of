@@ -64,7 +64,7 @@ module ValidatesEmailFormatOf
         return [ opts[:mx_message] ]
       end
 
-      if opts[:strict] && local =~ /(!|&)/
+      if opts[:restrict_special_chars] && local =~ /[&!`#\?]/
         return [ opts[:message] ]
       end
 

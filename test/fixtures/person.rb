@@ -22,11 +22,11 @@ class MxRecord < ActiveRecord::Base
                             :check_mx => true
 end
 
-class PersonWithStrict < ActiveRecord::Base
+class PersonRestrictSpecialChars < ActiveRecord::Base
   self.table_name = 'people'
 
   validates_email_format_of :email,
-                            :strict => true
+                            :restrict_special_chars => true
 end
 
 if ActiveRecord::VERSION::MAJOR >= 3
