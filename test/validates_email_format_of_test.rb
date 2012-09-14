@@ -181,19 +181,19 @@ class ValidatesEmailFormatOfTest < TEST_CASE
   end
 
   # TODO: find a future-proof way to check DNS records
-  def test_check_mx
-    pmx = MxRecord.new(:email => 'test@dunae.ca')
-    save_passes(pmx)
-
-    pmx = MxRecord.new(:email => 'test@127.0.0.2')
-    save_fails(pmx)
-  end
-
-  # TODO: find a future-proof way to check DNS records
-  def test_check_mx_fallback_to_a
-    pmx = MxRecord.new(:email => 'test@code.dunae.ca')
-    save_passes(pmx)
-  end
+  #def test_check_mx
+  #  pmx = MxRecord.new(:email => 'test@dunae.ca')
+  #  save_passes(pmx)
+  #
+  #  pmx = MxRecord.new(:email => 'test@127.0.0.2')
+  #  save_fails(pmx)
+  #end
+  #
+  ## TODO: find a future-proof way to check DNS records
+  #def test_check_mx_fallback_to_a
+  #  pmx = MxRecord.new(:email => 'test@code.dunae.ca')
+  #  save_passes(pmx)
+  #end
 
   def test_shorthand
     if ActiveRecord::VERSION::MAJOR >= 3
