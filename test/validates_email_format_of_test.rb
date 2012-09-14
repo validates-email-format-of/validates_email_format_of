@@ -95,6 +95,15 @@ class ValidatesEmailFormatOfTest < TEST_CASE
   # should not allow special chars after a period in the domain
      'local@sub.)domain.com',
      'local@sub.#domain.com',
+     'bklovesflowers@gmail.com"',
+  # invalid TLDs
+    'thiago7819@hotmai.commarcos78',
+    'Vlj33312@yahoo.company',
+    'bs25123@a63.c60',
+    'jrjrfogle@hotmail.c0m',
+    'martin_williams_11@yahoo.com32t',
+    'charles.shepherdjr@us.armymil',
+    'dr_magdysaber@hotmail.com123456',
   # one at a time
      "foo@example.com\nexample@gmail.com",
      'invalid@example.',
@@ -103,6 +112,7 @@ class ValidatesEmailFormatOfTest < TEST_CASE
      '@example.com',
      'foo@',
      'foo',
+     'erennl@gnÃ³mica.com',
      'Iñtërnâtiônàlizætiøn@hasnt.happened.to.email'
      ].each do |email|
       assert_invalid(email)

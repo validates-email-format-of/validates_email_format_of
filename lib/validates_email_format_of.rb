@@ -1,6 +1,7 @@
 # encoding: utf-8
 module ValidatesEmailFormatOf
   require 'resolv'
+  require 'tld_whitelist'
 
   @@restrict_special_chars = false
   @@restricted_special_chars = /[&!`#\?]/
@@ -142,7 +143,9 @@ module ValidatesEmailFormatOf
     return true if parts.length == 4 and parts.all? { |part| part =~ /\A[0-9]+\Z/ and part.to_i.between?(0, 255) }
         
     return false if parts[-1].length < 2 or not parts[-1] =~ /[a-z\-]/ # TLD is too short or does not contain a char or hyphen
-    
+
+    return false unless TLDWhitelist::ALLOWED_TLDS.include?(parts.last.upcase)
+
     return true
   end
 
