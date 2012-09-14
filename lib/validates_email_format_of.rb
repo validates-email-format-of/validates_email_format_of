@@ -35,7 +35,7 @@ module ValidatesEmailFormatOf
   # * <tt>with</tt> The regex to use for validating the format of the email address (deprecated)
   # * <tt>local_length</tt> Maximum number of characters allowed in the local part (default is 64)
   # * <tt>domain_length</tt> Maximum number of characters allowed in the domain part (default is 255)
-  # * <tt>strict</tt> Does not allow & and ! in local part (default is false)
+  # * <tt>restrict_special_chars</tt> Does not allow & and ! in local part (default is false)
   def self.validate_email_format(email, options={})
       default_options = { :message => I18n.t(:invalid_email_address, :scope => [MessageScope, :errors, :messages], :default => 'does not appear to be valid'),
                           :check_mx => false,
