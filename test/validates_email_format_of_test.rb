@@ -54,7 +54,13 @@ class ValidatesEmailFormatOfTest < TEST_CASE
   # international domain names
      'test@xn--bcher-kva.ch',
      'test@example.xn--0zwm56d',
-     'test@192.192.192.1'
+     'test@192.192.192.1',
+  # special characters in local parts
+     'test&test@example.com',
+     'test!test@example.com',
+     'test`test@example.com',
+     'test#test@example.com',
+     'test?test@example.com'
      ].each do |email|
       assert_valid(email)
     end
@@ -83,12 +89,23 @@ class ValidatesEmailFormatOfTest < TEST_CASE
     'invalid@example.123',
   # unclosed quote
      "\"a-17180061943-10618354-1993365053@example.com",
+  # unicode characters ('i' is unicode below)
+    "ultra@hotmaıl.com",
   # too many special chars used to cause the regexp to hang
      "-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++@foo",
      'invalidexample.com',
   # should not allow special chars after a period in the domain
      'local@sub.)domain.com',
      'local@sub.#domain.com',
+     'bklovesflowers@gmail.com"',
+  # invalid TLDs
+    'thiago7819@hotmai.commarcos78',
+    'Vlj33312@yahoo.company',
+    'bs25123@a63.c60',
+    'jrjrfogle@hotmail.c0m',
+    'martin_williams_11@yahoo.com32t',
+    'charles.shepherdjr@us.armymil',
+    'dr_magdysaber@hotmail.com123456',
   # one at a time
      "foo@example.com\nexample@gmail.com",
      'invalid@example.',
@@ -97,6 +114,7 @@ class ValidatesEmailFormatOfTest < TEST_CASE
      '@example.com',
      'foo@',
      'foo',
+     'erennl@gnÃ³mica.com',
      'Iñtërnâtiônàlizætiøn@hasnt.happened.to.email'
      ].each do |email|
       assert_invalid(email)
@@ -175,19 +193,19 @@ class ValidatesEmailFormatOfTest < TEST_CASE
   end
 
   # TODO: find a future-proof way to check DNS records
-  def test_check_mx
-    pmx = MxRecord.new(:email => 'test@dunae.ca')
-    save_passes(pmx)
-
-    pmx = MxRecord.new(:email => 'test@127.0.0.2')
-    save_fails(pmx)
-  end
-
-  # TODO: find a future-proof way to check DNS records
-  def test_check_mx_fallback_to_a
-    pmx = MxRecord.new(:email => 'test@code.dunae.ca')
-    save_passes(pmx)
-  end
+  #def test_check_mx
+  #  pmx = MxRecord.new(:email => 'test@dunae.ca')
+  #  save_passes(pmx)
+  #
+  #  pmx = MxRecord.new(:email => 'test@127.0.0.2')
+  #  save_fails(pmx)
+  #end
+  #
+  ## TODO: find a future-proof way to check DNS records
+  #def test_check_mx_fallback_to_a
+  #  pmx = MxRecord.new(:email => 'test@code.dunae.ca')
+  #  save_passes(pmx)
+  #end
 
   def test_shorthand
     if ActiveRecord::VERSION::MAJOR >= 3
@@ -205,6 +223,68 @@ class ValidatesEmailFormatOfTest < TEST_CASE
   def test_frozen_string
     assert_valid("  #{@valid_email}  ".freeze)
     assert_invalid("  #{@invalid_email}  ".freeze)
+  end
+
+  def test_restrict_special_chars
+    rsc = PersonRestrictSpecialChars.new(:email => 'test&test@example.com')
+    save_fails(rsc)
+
+    rsc = PersonRestrictSpecialChars.new(:email => 'test!test@example.com')
+    save_fails(rsc)
+
+    rsc = PersonRestrictSpecialChars.new(:email => 'test`test@example.com')
+    save_fails(rsc)
+
+    rsc = PersonRestrictSpecialChars.new(:email => 'test#test@example.com')
+    save_fails(rsc)
+
+    rsc = PersonRestrictSpecialChars.new(:email => 'test?test@example.com')
+    save_fails(rsc)
+  end
+
+  def test_restrict_special_chars_globally
+    ValidatesEmailFormatOf.restrict_special_chars = true
+    
+    rsc = create_person(:email => 'test&test@example.com')
+    save_fails(rsc)
+    
+    rsc = create_person(:email => 'test!test@example.com')
+    save_fails(rsc)
+
+    rsc = create_person(:email => 'test`test@example.com')
+    save_fails(rsc)
+
+    rsc = create_person(:email => 'test#test@example.com')
+    save_fails(rsc)
+
+    rsc = create_person(:email => 'test?test@example.com')
+    save_fails(rsc)
+
+    #change special chars
+    old_chars = ValidatesEmailFormatOf.restricted_special_chars
+    ValidatesEmailFormatOf.restricted_special_chars = /[!&a]/
+
+    rsc = create_person(:email => 'test&test@example.com')
+    save_fails(rsc)
+    
+    rsc = create_person(:email => 'test!test@example.com')
+    save_fails(rsc)
+
+    rsc = create_person(:email => 'test`test@example.com')
+    save_passes(rsc)
+
+    rsc = create_person(:email => 'test#test@example.com')
+    save_passes(rsc)
+
+    rsc = create_person(:email => 'test?test@example.com')
+    save_passes(rsc)
+    
+    rsc = create_person(:email => 'testatest@example.com')
+    save_fails(rsc)
+    
+    #reset
+    ValidatesEmailFormatOf.restrict_special_chars = false
+    ValidatesEmailFormatOf.restricted_special_chars = old_chars
   end
 
   protected
