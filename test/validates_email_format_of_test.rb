@@ -89,6 +89,8 @@ class ValidatesEmailFormatOfTest < TEST_CASE
     'invalid@example.123',
   # unclosed quote
      "\"a-17180061943-10618354-1993365053@example.com",
+  # unicode characters ('i' is unicode below)
+    "ultra@hotmaıl.com",
   # too many special chars used to cause the regexp to hang
      "-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++@foo",
      'invalidexample.com',

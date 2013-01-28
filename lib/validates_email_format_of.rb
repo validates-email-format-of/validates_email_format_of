@@ -47,7 +47,10 @@ module ValidatesEmailFormatOf
       opts = options.merge(default_options) {|key, old, new| old}  # merge the default options into the specified options, retaining all specified options
 
       email = email.strip if email
-      
+
+      # Ensure only ASCII chars
+      return opts[:message] unless (email.blank? || email.ascii_only?)
+
       begin
         domain, local = email.reverse.split('@', 2)
       rescue
