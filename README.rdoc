@@ -45,7 +45,7 @@ e-mail address or an array of error messages for invalid addresses.
 === Options
 
   :message
-     String. A custom error message (default is: " does not appear to be a valid e-mail address")
+     String. A custom error message (default is: "does not appear to be a valid e-mail address")
   :on
      Symbol. Specifies when this validation is active (default is :save, other options :create, :update)
   :allow_nil

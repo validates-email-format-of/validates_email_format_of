@@ -2,4 +2,11 @@ en:
   activerecord:
     errors:
       messages:
-        invalid_email_format: " does not appear to be a valid e-mail address"
+        invalid_email_address: 'does not appear to be a valid e-mail address'
+        email_address_not_routable: 'is not routable'
+
+  activemodel:
+    errors:
+      messages:
+        invalid_email_address: 'does not appear to be a valid e-mail address'
+        email_address_not_routable: 'is not routable'
