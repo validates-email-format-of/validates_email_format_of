@@ -1,0 +1,12 @@
+pl:
+  activerecord:
+    errors:
+      messages:
+        invalid_email_address: 'nieprawidłowy adres e-mail'
+        email_address_not_routable: 'jest nieosiągalny'
+
+  activemodel:
+    errors:
+      messages:
+        invalid_email_address: 'nieprawidłowy adres e-mail'
+        email_address_not_routable: 'jest nieosiągalny'
