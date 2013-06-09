@@ -119,7 +119,7 @@ module ValidatesEmailFormatOf
       |part| 
         part.nil? or 
         part.empty? or 
-        not part =~ /\A[[:alnum:]\-]+\Z/ or
+        not part =~ /\A[a-zA-Z0-9\-]+\Z/ or
         part[0,1] == '-' or part[-1,1] == '-' # hyphen at beginning or end of part
     } 
         
