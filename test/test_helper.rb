@@ -1,6 +1,7 @@
+$:.unshift(File.dirname(__FILE__))
 $:.unshift(File.dirname(__FILE__) + '/../lib')
 
-require 'rubygems'
+require 'bundler/setup'
 require 'test/unit'
 require 'active_record'
 require 'active_record/fixtures'
