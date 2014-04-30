@@ -1,5 +1,10 @@
 # encoding: utf-8
 module ValidatesEmailFormatOf
+  def self.load_i18n_locales
+    require 'i18n'
+    I18n.load_path += Dir.glob(File.expand_path(File.join(File.dirname(__FILE__), '..', 'config', 'locales', '*.yml')))
+  end
+
   require 'resolv'
 
   VERSION = '1.5.3'
@@ -192,3 +197,4 @@ else
   end
 end
 
+require 'validates_email_format_of/railtie' if defined?(::Rails)
