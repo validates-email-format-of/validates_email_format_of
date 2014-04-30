@@ -33,7 +33,25 @@ class TEST_CASE #:nodoc:
   end
 
   self.use_transactional_fixtures = false
-  
+
   self.use_instantiated_fixtures  = false
 end
 
+
+class Resolv::DNS
+  # Stub for MX record checks.
+  #
+  # If subdomain equals either 'mx' or 'a' returns that kind of record
+  # otherwise returns no match.
+  def getresources(name, typeclass)
+    stub = name.split('.').first
+    case stub
+    when 'mx'
+      [Resolv::DNS::Resource::IN::MX.new(10, '127.0.0.1')]
+    when 'a'
+      [Resolv::DNS::Resource::IN::A.new('127.0.0.1')]
+    else
+      []
+    end
+  end
+end

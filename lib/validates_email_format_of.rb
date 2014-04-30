@@ -36,7 +36,7 @@ module ValidatesEmailFormatOf
       opts = options.merge(default_options) {|key, old, new| old}  # merge the default options into the specified options, retaining all specified options
 
       email = email.strip if email
-      
+
       begin
         domain, local = email.reverse.split('@', 2)
       rescue
@@ -64,7 +64,7 @@ module ValidatesEmailFormatOf
 
       return nil    # represents no validation errors
   end
-  
+
 
   def self.validate_local_part_syntax(local)
     in_quoted_pair = false
@@ -74,27 +74,27 @@ module ValidatesEmailFormatOf
       ord = local[i].ord
 
       # accept anything if it's got a backslash before it
-      if in_quoted_pair 
+      if in_quoted_pair
         in_quoted_pair = false
         next
       end
-        
+
       # backslash signifies the start of a quoted pair
       if ord == 92 and i < local.length - 1
         return false if not in_quoted_string # must be in quoted string per http://www.rfc-editor.org/errata_search.php?rfc=3696
         in_quoted_pair = true
         next
       end
-        
+
       # double quote delimits quoted strings
       if ord == 34
         in_quoted_string = !in_quoted_string
         next
-      end    
+      end
 
       next if local[i,1] =~ /[a-z0-9]/i
       next if local[i,1] =~ LocalPartSpecialChars
-      
+
       # period must be followed by something
       if ord == 46
         return false if i == 0 or i == local.length - 1 # can't be first or last char
@@ -103,31 +103,31 @@ module ValidatesEmailFormatOf
 
       return false
     end
-    
+
     return false if in_quoted_string # unbalanced quotes
 
     return true
   end
-  
+
   def self.validate_domain_part_syntax(domain)
     parts = domain.downcase.split('.', -1)
-    
+
     return false if parts.length <= 1 # Only one domain part
 
     # Empty parts (double period) or invalid chars
-    return false if parts.any? { 
-      |part| 
-        part.nil? or 
-        part.empty? or 
+    return false if parts.any? {
+      |part|
+        part.nil? or
+        part.empty? or
         not part =~ /\A[[:alnum:]\-]+\Z/ or
         part[0,1] == '-' or part[-1,1] == '-' # hyphen at beginning or end of part
-    } 
-        
+    }
+
     # ipv4
     return true if parts.length == 4 and parts.all? { |part| part =~ /\A[0-9]+\Z/ and part.to_i.between?(0, 255) }
-        
+
     return false if parts[-1].length < 2 or not parts[-1] =~ /[a-z\-]/ # TLD is too short or does not contain a char or hyphen
-    
+
     return true
   end
 

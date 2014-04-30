@@ -65,7 +65,7 @@ class ValidatesEmailFormatOfTest < TEST_CASE
   # period can not start local part
      '.invalid@example.com',
   # period can not end local part
-     'invalid.@example.com', 
+     'invalid.@example.com',
   # period can not appear twice consecutively in local part
      'invali..d@example.com',
   # should not allow underscores in domain names
@@ -174,18 +174,18 @@ class ValidatesEmailFormatOfTest < TEST_CASE
     save_fails(p)
   end
 
-  # TODO: find a future-proof way to check DNS records
-  def test_check_mx
-    pmx = MxRecord.new(:email => 'test@dunae.ca')
+  def test_check_valid_mx
+    pmx = MxRecord.new(:email => 'test@mx.example.com')
     save_passes(pmx)
+  end
 
-    pmx = MxRecord.new(:email => 'test@127.0.0.2')
+  def test_check_invalid_mx
+    pmx = MxRecord.new(:email => 'test@nomx.example.com')
     save_fails(pmx)
   end
 
-  # TODO: find a future-proof way to check DNS records
   def test_check_mx_fallback_to_a
-    pmx = MxRecord.new(:email => 'test@code.dunae.ca')
+    pmx = MxRecord.new(:email => 'test@a.example.com')
     save_passes(pmx)
   end
 
