@@ -5,7 +5,7 @@ require 'bundler/setup'
 require 'test/unit'
 require 'active_record'
 require 'active_record/fixtures'
-require "#{File.dirname(__FILE__)}/../init"
+require "validates_email_format_of"
 
 config = YAML::load(IO.read(File.dirname(__FILE__) + '/database.yml'))
 ActiveRecord::Base.logger = Logger.new(File.dirname(__FILE__) + "/debug.log")
