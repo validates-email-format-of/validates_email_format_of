@@ -5,3 +5,4 @@ Gemfile.lock
 *.gem
 *.sqlite3
 *.swp
+.ruby-version
