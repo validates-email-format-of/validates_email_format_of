@@ -220,8 +220,8 @@ class ValidatesEmailFormatOfTest < TEST_CASE
       assert_not_nil ValidatesEmailFormatOf::validate_email_format(email), "#{email} should not be considered valid"
     end
 
-    def save_passes(p, email = '')
-      assert p.valid?, " #{email} should pass"
+    def save_passes(p)
+      assert p.valid?, " #{p.email} should pass"
       assert p.save
       if ActiveRecord::VERSION::MAJOR >= 3
         assert p.errors[:email].empty? && !p.errors.include?(:email)
@@ -230,8 +230,8 @@ class ValidatesEmailFormatOfTest < TEST_CASE
       end
     end
 
-    def save_fails(p, email = '')
-      assert !p.valid?, " #{email} should fail"
+    def save_fails(p)
+      assert !p.valid?, " #{p.email} should fail"
       assert !p.save
       if ActiveRecord::VERSION::MAJOR >= 3
         assert_equal 1, p.errors[:email].size

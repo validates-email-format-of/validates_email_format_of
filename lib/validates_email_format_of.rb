@@ -1,4 +1,6 @@
 # encoding: utf-8
+require 'validates_email_format_of/railtie' if defined?(::Rails)
+
 module ValidatesEmailFormatOf
   require 'resolv'
 

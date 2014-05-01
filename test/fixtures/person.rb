@@ -6,7 +6,7 @@ class Person < ActiveRecord::Base
 end
 
 class PersonForbidNil < ActiveRecord::Base
-  set_table_name 'people'
+  self.table_name = 'people'
 
   validates_email_format_of :email,
                             :on => :create,
@@ -15,7 +15,7 @@ end
 
 
 class MxRecord < ActiveRecord::Base
-  set_table_name 'people'
+  self.table_name = 'people'
   
   validates_email_format_of :email, 
                             :on => :create, 
@@ -24,7 +24,7 @@ end
 
 if ActiveRecord::VERSION::MAJOR >= 3
   class Shorthand < ActiveRecord::Base
-    set_table_name 'people'
+    self.table_name = 'people'
 
     validates :email, :email_format => { :message => 'fails with shorthand message' },
                       :length => { :maximum => 1 }
