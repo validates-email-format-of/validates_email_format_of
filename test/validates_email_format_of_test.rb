@@ -2,19 +2,9 @@
 require File.expand_path(File.dirname(__FILE__) + '/test_helper')
 
 class ValidatesEmailFormatOfTest < TEST_CASE
-  fixtures :people
-
   def setup
     @valid_email = 'valid@example.com'
     @invalid_email = 'invalid@example.'
-  end
-
-  def test_with_activerecord
-    p = create_person(:email => @valid_email)
-    save_passes(p)
-
-    p = create_person(:email => @invalid_email)
-    save_fails(p)
   end
 
   def test_without_activerecord
@@ -147,23 +137,10 @@ class ValidatesEmailFormatOfTest < TEST_CASE
     assert_nil ValidatesEmailFormatOf::validate_email_format('012345@789', :with => /[0-9]+\@[0-9]+/)
   end
 
-  def test_should_respect_validate_on_option
-    p = create_person(:email => @valid_email)
-    save_passes(p)
-
-    # we only asked to validate on :create so this should fail
-    assert p.update_attributes(:email => @invalid_email)
-    assert_equal @invalid_email, p.email
-  end
-
   def test_should_allow_custom_error_message
     p = create_person(:email => @invalid_email)
     save_fails(p)
-    if ActiveRecord::VERSION::MAJOR >= 3
-      assert_equal 'fails with custom message', p.errors[:email].first
-    else
-      assert_equal 'fails with custom message', p.errors.on(:email)
-    end
+    assert_equal 'fails with custom message', p.errors[:email].first
   end
 
   def test_should_allow_nil
@@ -190,16 +167,10 @@ class ValidatesEmailFormatOfTest < TEST_CASE
   end
 
   def test_shorthand
-    if ActiveRecord::VERSION::MAJOR >= 3
-      s = Shorthand.new(:email => 'invalid')
-      assert !s.save
-      assert_equal 2, s.errors[:email].size
-      assert_block do
-        s.errors[:email].any? do |err|
-        err =~ /fails with shorthand message/
-      end
-      end
-    end
+    s = Shorthand.new(:email => 'invalid')
+    assert s.invalid?
+    assert_equal 2, s.errors[:email].size
+    assert s.errors[:email].any? { |err| err =~ /fails with shorthand message/ }
   end
 
   def test_frozen_string
@@ -209,7 +180,7 @@ class ValidatesEmailFormatOfTest < TEST_CASE
 
   protected
     def create_person(params)
-      Person.new(params)
+      ::Person.new(params)
     end
 
     def assert_valid(email)
@@ -220,23 +191,13 @@ class ValidatesEmailFormatOfTest < TEST_CASE
       assert_not_nil ValidatesEmailFormatOf::validate_email_format(email), "#{email} should not be considered valid"
     end
 
-    def save_passes(p, email = '')
-      assert p.valid?, " #{email} should pass"
-      assert p.save
-      if ActiveRecord::VERSION::MAJOR >= 3
-        assert p.errors[:email].empty? && !p.errors.include?(:email)
-      else
-        assert_nil p.errors.on(:email)
-      end
+    def save_passes(p)
+      assert p.valid?, " #{p.email} should pass"
+      assert p.errors[:email].empty? && !p.errors.include?(:email)
     end
 
-    def save_fails(p, email = '')
-      assert !p.valid?, " #{email} should fail"
-      assert !p.save
-      if ActiveRecord::VERSION::MAJOR >= 3
-        assert_equal 1, p.errors[:email].size
-      else
-        assert p.errors.on(:email)
-      end
+    def save_fails(p)
+      assert !p.valid?, " #{p.email} should fail"
+      assert_equal 1, p.errors[:email].size
     end
 end
