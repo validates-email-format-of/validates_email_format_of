@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 $:.unshift File.expand_path('../lib', __FILE__)
-require 'validates_email_format_of'
+require 'validates_email_format_of/version'
 
 spec = Gem::Specification.new do |s|
   s.name          = 'validates_email_format_of'

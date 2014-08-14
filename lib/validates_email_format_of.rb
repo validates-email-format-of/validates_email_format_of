@@ -1,4 +1,6 @@
 # encoding: utf-8
+require 'validates_email_format_of/version'
+
 module ValidatesEmailFormatOf
   def self.load_i18n_locales
     require 'i18n'
@@ -6,8 +8,6 @@ module ValidatesEmailFormatOf
   end
 
   require 'resolv'
-
-  VERSION = '1.5.3'
 
   MessageScope = defined?(ActiveModel) ? :activemodel : :activerecord
 
