@@ -61,7 +61,11 @@ describe ValidatesEmailFormatOf do
     # international domain names
     'test@xn--bcher-kva.ch',
     'test@example.xn--0zwm56d',
-    'test@192.192.192.1'
+    'test@192.192.192.1',
+    # Allow quoted characters.  Valid according to http://www.rfc-editor.org/errata_search.php?rfc=3696
+    '"Abc\@def"@example.com',
+    '"Fred\ Bloggs"@example.com',
+    '"Joe.\\Blow"@example.com',
   ].each do |address|
     describe address do
       it { should_not have_errors_on_email }
@@ -106,7 +110,11 @@ describe ValidatesEmailFormatOf do
     '@example.com',
     'foo@',
     'foo',
-    'Iñtërnâtiônàlizætiøn@hasnt.happened.to.email'
+    'Iñtërnâtiônàlizætiøn@hasnt.happened.to.email',
+    # Escaped characters with quotes.  From http://tools.ietf.org/html/rfc3696, page 5.  Corrected in http://www.rfc-editor.org/errata_search.php?rfc=3696
+    'Fred\ Bloggs_@example.com',
+    'Abc\@def+@example.com',
+    'Joe.\\Blow@example.com'
   ].each do |address|
     describe address do
       it { should have_errors_on_email.because("does not appear to be a valid e-mail address") }

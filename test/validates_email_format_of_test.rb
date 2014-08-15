@@ -12,31 +12,10 @@ class ValidatesEmailFormatOfTest < TEST_CASE
     assert_invalid(@invalid_email)
   end
 
-  # from http://www.rfc-editor.org/errata_search.php?rfc=3696
-  def test_should_allow_quoted_characters
-    ['"Abc\@def"@example.com',
-     '"Fred\ Bloggs"@example.com',
-     '"Joe.\\Blow"@example.com',
-     ].each do |email|
-      assert_valid(email)
-    end
-  end
-
   def test_should_required_balanced_quoted_characters
     assert_valid(%!"example\\\\\\""@example.com!)
     assert_valid(%!"example\\\\"@example.com!)
     assert_invalid(%!"example\\\\""example.com!)
-  end
-
-  # from http://tools.ietf.org/html/rfc3696, page 5
-  # corrected in http://www.rfc-editor.org/errata_search.php?rfc=3696
-  def test_should_not_allow_escaped_characters_without_quotes
-    ['Fred\ Bloggs_@example.com',
-     'Abc\@def+@example.com',
-     'Joe.\\Blow@example.com'
-     ].each do |email|
-      assert_invalid(email)
-    end
   end
 
   def test_validating_with_custom_regexp
