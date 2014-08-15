@@ -12,4 +12,5 @@ gemfile:
   - gemfiles/active_model_3_2
   - gemfiles/active_model_4_0
   - gemfiles/active_model_4_1
+install: bundle install
 script: bundle exec rspec
