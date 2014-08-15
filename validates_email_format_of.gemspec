@@ -16,4 +16,5 @@ spec = Gem::Specification.new do |s|
   s.require_paths = ['lib']
 
   s.add_dependency 'i18n'
+  s.add_development_dependency 'rspec'
 end
