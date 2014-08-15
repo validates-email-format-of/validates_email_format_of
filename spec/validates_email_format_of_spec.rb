@@ -1,4 +1,4 @@
-require_relative "spec_helper"
+require "#{File.expand_path(File.dirname(__FILE__))}/spec_helper"
 require "validates_email_format_of"
 
 describe ValidatesEmailFormatOf do
