@@ -30,4 +30,43 @@ describe ValidatesEmailFormatOf do
   describe "user1@gmail.com" do
     it { should_not have_errors_on_email }
   end
+
+  [
+    'valid@example.com',
+    'Valid@test.example.com',
+    'valid+valid123@test.example.com',
+    'valid_valid123@test.example.com',
+    'valid-valid+123@test.example.co.uk',
+    'valid-valid+1.23@test.example.com.au',
+    'valid@example.co.uk',
+    'v@example.com',
+    'valid@example.ca',
+    'valid_@example.com',
+    'valid123.456@example.org',
+    'valid123.456@example.travel',
+    'valid123.456@example.museum',
+    'valid@example.mobi',
+    'valid@example.info',
+    'valid-@example.com',
+    'fake@p-t.k12.ok.us',
+    # allow single character domain parts
+    'valid@mail.x.example.com',
+    'valid@x.com',
+    'valid@example.w-dash.sch.uk',
+    # from RFC 3696, page 6
+    'customer/department=shipping@example.com',
+    '$A12345@example.com',
+    '!def!xyz%abc@example.com',
+    '_somename@example.com',
+    # apostrophes
+    "test'test@example.com",
+    # international domain names
+    'test@xn--bcher-kva.ch',
+    'test@example.xn--0zwm56d',
+    'test@192.192.192.1'
+  ].each do |address|
+    describe address do
+      it { should_not have_errors_on_email }
+    end
+  end
 end
