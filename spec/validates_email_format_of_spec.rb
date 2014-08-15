@@ -112,4 +112,39 @@ describe ValidatesEmailFormatOf do
       it { should have_errors_on_email.because("does not appear to be a valid e-mail address") }
     end
   end
+
+  describe do
+    shared_examples_for :local_length_limit do |limit|
+      describe "#{'a' * limit}@example.com" do
+        it { should_not have_errors_on_email }
+      end
+      describe "#{'a' * (limit + 1)}@example.com" do
+        it { should have_errors_on_email.because("does not appear to be a valid e-mail address") }
+      end
+    end
+    describe "when using default" do
+      it_should_behave_like :local_length_limit, 64
+    end
+    describe "when overriding defaults" do
+      let(:options) { { :local_length => 20 } }
+      it_should_behave_like :local_length_limit, 20
+    end
+  end
+  describe do
+    shared_examples_for :domain_length_limit do |limit|
+      describe "user@#{'a' * (limit - 4)}.com" do
+        it { should_not have_errors_on_email }
+      end
+      describe "user@#{'a' * (limit - 3)}.com" do
+        it { should have_errors_on_email.because("does not appear to be a valid e-mail address") }
+      end
+    end
+    describe "when using default" do
+      it_should_behave_like :domain_length_limit, 255
+    end
+    describe "when overriding defaults" do
+      let(:options) { { :domain_length => 100 } }
+      it_should_behave_like :domain_length_limit, 100
+    end
+  end
 end
