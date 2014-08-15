@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require "#{File.expand_path(File.dirname(__FILE__))}/spec_helper"
 require "validates_email_format_of"
 
@@ -24,9 +25,6 @@ describe ValidatesEmailFormatOf do
   end
   let(:options) { {} }
   let(:email) { |example| example.example_group.description }
-  describe "no_at_symbol" do
-    it { should have_errors_on_email.because("does not appear to be a valid e-mail address") }
-  end
   describe "user1@gmail.com" do
     it { should_not have_errors_on_email }
   end
@@ -67,6 +65,51 @@ describe ValidatesEmailFormatOf do
   ].each do |address|
     describe address do
       it { should_not have_errors_on_email }
+    end
+  end
+
+  [
+    'no_at_symbol',
+    'invalid@example-com',
+    # period can not start local part
+      '.invalid@example.com',
+    # period can not end local part
+      'invalid.@example.com',
+    # period can not appear twice consecutively in local part
+      'invali..d@example.com',
+    # should not allow underscores in domain names
+    'invalid@ex_mple.com',
+    'invalid@e..example.com',
+    'invalid@p-t..example.com',
+    'invalid@example.com.',
+    'invalid@example.com_',
+    'invalid@example.com-',
+    'invalid-example.com',
+    'invalid@example.b#r.com',
+    'invalid@example.c',
+    'invali d@example.com',
+    # TLD can not be only numeric
+    'invalid@example.123',
+    # unclosed quote
+    "\"a-17180061943-10618354-1993365053@example.com",
+    # too many special chars used to cause the regexp to hang
+    "-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++@foo",
+    'invalidexample.com',
+    # should not allow special chars after a period in the domain
+    'local@sub.)domain.com',
+    'local@sub.#domain.com',
+    # one at a time
+    "foo@example.com\nexample@gmail.com",
+    'invalid@example.',
+    "\"foo\\\\\"\"@bar.com",
+    "foo@mail.com\r\nfoo@mail.com",
+    '@example.com',
+    'foo@',
+    'foo',
+    'Iñtërnâtiônàlizætiøn@hasnt.happened.to.email'
+  ].each do |address|
+    describe address do
+      it { should have_errors_on_email.because("does not appear to be a valid e-mail address") }
     end
   end
 end

@@ -12,49 +12,6 @@ class ValidatesEmailFormatOfTest < TEST_CASE
     assert_invalid(@invalid_email)
   end
 
-  def test_should_not_allow_invalid_email_addresses
-    ['invalid@example-com',
-  # period can not start local part
-     '.invalid@example.com',
-  # period can not end local part
-     'invalid.@example.com',
-  # period can not appear twice consecutively in local part
-     'invali..d@example.com',
-  # should not allow underscores in domain names
-    'invalid@ex_mple.com',
-    'invalid@e..example.com',
-    'invalid@p-t..example.com',
-    'invalid@example.com.',
-    'invalid@example.com_',
-    'invalid@example.com-',
-    'invalid-example.com',
-    'invalid@example.b#r.com',
-    'invalid@example.c',
-    'invali d@example.com',
-  # TLD can not be only numeric
-    'invalid@example.123',
-  # unclosed quote
-     "\"a-17180061943-10618354-1993365053@example.com",
-  # too many special chars used to cause the regexp to hang
-     "-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++@foo",
-     'invalidexample.com',
-  # should not allow special chars after a period in the domain
-     'local@sub.)domain.com',
-     'local@sub.#domain.com',
-  # one at a time
-     "foo@example.com\nexample@gmail.com",
-     'invalid@example.',
-     "\"foo\\\\\"\"@bar.com",
-     "foo@mail.com\r\nfoo@mail.com",
-     '@example.com',
-     'foo@',
-     'foo',
-     'Iñtërnâtiônàlizætiøn@hasnt.happened.to.email'
-     ].each do |email|
-      assert_invalid(email)
-    end
-  end
-
   # from http://www.rfc-editor.org/errata_search.php?rfc=3696
   def test_should_allow_quoted_characters
     ['"Abc\@def"@example.com',
