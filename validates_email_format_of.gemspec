@@ -14,4 +14,6 @@ spec = Gem::Specification.new do |s|
   s.test_files    = s.files.grep(%r{^test/})
   s.files         = `git ls-files`.split($/)
   s.require_paths = ['lib']
+
+  s.add_dependency 'i18n'
 end
