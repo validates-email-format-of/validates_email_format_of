@@ -228,6 +228,16 @@ describe ValidatesEmailFormatOf do
         end
       end
     end
+
+    describe "custom regex" do
+      let(:options) { { :with => /[0-9]+\@[0-9]+/ } }
+      describe '012345@789' do
+        it { should_not have_errors_on_email }
+      end
+      describe 'valid@example.com' do
+        it { should have_errors_on_email.because("does not appear to be a valid e-mail address") }
+      end
+    end
   end
   it_should_behave_like :all_specs
 
