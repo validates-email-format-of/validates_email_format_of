@@ -11,7 +11,7 @@ describe ValidatesEmailFormatOf do
     if defined?(ActiveModel)
       user = Class.new do
         def initialize(email)
-          @email = email
+          @email = email.freeze
         end
         attr_reader :email
         include ActiveModel::Validations
@@ -20,7 +20,7 @@ describe ValidatesEmailFormatOf do
       example.example_group_instance.class::User = user
       user.new(example.example_group_instance.email).tap(&:valid?).errors.full_messages
     else
-      ValidatesEmailFormatOf::validate_email_format(email, options)
+      ValidatesEmailFormatOf::validate_email_format(email.freeze, options)
     end
   end
   let(:options) { {} }

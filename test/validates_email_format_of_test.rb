@@ -58,11 +58,6 @@ class ValidatesEmailFormatOfTest < TEST_CASE
     assert s.errors[:email].any? { |err| err =~ /fails with shorthand message/ }
   end
 
-  def test_frozen_string
-    assert_valid("  #{@valid_email}  ".freeze)
-    assert_invalid("  #{@invalid_email}  ".freeze)
-  end
-
   protected
     def create_person(params)
       ::Person.new(params)
