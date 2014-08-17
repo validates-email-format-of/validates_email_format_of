@@ -7,17 +7,6 @@ class ValidatesEmailFormatOfTest < TEST_CASE
     @invalid_email = 'invalid@example.'
   end
 
-  def test_without_activerecord
-    assert_valid(@valid_email)
-    assert_invalid(@invalid_email)
-  end
-
-  def test_should_required_balanced_quoted_characters
-    assert_valid(%!"example\\\\\\""@example.com!)
-    assert_valid(%!"example\\\\"@example.com!)
-    assert_invalid(%!"example\\\\""example.com!)
-  end
-
   def test_validating_with_custom_regexp
     assert_nil ValidatesEmailFormatOf::validate_email_format('012345@789', :with => /[0-9]+\@[0-9]+/)
   end
@@ -45,14 +34,6 @@ class ValidatesEmailFormatOfTest < TEST_CASE
   end
 
   protected
-    def assert_valid(email)
-      assert_nil ValidatesEmailFormatOf::validate_email_format(email), "#{email} should be considered valid"
-    end
-
-    def assert_invalid(email)
-      assert_not_nil ValidatesEmailFormatOf::validate_email_format(email), "#{email} should not be considered valid"
-    end
-
     def save_passes(p)
       assert p.valid?, " #{p.email} should pass"
       assert p.errors[:email].empty? && !p.errors.include?(:email)

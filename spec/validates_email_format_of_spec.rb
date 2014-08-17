@@ -66,6 +66,9 @@ describe ValidatesEmailFormatOf do
     '"Abc\@def"@example.com',
     '"Fred\ Bloggs"@example.com',
     '"Joe.\\Blow"@example.com',
+    # Balanced quoted characters
+    %!"example\\\\\\""@example.com!,
+    %!"example\\\\"@example.com!
   ].each do |address|
     describe address do
       it { should_not have_errors_on_email }
@@ -114,7 +117,9 @@ describe ValidatesEmailFormatOf do
     # Escaped characters with quotes.  From http://tools.ietf.org/html/rfc3696, page 5.  Corrected in http://www.rfc-editor.org/errata_search.php?rfc=3696
     'Fred\ Bloggs_@example.com',
     'Abc\@def+@example.com',
-    'Joe.\\Blow@example.com'
+    'Joe.\\Blow@example.com',
+    # Unbalanced quoted characters
+    %!"example\\\\""example.com!
   ].each do |address|
     describe address do
       it { should have_errors_on_email.because("does not appear to be a valid e-mail address") }
