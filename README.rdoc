@@ -8,75 +8,53 @@ Installing as a gem:
 
   gem install validates_email_format_of
 
-Installing as a Ruby on Rails 2 plugin:
+Or in your Gemfile:
 
-  ./script/plugin install http://github.com/alexdunae/validates_email_format_of.git
-
-Or in your Rails 3 Gemfile
-
-  gem 'validates_email_format_of', :git => 'git://github.com/alexdunae/validates_email_format_of.git'
-
+  gem 'validates_email_format_of'
 
 == Usage
 
- class Person < ActiveRecord::Base
-   validates_email_format_of :email
- end
-
- # Rails 3
- class Person < ActiveRecord::Base
-   validates :email, :email_format => {:message => 'is not looking good'}
- end
-
-As of version 1.4, it's possible to run e-mail validation tests (including MX
-checks) without using ActiveRecord or even touching a database.  The
-<tt>validate_email_format</tt> method will return <tt>nil</tt> on a valid
-e-mail address or an array of error messages for invalid addresses.
-
-  results = ValidatesEmailFormatOf::validate_email_format(email, options)
-
-  if results.nil?
-    # success!
-  else
-    puts results.join(', ')
+  # Rails
+  # I18n locales are loaded automatically.
+  class Person < ActiveRecord::Base
+    validates_email_format_of :email, :message => 'is not looking good'
+    # OR
+    validates :email, :email_format => { :message => 'is not looking good' }
   end
 
+  # If you're not using Rails (which really means, if you're not using ActiveModel::Validations)
+  ValidatesEmailFormatOf::load_i18n_locales # Optional, if you want error messages to be in your language
+  I18n.locale = :pl # If, for example, you want Polish error messages.
+  ValidatesEmailFormatOf::validate_email_format("example@mydomain.com") # => nil
+  ValidatesEmailFormatOf::validate_email_format("invalid_because_there_is_no_at_symbol") # => ["does not appear to be a valid e-mail address"]
 
 === Options
 
   :message
-     String. A custom error message (default is: "does not appear to be a valid e-mail address")
-  :on
-     Symbol. Specifies when this validation is active (default is :save, other options :create, :update)
-  :allow_nil
-     Boolean. Allow nil values (default is false)
-  :allow_blank
-     Boolean. Allow blank values (default is false)
+     String. A custom error message when the email format is invalid (default is: "does not appear to be a valid e-mail address")
   :check_mx
      Boolean. Check domain for a valid MX record (default is false)
-  :if
-     Specifies a method, proc or string to call to determine if the validation should occur
-     (e.g. :if => :allow_validation, or :if => Proc.new { |user| user.signup_step > 2 }). The method,
-     proc or string should return or evaluate to a true or false value.
-  :unless
-     See :if option.
+  :mx_message
+     String. A custom error message when the domain does not match a valid MX record (default is: "is not routable").  Ignored unless :check_mx option is true.
   :local_length
-    Maximum number of characters allowed in the local part (default is 64)
+    Maximum number of characters allowed in the local part (everything before the '@') (default is 64)
   :domain_length
-    Maximum number of characters allowed in the domain part (default is 255)
-
+    Maximum number of characters allowed in the domain part (everything after the '@') (default is 255)
+  :with
+    Specify a custom Regex as the valid email format.
+  :on, :if, :unless, :allow_nil, :allow_blank, :strict
+     Standard ActiveModel validation options.  These work in the ActiveModel/ActiveRecord/Rails syntax only.
+     See http://api.rubyonrails.org/classes/ActiveModel/Validations/ClassMethods.html#method-i-validates for details.
 
 == Testing
 
-To execute the unit tests run <tt>rake test</tt>.
+To execute the unit tests run <tt>rspec</tt>.
 
-The unit tests for this plugin use an in-memory sqlite3 database.
+Tested in Ruby 1.8.7, 1.9.2, 1.9.3, 2.0.0, 2.1.2, JRuby and REE 1.8.7.
 
-Tested in Ruby 1.8.7, 1.9.2, 1.9.3-rc1, JRuby and REE 1.8.7.
+== Homepage
 
-== Resources
-
-* https://github.com/alexdunae/validates_email_format_of
+* https://github.com/validates-email-format-of/validates_email_format_of
 
 == Credits
 
@@ -91,3 +69,5 @@ Thanks to Travis Sinnott for creating the 1.3 update.
 Thanks to Denis Ahearn at Riverock Technologies (http://www.riverocktech.com/) for creating the 1.4 update.
 
 Thanks to George Anderson (http://github.com/george) and 'history' (http://github.com/history) for creating the 1.4.1 update.
+
+Thanks to Isaac Betesh (https://github.com/betesh) for converting tests to Rspec and refactoring for version 1.6.0.
