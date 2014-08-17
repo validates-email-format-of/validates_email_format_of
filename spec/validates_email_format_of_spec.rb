@@ -25,9 +25,6 @@ describe ValidatesEmailFormatOf do
   end
   let(:options) { {} }
   let(:email) { |example| example.example_group.description }
-  describe "user1@gmail.com" do
-    it { should_not have_errors_on_email }
-  end
 
   shared_examples_for :all_specs do
     [
