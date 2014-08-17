@@ -29,6 +29,7 @@ describe ValidatesEmailFormatOf do
     it { should_not have_errors_on_email }
   end
 
+  shared_examples_for :all_specs do
   [
     'valid@example.com',
     'Valid@test.example.com',
@@ -225,6 +226,27 @@ describe ValidatesEmailFormatOf do
         let(:options) { { :check_mx => true } }
         it { should_not have_errors_on_email }
       end
+    end
+  end
+  end
+  it_should_behave_like :all_specs
+
+  if defined?(ActiveModel)
+    describe "shorthand ActiveModel validation" do
+      subject do |example|
+        user = Class.new do
+          def initialize(email)
+            @email = email.freeze
+          end
+          attr_reader :email
+          include ActiveModel::Validations
+          validates :email, :email_format => example.example_group_instance.options
+        end
+        example.example_group_instance.class::User = user
+        user.new(example.example_group_instance.email).tap(&:valid?).errors.full_messages
+      end
+
+      it_should_behave_like :all_specs
     end
   end
 end
