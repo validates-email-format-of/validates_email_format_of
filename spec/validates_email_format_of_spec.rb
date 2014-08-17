@@ -202,6 +202,12 @@ describe ValidatesEmailFormatOf do
           describe email do
             it { should have_errors_on_email.because("is not routable") }
           end
+          describe "with a custom error message" do
+            let(:options) { { :check_mx => true, :mx_message => "There ain't no such domain!" } }
+            describe email do
+              it { should have_errors_on_email.because("There ain't no such domain!") }
+            end
+          end
         end
       end
       describe "when not testing" do
