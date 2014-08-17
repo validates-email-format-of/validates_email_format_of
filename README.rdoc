@@ -52,6 +52,23 @@ To execute the unit tests run <tt>rspec</tt>.
 
 Tested in Ruby 1.8.7, 1.9.2, 1.9.3, 2.0.0, 2.1.2, JRuby and REE 1.8.7.
 
+== Contributing
+
+If you think we're letting some rules about valid email formats slip through the cracks, don't just update the Regex.
+Instead, add a failing test, and demonstrate that the described email address should be treated differently.  A link to an appropriate RFC is the best way to do this.
+Then change the gem code to make the test pass.
+
+  describe "i_think_this_is_not_a_v@lid_email_addre.ss" do
+    # According to http://..., this email address IS NOT valid.
+    it { should have_errors_on_email.because("does not appear to be valid") }
+  end
+  describe "i_think_this_is_a_v@lid_email_addre.ss" do
+    # According to http://..., this email address IS valid.
+    it { should_not have_errors_on_email }
+  end
+
+Yes, our Rspec syntax is that simple!
+
 == Homepage
 
 * https://github.com/validates-email-format-of/validates_email_format_of
