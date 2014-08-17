@@ -135,5 +135,5 @@ module ValidatesEmailFormatOf
   end
 end
 
-require 'validates_email_format_of/active_model' if defined?(::ActiveModel)
+require 'validates_email_format_of/active_model' if defined?(::ActiveModel) && !(ActiveModel::VERSION::MAJOR < 2 || (2 == ActiveModel::VERSION::MAJOR && ActiveModel::VERSION::MINOR < 1))
 require 'validates_email_format_of/railtie' if defined?(::Rails)
