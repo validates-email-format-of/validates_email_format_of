@@ -223,10 +223,12 @@ describe ValidatesEmailFormatOf do
               end
             end
           end
-          describe "without i18n" do
-            before(:each) { hide_const("I18n") }
-            describe email do
-              it { should have_errors_on_email.because("is not routable") }
+          unless defined?(ActiveModel)
+            describe "without i18n" do
+              before(:each) { hide_const("I18n") }
+              describe email do
+                it { should have_errors_on_email.because("is not routable") }
+              end
             end
           end
         end
@@ -278,10 +280,12 @@ describe ValidatesEmailFormatOf do
         end
       end
     end
-    describe "without i18n" do
-      before(:each) { hide_const("I18n") }
-      describe "invalid@exmaple." do
-        it { should have_errors_on_email.because("does not appear to be valid") }
+    unless defined?(ActiveModel)
+      describe "without i18n" do
+        before(:each) { hide_const("I18n") }
+        describe "invalid@exmaple." do
+          it { should have_errors_on_email.because("does not appear to be valid") }
+        end
       end
     end
   end
