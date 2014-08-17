@@ -22,14 +22,6 @@ class ValidatesEmailFormatOfTest < TEST_CASE
     assert_nil ValidatesEmailFormatOf::validate_email_format('012345@789', :with => /[0-9]+\@[0-9]+/)
   end
 
-  def test_should_allow_nil
-    p = create_person(:email => nil)
-    save_passes(p)
-
-    p = PersonForbidNil.new(:email => nil)
-    save_fails(p)
-  end
-
   def test_check_valid_mx
     pmx = MxRecord.new(:email => 'test@mx.example.com')
     save_passes(pmx)
@@ -53,10 +45,6 @@ class ValidatesEmailFormatOfTest < TEST_CASE
   end
 
   protected
-    def create_person(params)
-      ::Person.new(params)
-    end
-
     def assert_valid(email)
       assert_nil ValidatesEmailFormatOf::validate_email_format(email), "#{email} should be considered valid"
     end

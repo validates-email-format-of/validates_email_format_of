@@ -7,18 +7,6 @@ module ValidatesEmailFormatOf
   end
 end
 
-class Person < ValidatesEmailFormatOf::Base
-  validates_email_format_of :email,
-                            :on => :create,
-                            :message => 'fails with custom message',
-                            :allow_nil => true
-end
-
-class PersonForbidNil < ValidatesEmailFormatOf::Base
-  validates_email_format_of :email,
-                            :on => :create,
-                            :allow_nil => false
-end
 
 class MxRecord < ValidatesEmailFormatOf::Base
   validates_email_format_of :email,
