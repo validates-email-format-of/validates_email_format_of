@@ -28,9 +28,9 @@ Or in your Rails 3 Gemfile
    validates :email, :email_format => {:message => 'is not looking good'}
  end
 
-As of version 1.4, it's possible to run e-mail validation tests (including MX 
-checks) without using ActiveRecord or even touching a database.  The 
-<tt>validate_email_format</tt> method will return <tt>nil</tt> on a valid 
+As of version 1.4, it's possible to run e-mail validation tests (including MX
+checks) without using ActiveRecord or even touching a database.  The
+<tt>validate_email_format</tt> method will return <tt>nil</tt> on a valid
 e-mail address or an array of error messages for invalid addresses.
 
   results = ValidatesEmailFormatOf::validate_email_format(email, options)
@@ -55,9 +55,9 @@ e-mail address or an array of error messages for invalid addresses.
   :check_mx
      Boolean. Check domain for a valid MX record (default is false)
   :if
-     Specifies a method, proc or string to call to determine if the validation should occur 
-     (e.g. :if => :allow_validation, or :if => Proc.new { |user| user.signup_step > 2 }). The method, 
-     proc or string should return or evaluate to a true or false value. 
+     Specifies a method, proc or string to call to determine if the validation should occur
+     (e.g. :if => :allow_validation, or :if => Proc.new { |user| user.signup_step > 2 }). The method,
+     proc or string should return or evaluate to a true or false value.
   :unless
      See :if option.
   :local_length
