@@ -22,6 +22,12 @@ Or in your Gemfile:
     validates :email, :email_format => { :message => 'is not looking good' }
   end
 
+  # Now you can test your model using RSpec:
+  require "validates_email_format_of/rspec_matcher"
+  describe Person do
+    it { should validate_email_format_of(:email).with_message('is not looking good') }
+  end
+
   # If you're not using Rails (which really means, if you're not using ActiveModel::Validations)
   ValidatesEmailFormatOf::load_i18n_locales # Optional, if you want error messages to be in your language
   I18n.locale = :pl # If, for example, you want Polish error messages.
