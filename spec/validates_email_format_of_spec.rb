@@ -167,4 +167,64 @@ describe ValidatesEmailFormatOf do
       it { should have_errors_on_email.because("just because I don't like you") }
     end
   end
+
+  describe "mx record" do
+    domain = "stubbed.com"
+    email = "valid@#{domain}"
+    describe "when testing" do
+      let(:dns) { double(Resolv::DNS) }
+      let(:mx_record) { [double] }
+      let(:a_record) { [double] }
+      before(:each) do
+        allow(Resolv::DNS).to receive(:open).and_yield(dns)
+        allow(dns).to receive(:getresources).with(domain, Resolv::DNS::Resource::IN::MX).once.and_return(mx_record)
+        allow(dns).to receive(:getresources).with(domain, Resolv::DNS::Resource::IN::A).once.and_return(a_record)
+      end
+      let(:options) { { :check_mx => true } }
+      describe "and only an mx record is found" do
+        let(:a_record) { [] }
+        describe email do
+          it { should_not have_errors_on_email }
+        end
+      end
+      describe "and only an a record is found" do
+        let(:mx_record) { [] }
+        describe email do
+          it { should_not have_errors_on_email }
+        end
+      end
+      describe "and both an mx record and an a record are found" do
+        describe email do
+          it { should_not have_errors_on_email }
+        end
+      end
+      describe "and neither an mx record nor an a record is found" do
+        let(:a_record) { [] }
+        let(:mx_record) { [] }
+        describe email do
+          it { should have_errors_on_email.because("is not routable") }
+        end
+      end
+    end
+    describe "when not testing" do
+      before(:each) { allow(Resolv::DNS).to receive(:open).never }
+      describe "by default" do
+        describe email do
+          it { should_not have_errors_on_email }
+        end
+      end
+      describe "explicitly" do
+        describe email do
+          let(:options) { { :check_mx => false } }
+          it { should_not have_errors_on_email }
+        end
+      end
+    end
+    describe "without mocks" do
+      describe email do
+        let(:options) { { :check_mx => true } }
+        it { should_not have_errors_on_email }
+      end
+    end
+  end
 end
