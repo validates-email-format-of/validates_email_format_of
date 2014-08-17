@@ -22,12 +22,6 @@ class ValidatesEmailFormatOfTest < TEST_CASE
     assert_nil ValidatesEmailFormatOf::validate_email_format('012345@789', :with => /[0-9]+\@[0-9]+/)
   end
 
-  def test_should_allow_custom_error_message
-    p = create_person(:email => @invalid_email)
-    save_fails(p)
-    assert_equal 'fails with custom message', p.errors[:email].first
-  end
-
   def test_should_allow_nil
     p = create_person(:email => nil)
     save_passes(p)

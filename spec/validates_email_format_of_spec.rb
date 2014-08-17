@@ -155,4 +155,11 @@ describe ValidatesEmailFormatOf do
       it_should_behave_like :domain_length_limit, 100
     end
   end
+
+  describe "custom error messages" do
+    describe 'invalid@example.' do
+      let(:options) { { :message => "just because I don't like you" } }
+      it { should have_errors_on_email.because("just because I don't like you") }
+    end
+  end
 end
