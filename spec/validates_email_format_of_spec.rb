@@ -3,10 +3,6 @@ require "#{File.expand_path(File.dirname(__FILE__))}/spec_helper"
 require "validates_email_format_of"
 
 describe ValidatesEmailFormatOf do
-  before(:all) do
-    described_class.load_i18n_locales
-    I18n.enforce_available_locales = false
-  end
   subject do |example|
     if defined?(ActiveModel)
       user = Class.new do

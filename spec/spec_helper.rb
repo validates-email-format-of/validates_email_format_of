@@ -20,3 +20,10 @@ RSpec::Matchers.define :have_errors_on_email do
     expect(actual).to (defined?(ActiveModel) ? be_empty : be_nil)
   end
 end
+
+RSpec.configure do |config|
+  config.before(:suite) do
+    ValidatesEmailFormatOf.load_i18n_locales
+    I18n.enforce_available_locales = false
+  end
+end
