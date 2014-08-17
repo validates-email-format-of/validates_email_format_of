@@ -208,6 +208,21 @@ describe ValidatesEmailFormatOf do
               it { should have_errors_on_email.because("There ain't no such domain!") }
             end
           end
+          describe "i18n" do
+            before(:each) { allow(I18n.config).to receive(:locale).and_return(locale) }
+            describe "present locale" do
+              let(:locale) { :pl }
+              describe email do
+                it { should have_errors_on_email.because("jest nieosiągalny") }
+              end
+            end
+            describe email do
+              let(:locale) { :ir }
+              describe email do
+                it { should have_errors_on_email.because("is not routable") }
+              end
+            end
+          end
         end
       end
       describe "when not testing" do
@@ -239,6 +254,22 @@ describe ValidatesEmailFormatOf do
       end
       describe 'valid@example.com' do
         it { should have_errors_on_email.because("does not appear to be a valid e-mail address") }
+      end
+    end
+
+    describe "i18n" do
+      before(:each) { allow(I18n.config).to receive(:locale).and_return(locale) }
+      describe "present locale" do
+        let(:locale) { :pl }
+        describe "invalid@exmaple." do
+          it { should have_errors_on_email.because("nieprawidłowy adres e-mail") }
+        end
+      end
+      describe "missing locale" do
+        let(:locale) { :ir }
+        describe "invalid@exmaple." do
+          it { should have_errors_on_email.because("does not appear to be valid") }
+        end
       end
     end
   end
