@@ -205,17 +205,21 @@ describe ValidatesEmailFormatOf do
             end
           end
           describe "i18n" do
-            before(:each) { allow(I18n.config).to receive(:locale).and_return(locale) }
+            before(:each) do
+              allow(I18n.config).to receive(:locale).and_return(locale)
+            end
             describe "present locale" do
               let(:locale) { :pl }
               describe email do
                 it { should have_errors_on_email.because("jest nieosiągalny") }
               end
             end
-            describe email do
-              let(:locale) { :ir }
+            unless defined?(ActiveModel)
               describe email do
-                it { should have_errors_on_email.because("is not routable") }
+                let(:locale) { :ir }
+                describe email do
+                  it { should have_errors_on_email.because("is not routable") }
+                end
               end
             end
           end
@@ -262,17 +266,21 @@ describe ValidatesEmailFormatOf do
     end
 
     describe "i18n" do
-      before(:each) { allow(I18n.config).to receive(:locale).and_return(locale) }
+      before(:each) do
+        allow(I18n.config).to receive(:locale).and_return(locale)
+      end
       describe "present locale" do
         let(:locale) { :pl }
         describe "invalid@exmaple." do
           it { should have_errors_on_email.because("nieprawidłowy adres e-mail") }
         end
       end
-      describe "missing locale" do
-        let(:locale) { :ir }
-        describe "invalid@exmaple." do
-          it { should have_errors_on_email.because("does not appear to be valid") }
+      unless defined?(ActiveModel)
+        describe "missing locale" do
+          let(:locale) { :ir }
+          describe "invalid@exmaple." do
+            it { should have_errors_on_email.because("does not appear to be valid") }
+          end
         end
       end
     end

@@ -9,7 +9,7 @@ module ActiveModel
   module Validations
     class EmailFormatValidator < EachValidator
       def validate_each(record, attribute, value)
-        (ValidatesEmailFormatOf::validate_email_format(value, options) || []).each do |error|
+        (ValidatesEmailFormatOf::validate_email_format(value, options.merge(:generate_message => true)) || []).each do |error|
           record.errors.add(attribute, error)
         end
       end

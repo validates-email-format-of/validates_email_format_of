@@ -19,6 +19,15 @@ module ValidatesEmailFormatOf
     @mx.size > 0 ? true : false
   end
 
+  DEFAULT_MESSAGE = "does not appear to be valid"
+  DEFAULT_MX_MESSAGE = "is not routable"
+  ERROR_MESSAGE_I18N_KEY = :invalid_email_address
+  ERROR_MX_MESSAGE_I18N_KEY = :email_address_not_routable
+
+  def self.default_message
+    defined?(I18n) ? I18n.t(ERROR_MESSAGE_I18N_KEY, :scope => [:activemodel, :errors, :messages], :default => DEFAULT_MESSAGE) : DEFAULT_MESSAGE
+  end
+
   # Validates whether the specified value is a valid email address.  Returns nil if the value is valid, otherwise returns an array
   # containing one or more validation error messages.
   #
@@ -29,18 +38,14 @@ module ValidatesEmailFormatOf
   # * <tt>with</tt> The regex to use for validating the format of the email address (deprecated)
   # * <tt>local_length</tt> Maximum number of characters allowed in the local part (default is 64)
   # * <tt>domain_length</tt> Maximum number of characters allowed in the domain part (default is 255)
-  DEFAULT_MESSAGE = "does not appear to be valid"
-  DEFAULT_MX_MESSAGE = "is not routable"
-  def self.default_message
-    defined?(I18n) ? I18n.t(:invalid_email_address, :scope => [:activemodel, :errors, :messages], :default => DEFAULT_MESSAGE) : DEFAULT_MESSAGE
-  end
-
+  # * <tt>generate_message</tt> Return the I18n key of the error message instead of the error message itself (default is false)
   def self.validate_email_format(email, options={})
-      default_options = { :message => default_message,
+      default_options = { :message => options[:generate_message] ? ERROR_MESSAGE_I18N_KEY : default_message,
                           :check_mx => false,
-                          :mx_message => defined?(I18n) ? I18n.t(:email_address_not_routable, :scope => [:activemodel, :errors, :messages], :default => DEFAULT_MX_MESSAGE) : DEFAULT_MX_MESSAGE,
+                          :mx_message => options[:generate_message] ? ERROR_MX_MESSAGE_I18N_KEY : (defined?(I18n) ? I18n.t(ERROR_MX_MESSAGE_I18N_KEY, :scope => [:activemodel, :errors, :messages], :default => DEFAULT_MX_MESSAGE) : DEFAULT_MX_MESSAGE),
                           :domain_length => 255,
-                          :local_length => 64
+                          :local_length => 64,
+                          :generate_message => false
                           }
       opts = options.merge(default_options) {|key, old, new| old}  # merge the default options into the specified options, retaining all specified options
 
