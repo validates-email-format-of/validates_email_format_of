@@ -1,0 +1,6 @@
+de:
+  activemodel:
+    errors:
+      messages:
+        invalid_email_address: 'ist offensichtlich keine gültige E-Mail-Adresse'
+        email_address_not_routable: 'kann nicht erreicht werden'
