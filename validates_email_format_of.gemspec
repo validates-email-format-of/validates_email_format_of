@@ -15,7 +15,12 @@ spec = Gem::Specification.new do |s|
   s.files         = `git ls-files`.split($/)
   s.require_paths = ['lib']
 
-  s.add_dependency 'i18n'
+  if RUBY_VERSION < "1.9.3"
+    s.add_dependency 'i18n', '< 0.7.0'
+  else
+    s.add_dependency 'i18n'
+  end
+
   s.add_development_dependency 'bundler'
   s.add_development_dependency 'rspec'
 end
