@@ -2,6 +2,13 @@
 require "#{File.expand_path(File.dirname(__FILE__))}/spec_helper"
 require "validates_email_format_of"
 
+RSpec.configure do |config|
+  config.before(:suite) do
+    ValidatesEmailFormatOf.load_i18n_locales
+    I18n.enforce_available_locales = false
+  end
+end
+
 describe ValidatesEmailFormatOf do
   subject do |example|
     if defined?(ActiveModel)
