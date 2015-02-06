@@ -2,8 +2,7 @@ require "validates_email_format_of"
 
 RSpec::Matchers.define :validate_email_format_of do |attribute|
   match do
-    actual_class_name = subject.is_a?(Class) ? subject : subject.class
-    actual = actual_class_name.new
+    actual = subject.is_a?(Class) ? subject.new : subject
     actual.send(:"#{attribute}=", "invalid@example.")
     expect(actual).to be_invalid
     @expected_message ||= ValidatesEmailFormatOf.default_message
