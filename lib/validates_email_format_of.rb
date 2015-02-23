@@ -43,7 +43,7 @@ module ValidatesEmailFormatOf
   def self.validate_email_format(email, options={})
       default_options = { :message => options[:generate_message] ? ERROR_MESSAGE_I18N_KEY : default_message,
                           :check_mx => false,
-                          :email_domain => true,
+                          :email_domain => nil,
                           :mx_message => options[:generate_message] ? ERROR_MX_MESSAGE_I18N_KEY : (defined?(I18n) ? I18n.t(ERROR_MX_MESSAGE_I18N_KEY, :scope => [:activemodel, :errors, :messages], :default => DEFAULT_MX_MESSAGE) : DEFAULT_MX_MESSAGE),
                           :domain_length => 255,
                           :local_length => 64,
