@@ -189,17 +189,17 @@ describe ValidatesEmailFormatOf do
     end
 
     describe "mx record" do
-      domain = "stubbed.com"
+      domain = 'stubbed.com'
       email = "valid@#{domain}"
 
-      describe "when testing with the email domain" do
+      describe 'when testing with the email domain' do
         include_context 'mocked Resolv', domain
         let(:options) { { :check_mx => true } }
 
         include_examples 'check_mx tests on', email
       end
 
-      describe "when testing with an explicit email_domain" do
+      describe 'when testing with an explicit email_domain' do
         include_context 'mocked Resolv', domain
         let(:options) { { :check_mx => true, :email_domain => domain } }
 
