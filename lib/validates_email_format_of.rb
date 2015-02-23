@@ -11,8 +11,8 @@ module ValidatesEmailFormatOf
 
   LocalPartSpecialChars = /[\!\#\$\%\&\'\*\-\/\=\?\+\-\^\_\`\{\|\}\~]/
 
-  def self.validate_email_domain(email, domain = true)
-    domain = (domain.is_a?(String)) ? domain : email.to_s.downcase.match(/\@(.+)/)[1]
+  def self.validate_email_domain(email, domain_override = true)
+    domain = (domain_override.is_a?(String)) ? domain_override : email.to_s.downcase.match(/\@(.+)/)[1]
     Resolv::DNS.open do |dns|
       @mx = dns.getresources(domain, Resolv::DNS::Resource::IN::MX) + dns.getresources(domain, Resolv::DNS::Resource::IN::A)
     end
