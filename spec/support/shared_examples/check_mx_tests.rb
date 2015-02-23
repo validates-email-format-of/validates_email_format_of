@@ -1,3 +1,5 @@
+# -*- encoding : utf-8 -*-
+
 RSpec.shared_examples 'check_mx tests on' do |email|
   describe 'and only an mx record is found' do
     let(:a_record) { [] }
