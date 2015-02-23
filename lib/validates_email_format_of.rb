@@ -11,8 +11,8 @@ module ValidatesEmailFormatOf
 
   LocalPartSpecialChars = /[\!\#\$\%\&\'\*\-\/\=\?\+\-\^\_\`\{\|\}\~]/
 
-  def self.validate_email_domain(email)
-    domain = email.to_s.downcase.match(/\@(.+)/)[1]
+  def self.validate_email_domain(email, domain = true)
+    domain = (domain.is_a?(String)) ? domain : email.to_s.downcase.match(/\@(.+)/)[1]
     Resolv::DNS.open do |dns|
       @mx = dns.getresources(domain, Resolv::DNS::Resource::IN::MX) + dns.getresources(domain, Resolv::DNS::Resource::IN::A)
     end
@@ -34,6 +34,7 @@ module ValidatesEmailFormatOf
   # Configuration options:
   # * <tt>message</tt> - A custom error message (default is: "does not appear to be valid")
   # * <tt>check_mx</tt> - Check for MX records (default is false)
+  # * <tt>email_domain</tt> - The email domain to check MX against (default is to use the one in the email)
   # * <tt>mx_message</tt> - A custom error message when an MX record validation fails (default is: "is not routable.")
   # * <tt>with</tt> The regex to use for validating the format of the email address (deprecated)
   # * <tt>local_length</tt> Maximum number of characters allowed in the local part (default is 64)
@@ -42,6 +43,7 @@ module ValidatesEmailFormatOf
   def self.validate_email_format(email, options={})
       default_options = { :message => options[:generate_message] ? ERROR_MESSAGE_I18N_KEY : default_message,
                           :check_mx => false,
+                          :email_domain => true,
                           :mx_message => options[:generate_message] ? ERROR_MX_MESSAGE_I18N_KEY : (defined?(I18n) ? I18n.t(ERROR_MX_MESSAGE_I18N_KEY, :scope => [:activemodel, :errors, :messages], :default => DEFAULT_MX_MESSAGE) : DEFAULT_MX_MESSAGE),
                           :domain_length => 255,
                           :local_length => 64,
@@ -72,7 +74,7 @@ module ValidatesEmailFormatOf
         return [ opts[:message] ] unless self.validate_local_part_syntax(local) and self.validate_domain_part_syntax(domain)
       end
 
-      if opts[:check_mx] and !self.validate_email_domain(email)
+      if opts[:check_mx] && !validate_email_domain(email, opts[:email_domain])
         return [ opts[:mx_message] ]
       end
 
