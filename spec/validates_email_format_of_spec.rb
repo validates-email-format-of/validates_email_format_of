@@ -201,9 +201,16 @@ describe ValidatesEmailFormatOf do
 
       describe 'when testing with an explicit email_domain' do
         include_context 'mocked Resolv', domain
-        let(:options) { { :check_mx => true, :email_domain => domain } }
 
-        include_examples 'check_mx tests on', email
+        context 'when the email_domain is a Proc' do
+          let(:options) { { :check_mx => true, :email_domain => Proc.new { |_email| domain } } }
+          include_examples 'check_mx tests on', email
+        end
+
+        context 'when the email_domain is a String' do
+          let(:options) { { :check_mx => true, :email_domain => domain } }
+          include_examples 'check_mx tests on', email
+        end
       end
 
       describe "when not testing" do

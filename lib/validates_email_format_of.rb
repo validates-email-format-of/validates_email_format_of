@@ -74,8 +74,9 @@ module ValidatesEmailFormatOf
         return [ opts[:message] ] unless self.validate_local_part_syntax(local) and self.validate_domain_part_syntax(domain)
       end
 
-      if opts[:check_mx] && !validate_email_domain(email, opts[:email_domain])
-        return [ opts[:mx_message] ]
+      if opts[:check_mx]
+        domain_override = opts[:email_domain].is_a?(Proc) ? opts[:email_domain].call(email) : opts[:email_domain]
+        return [ opts[:mx_message] ] unless validate_email_domain(email, domain_override)
       end
 
       return nil    # represents no validation errors

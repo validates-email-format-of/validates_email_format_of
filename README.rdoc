@@ -40,6 +40,8 @@ Or in your Gemfile:
      String. A custom error message when the email format is invalid (default is: "does not appear to be a valid e-mail address")
   :check_mx
      Boolean. Check domain for a valid MX record (default is false)
+  :email_domain
+     String or a Proc. The email domain to check MX against (default is everything after the '@')
   :mx_message
      String. A custom error message when the domain does not match a valid MX record (default is: "is not routable").  Ignored unless :check_mx option is true.
   :local_length
