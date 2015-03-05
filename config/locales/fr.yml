@@ -1,4 +1,4 @@
-en:
+fr:
   activemodel: &errors
     errors:
       messages:
