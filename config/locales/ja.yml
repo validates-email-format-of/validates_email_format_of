@@ -1,0 +1,8 @@
+ja:
+  activemodel: &errors
+    errors:
+      messages:
+        invalid_email_address: 'は妥当なメールアドレスでは無いようです。'
+        email_address_not_routable: 'は到達不能です。'
+  activerecord:
+    <<: *errors
