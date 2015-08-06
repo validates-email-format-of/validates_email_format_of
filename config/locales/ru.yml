@@ -1,0 +1,8 @@
+ru:
+  activemodel: &errors
+    errors:
+      messages:
+        invalid_email_address: 'не является правильным адресом e-mail'
+        email_address_not_routable: 'не доступен'
+  activerecord:
+    <<: *errors
