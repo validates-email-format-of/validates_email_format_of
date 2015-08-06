@@ -29,6 +29,25 @@ describe ValidatesEmailFormatOf do
   let(:options) { {} }
   let(:email) { |example| example.example_group.description }
 
+  describe '.validate_email_domain' do
+    let(:email) { 'somebody@somewhere.com' }
+    subject { described_class.validate_email_domain(email, email_domain) }
+
+    context 'when passing a String argument' do
+      include_context 'mocked Resolv', 'somewhere.com.'
+      let(:email_domain) { 'somewhere.com.' }
+
+      include_examples 'email domain tests'
+    end
+
+    context 'when passing a boolean argument' do
+      include_context 'mocked Resolv', 'somewhere.com'
+      let(:email_domain) { true }
+
+      include_examples 'email domain tests'
+    end
+  end
+
   shared_examples_for :all_specs do
     [
       'valid@example.com',
@@ -170,76 +189,30 @@ describe ValidatesEmailFormatOf do
     end
 
     describe "mx record" do
-      domain = "stubbed.com"
+      domain = 'stubbed.com'
       email = "valid@#{domain}"
-      describe "when testing" do
-        let(:dns) { double(Resolv::DNS) }
-        let(:mx_record) { [double] }
-        let(:a_record) { [double] }
-        before(:each) do
-          allow(Resolv::DNS).to receive(:open).and_yield(dns)
-          allow(dns).to receive(:getresources).with(domain, Resolv::DNS::Resource::IN::MX).once.and_return(mx_record)
-          allow(dns).to receive(:getresources).with(domain, Resolv::DNS::Resource::IN::A).once.and_return(a_record)
-        end
+
+      describe 'when testing with the email domain' do
+        include_context 'mocked Resolv', domain
         let(:options) { { :check_mx => true } }
-        describe "and only an mx record is found" do
-          let(:a_record) { [] }
-          describe email do
-            it { should_not have_errors_on_email }
-          end
+
+        include_examples 'check_mx tests on', email
+      end
+
+      describe 'when testing with an explicit email_domain' do
+        include_context 'mocked Resolv', domain
+
+        context 'when the email_domain is a Proc' do
+          let(:options) { { :check_mx => true, :email_domain => Proc.new { |_email| domain } } }
+          include_examples 'check_mx tests on', email
         end
-        describe "and only an a record is found" do
-          let(:mx_record) { [] }
-          describe email do
-            it { should_not have_errors_on_email }
-          end
-        end
-        describe "and both an mx record and an a record are found" do
-          describe email do
-            it { should_not have_errors_on_email }
-          end
-        end
-        describe "and neither an mx record nor an a record is found" do
-          let(:a_record) { [] }
-          let(:mx_record) { [] }
-          describe email do
-            it { should have_errors_on_email.because("is not routable") }
-          end
-          describe "with a custom error message" do
-            let(:options) { { :check_mx => true, :mx_message => "There ain't no such domain!" } }
-            describe email do
-              it { should have_errors_on_email.because("There ain't no such domain!") }
-            end
-          end
-          describe "i18n" do
-            before(:each) do
-              allow(I18n.config).to receive(:locale).and_return(locale)
-            end
-            describe "present locale" do
-              let(:locale) { :pl }
-              describe email do
-                it { should have_errors_on_email.because("jest nieosiągalny") }
-              end
-            end
-            unless defined?(ActiveModel)
-              describe email do
-                let(:locale) { :ir }
-                describe email do
-                  it { should have_errors_on_email.because("is not routable") }
-                end
-              end
-            end
-          end
-          unless defined?(ActiveModel)
-            describe "without i18n" do
-              before(:each) { hide_const("I18n") }
-              describe email do
-                it { should have_errors_on_email.because("is not routable") }
-              end
-            end
-          end
+
+        context 'when the email_domain is a String' do
+          let(:options) { { :check_mx => true, :email_domain => domain } }
+          include_examples 'check_mx tests on', email
         end
       end
+
       describe "when not testing" do
         before(:each) { allow(Resolv::DNS).to receive(:open).never }
         describe "by default" do
