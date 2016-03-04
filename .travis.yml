@@ -3,7 +3,9 @@ rvm:
   - 1.9.2
   - 1.9.3
   - 2.0.0
-  - 2.1.2
+  - 2.1.7
+  - 2.2.4
+  - 2.3.0
   - jruby
   - ree
 gemfile:
@@ -14,5 +16,6 @@ gemfile:
   - gemfiles/active_model_3_2
   - gemfiles/active_model_4_0
   - gemfiles/active_model_4_1
+  - gemfiles/active_model_4_2
 install: bundle install
 script: bundle exec rspec
