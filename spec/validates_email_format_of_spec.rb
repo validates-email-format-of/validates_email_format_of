@@ -175,32 +175,17 @@ describe ValidatesEmailFormatOf do
       describe "when testing" do
         let(:dns) { double(Resolv::DNS) }
         let(:mx_record) { [double] }
-        let(:a_record) { [double] }
         before(:each) do
           allow(Resolv::DNS).to receive(:open).and_yield(dns)
           allow(dns).to receive(:getresources).with(domain, Resolv::DNS::Resource::IN::MX).once.and_return(mx_record)
-          allow(dns).to receive(:getresources).with(domain, Resolv::DNS::Resource::IN::A).once.and_return(a_record)
         end
         let(:options) { { :check_mx => true } }
-        describe "and only an mx record is found" do
-          let(:a_record) { [] }
+        describe "and an mx record is found" do
           describe email do
             it { should_not have_errors_on_email }
           end
         end
-        describe "and only an a record is found" do
-          let(:mx_record) { [] }
-          describe email do
-            it { should_not have_errors_on_email }
-          end
-        end
-        describe "and both an mx record and an a record are found" do
-          describe email do
-            it { should_not have_errors_on_email }
-          end
-        end
-        describe "and neither an mx record nor an a record is found" do
-          let(:a_record) { [] }
+        describe "and no mx record is found" do
           let(:mx_record) { [] }
           describe email do
             it { should have_errors_on_email.because("is not routable") }
