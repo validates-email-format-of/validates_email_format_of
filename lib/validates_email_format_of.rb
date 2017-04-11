@@ -1,5 +1,6 @@
 # encoding: utf-8
 require 'validates_email_format_of/version'
+require 'simpleidn'
 
 module ValidatesEmailFormatOf
   def self.load_i18n_locales
@@ -12,7 +13,7 @@ module ValidatesEmailFormatOf
   LocalPartSpecialChars = /[\!\#\$\%\&\'\*\-\/\=\?\+\-\^\_\`\{\|\}\~]/
 
   def self.validate_email_domain(email)
-    domain = email.to_s.downcase.match(/\@(.+)/)[1]
+    domain = SimpleIDN.to_ascii(email.to_s.downcase.match(/\@(.+)/)[1])
     Resolv::DNS.open do |dns|
       @mx = dns.getresources(domain, Resolv::DNS::Resource::IN::MX) + dns.getresources(domain, Resolv::DNS::Resource::IN::A)
     end
