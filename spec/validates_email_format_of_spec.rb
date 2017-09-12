@@ -169,6 +169,26 @@ describe ValidatesEmailFormatOf do
       end
     end
 
+    describe "comma separated" do
+      context "when using default" do
+        describe 'first@example.com,second@example.com' do
+          it { should have_errors_on_email.because("does not appear to be a valid e-mail address") }
+        end
+      end
+      context "when using comma_separated=true" do
+        let(:options) { { :comma_separated => true } }
+        describe 'first@example.com,second@example.com' do
+          it { should_not have_errors_on_email }
+        end
+        describe 'first@example.,second@example.com,third@example.,fourth@example.com' do
+          it { should have_errors_on_email.because("does not appear to be a valid e-mail address") }
+        end
+        describe 'first@example.com,' do
+          it { should have_errors_on_email.because("does not appear to be a valid e-mail address") }
+        end
+      end
+    end
+
     describe "mx record" do
       domain = "stubbed.com"
       email = "valid@#{domain}"

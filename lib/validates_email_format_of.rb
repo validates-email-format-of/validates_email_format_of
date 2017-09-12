@@ -39,15 +39,28 @@ module ValidatesEmailFormatOf
   # * <tt>local_length</tt> Maximum number of characters allowed in the local part (default is 64)
   # * <tt>domain_length</tt> Maximum number of characters allowed in the domain part (default is 255)
   # * <tt>generate_message</tt> Return the I18n key of the error message instead of the error message itself (default is false)
+  # * <tt>comma_separated</tt> Split value into multiple addresses and validates separably (default is false)
   def self.validate_email_format(email, options={})
       default_options = { :message => options[:generate_message] ? ERROR_MESSAGE_I18N_KEY : default_message,
                           :check_mx => false,
                           :mx_message => options[:generate_message] ? ERROR_MX_MESSAGE_I18N_KEY : (defined?(I18n) ? I18n.t(ERROR_MX_MESSAGE_I18N_KEY, :scope => [:activemodel, :errors, :messages], :default => DEFAULT_MX_MESSAGE) : DEFAULT_MX_MESSAGE),
                           :domain_length => 255,
                           :local_length => 64,
-                          :generate_message => false
-                          }
+                          :generate_message => false,
+                          :comma_separated => false,
+                        }
       opts = options.merge(default_options) {|key, old, new| old}  # merge the default options into the specified options, retaining all specified options
+
+      if opts[:comma_separated]
+        errors = email.to_s.split(',', -1).map do |email_separated|
+          if email_separated.strip == ''
+            [ opts[:message] ]
+          else
+            self.validate_email_format(email_separated, opts.except(:comma_separated))
+          end
+        end.flatten.uniq.compact
+        return errors.size > 0 ? errors : nil
+      end
 
       email = email.strip if email
 
