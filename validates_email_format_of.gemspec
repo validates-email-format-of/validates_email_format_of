@@ -11,7 +11,6 @@ spec = Gem::Specification.new do |s|
   s.email         = ['code@dunae.ca', 'iybetesh@gmail.com']
   s.homepage      = 'https://github.com/validates-email-format-of/validates_email_format_of'
   s.license       = 'MIT'
-  s.test_files    = s.files.grep(%r{^test/})
   s.files         = `git ls-files`.split($/)
   s.require_paths = ['lib']
 
