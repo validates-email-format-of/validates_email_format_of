@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: "Ruby ${{ matrix.ruby }}, Rails ${{ matrix.gemfile }}"
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        ruby: ["2.6", "2.7", "3.0", "3.1"]
+        gemfile: ["4.2", "5.0", "5.1", "5.2", "6.0", "6.1", "7.0"]
+        exclude:
+          - gemfile: "4.2"
+            ruby: "3.0"
+          - gemfile: "4.2"
+            ruby: "3.1"
+          - gemfile: "5.0"
+            ruby: "3.0"
+          - gemfile: "5.0"
+            ruby: "3.1"
+          - gemfile: "5.1"
+            ruby: "3.0"
+          - gemfile: "5.1"
+            ruby: "3.1"
+          - gemfile: "5.2"
+            ruby: "3.0"
+          - gemfile: "5.2"
+            ruby: "3.1"
+          - gemfile: "7.0"
+            ruby: "2.5"
+          - gemfile: "7.0"
+            ruby: "2.6"
+          - gemfile: "7.0"
+            ruby: "2.7"
+
+    env:
+      BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.gemfile }}.gemfile
+      RAILS_ENV: test
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: "Install Ruby ${{ matrix.ruby  }}"
+        # To automatically get bug fixes and new Ruby versions for ruby/setup-ruby,
+        # change this to (see https://github.com/ruby/setup-ruby#versioning):
+        # uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler: 1
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+
+      - name: Run specs
+        run: bundle exec rspec
