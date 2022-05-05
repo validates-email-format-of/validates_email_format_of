@@ -9,7 +9,38 @@ module ValidatesEmailFormatOf
 
   require 'resolv'
 
-  LocalPartSpecialChars = /[\!\#\$\%\&\'\*\-\/\=\?\+\^\_\`\{\|\}\~]/
+  LocalPartSpecialChars = /[\!\#\$\%\&\'\*\-\/\=\?\+\^\_\`\{\|\}\~]/.freeze
+
+  # From https://datatracker.ietf.org/doc/html/rfc1035#section-2.3.1
+  #
+  # > The labels must follow the rules for ARPANET host names.  They must
+  # > start with a letter, end with a letter or digit, and have as interior
+  # > characters only letters, digits, and hyphen.  There are also some
+  # > restrictions on the length.  Labels must be 63 characters or less.
+  #
+  # <label> | <subdomain> "." <label>
+  # <label> ::= <letter> [ [ <ldh-str> ] <let-dig> ]
+  # <ldh-str> ::= <let-dig-hyp> | <let-dig-hyp> <ldh-str>
+  # <let-dig-hyp> ::= <let-dig> | "-"
+  # <let-dig> ::= <letter> | <digit>
+  DomainPartLabel =  /\A[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]?\Z/.freeze
+
+  IPAddressPart = /\A[0-9]+\Z/.freeze
+
+  # From https://tools.ietf.org/id/draft-liman-tld-names-00.html#rfc.section.2
+  #
+  # > A TLD label MUST be at least two characters long and MAY be as long as 63 characters -
+  # > not counting any leading or trailing periods (.). It MUST consist of only ASCII characters
+  # > from the groups "letters" (A-Z), "digits" (0-9) and "hyphen" (-), and it MUST start with an
+  # > ASCII "letter", and it MUST NOT end with a "hyphen". Upper and lower case MAY be mixed at random,
+  # > since DNS lookups are case-insensitive.
+  #
+  # tldlabel = ALPHA *61(ldh) ld
+  # ldh      = ld / "-"
+  # ld       = ALPHA / DIGIT
+  # ALPHA    = %x41-5A / %x61-7A   ; A-Z / a-z
+  # DIGIT    = %x30-39             ; 0-9
+  DomainPartTLD = /\A[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]\Z/.freeze
 
   def self.validate_email_domain(email, check_mx_timeout: 3)
     domain = email.to_s.downcase.match(/\@(.+)/)[1]
@@ -129,20 +160,24 @@ module ValidatesEmailFormatOf
 
     return false if parts.length <= 1 # Only one domain part
 
-    # Empty parts (double period) or invalid chars
-    return false if parts.any? {
-      |part|
-        part.nil? or
-        part.empty? or
-        not part =~ /\A[[:alnum:]\-]+\Z/ or
-        part[0,1] == '-' or part[-1,1] == '-' # hyphen at beginning or end of part
-    }
-
     # ipv4
-    return true if parts.length == 4 and parts.all? { |part| part =~ /\A[0-9]+\Z/ and part.to_i.between?(0, 255) }
+    return true if parts.length == 4 && parts.all? { |part| part =~ IPAddressPart && part.to_i.between?(0, 255) }
 
-    return false if parts[-1].length < 2 or not parts[-1] =~ /[a-z\-]/ # TLD is too short or does not contain a char or hyphen
+    # From https://datatracker.ietf.org/doc/html/rfc3696#section-2 this is the recommended, pragmatic way to validate a domain name:
+    #
+    # > It is likely that the better strategy has now become to make the "at least one period" test,
+    # > to verify LDH conformance (including verification that the apparent TLD name is not all-numeric),
+    # > and then to use the DNS to determine domain name validity, rather than trying to maintain
+    # > a local list of valid TLD names.
+    #
+    # We do a little bit more but not too much and validate the tokens but do not check against a list of valid TLDs.
+    parts.each do |part|
+      return false if part.blank?
+      return false if part.length > 63
+      return false unless part =~ DomainPartLabel
+    end
 
+    return false unless parts[-1] =~ DomainPartTLD
     return true
   end
 end
