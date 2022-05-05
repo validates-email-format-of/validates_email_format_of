@@ -1,0 +1,8 @@
+pt-BR:
+  activemodel: &errors
+    errors:
+      messages:
+        invalid_email_address: 'não parece ser um endereço de e-mail válido'
+        email_address_not_routable: 'não é acessível'
+  activerecord:
+    <<: *errors
