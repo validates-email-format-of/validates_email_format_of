@@ -175,12 +175,14 @@ describe ValidatesEmailFormatOf do
     describe "mx record" do
       domain = "example.com"
       email = "valid@#{domain}"
+      check_mx_timeout = 3
       describe "when testing" do
         let(:dns) { double(Resolv::DNS) }
         let(:mx_record) { [double] }
         let(:a_record) { [double] }
         before(:each) do
           allow(Resolv::DNS).to receive(:open).and_yield(dns)
+          expect(dns).to receive(:"timeouts=").with(3).once
           allow(dns).to receive(:getresources).with(domain, Resolv::DNS::Resource::IN::MX).once.and_return(mx_record)
           allow(dns).to receive(:getresources).with(domain, Resolv::DNS::Resource::IN::A).once.and_return(a_record)
         end
