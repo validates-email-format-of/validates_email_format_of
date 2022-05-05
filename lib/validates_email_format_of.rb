@@ -49,8 +49,6 @@ module ValidatesEmailFormatOf
                           }
       opts = options.merge(default_options) {|key, old, new| old}  # merge the default options into the specified options, retaining all specified options
 
-      email = email.strip if email
-
       begin
         domain, local = email.reverse.split('@', 2)
       rescue
