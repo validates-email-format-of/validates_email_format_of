@@ -170,7 +170,7 @@ describe ValidatesEmailFormatOf do
     end
 
     describe "mx record" do
-      domain = "stubbed.com"
+      domain = "example.com"
       email = "valid@#{domain}"
       describe "when testing" do
         let(:dns) { double(Resolv::DNS) }
