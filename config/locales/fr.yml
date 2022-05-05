@@ -2,7 +2,7 @@ fr:
   activemodel: &errors
     errors:
       messages:
-        invalid_email_address: 'ne semble pas être une adresse email valide'
-        email_address_not_routable: "n'est pas routable'
+        invalid_email_address: "ne semble pas être une adresse email valide"
+        email_address_not_routable: "n'est pas routable"
   activerecord:
     <<: *errors
