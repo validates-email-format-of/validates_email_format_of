@@ -9,7 +9,7 @@ module ValidatesEmailFormatOf
 
   require 'resolv'
 
-  LocalPartSpecialChars = /[\!\#\$\%\&\'\*\-\/\=\?\+\-\^\_\`\{\|\}\~]/
+  LocalPartSpecialChars = /[\!\#\$\%\&\'\*\-\/\=\?\+\^\_\`\{\|\}\~]/
 
   def self.validate_email_domain(email)
     domain = email.to_s.downcase.match(/\@(.+)/)[1]
