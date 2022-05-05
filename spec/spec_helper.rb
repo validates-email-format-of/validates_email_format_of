@@ -1,4 +1,6 @@
 require 'active_model' if Gem.loaded_specs.keys.include?('activemodel')
+require 'pry'
+require 'byebug'
 
 RSpec::Matchers.define :have_errors_on_email do
   match do |actual|
