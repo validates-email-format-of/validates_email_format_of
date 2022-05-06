@@ -11,6 +11,32 @@ module ValidatesEmailFormatOf
 
   LocalPartSpecialChars = /[\!\#\$\%\&\'\*\-\/\=\?\+\^\_\`\{\|\}\~]/.freeze
 
+  # Characters that are allowed in to appear in the local part unquoted
+  # https://www.rfc-editor.org/rfc/rfc5322#section-3.4.1
+  #
+  # An addr-spec is a specific Internet identifier that contains a
+  # locally interpreted string followed by the at-sign character ("@",
+  # ASCII value 64) followed by an Internet domain.  The locally
+  # interpreted string is either a quoted-string or a dot-atom.  If the
+  # string can be represented as a dot-atom (that is, it contains no
+  # characters other than atext characters or "." surrounded by atext
+  # characters), then the dot-atom form SHOULD be used and the quoted-
+  # string form SHOULD NOT be used.  Comments and folding white space
+  # SHOULD NOT be used around the "@" in the addr-spec.
+  #
+  #   dot-atom-text   =   1*atext *("." 1*atext)
+  #   dot-atom        =   [CFWS] dot-atom-text [CFWS]
+  ATEXT = /\A[A-Z0-9#{LocalPartSpecialChars}]\z/i
+
+  # Characters that are allowed to appear unquoted in comments
+  # https://www.rfc-editor.org/rfc/rfc5322#section-3.2.2
+  #
+  # ctext           =   %d33-39 / %d42-91 / %d93-126
+  # ccontent        =   ctext / quoted-pair / comment
+  # comment         =   "(" *([FWS] ccontent) [FWS] ")"
+  # CFWS            =   (1*([FWS] comment) [FWS]) / FWS
+  CTEXT = /\A[#{Regexp.escape([33..39, 42..91, 93..126].map { |ascii_range| ascii_range.map(&:chr) }.flatten.join)}\s]/i.freeze
+
   # From https://datatracker.ietf.org/doc/html/rfc1035#section-2.3.1
   #
   # > The labels must follow the rules for ARPANET host names.  They must
@@ -115,6 +141,7 @@ module ValidatesEmailFormatOf
   def self.validate_local_part_syntax(local)
     in_quoted_pair = false
     in_quoted_string = false
+    comment_depth = 0
 
     (0..local.length-1).each do |i|
       ord = local[i].ord
@@ -122,6 +149,19 @@ module ValidatesEmailFormatOf
       # accept anything if it's got a backslash before it
       if in_quoted_pair
         in_quoted_pair = false
+        next
+      end
+
+      # opening paren to show we are going into a comment (CFWS)
+      if ord == 40
+        comment_depth += 1
+        next
+      end
+
+      # closing paren
+      if ord == 41
+        comment_depth -= 1
+        return false if comment_depth < 0
         next
       end
 
@@ -138,8 +178,11 @@ module ValidatesEmailFormatOf
         next
       end
 
-      next if local[i,1] =~ /[a-z0-9]/i
-      next if local[i,1] =~ LocalPartSpecialChars
+      if comment_depth > 0
+        next if local[i]  =~ CTEXT
+      else
+        next if local[i,1] =~ ATEXT
+      end
 
       # period must be followed by something
       if ord == 46
@@ -151,6 +194,7 @@ module ValidatesEmailFormatOf
     end
 
     return false if in_quoted_string # unbalanced quotes
+    return false unless comment_depth.zero? # unbalanced comment parens
 
     return true
   end
