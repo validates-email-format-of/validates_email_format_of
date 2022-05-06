@@ -69,7 +69,10 @@ describe ValidatesEmailFormatOf do
       '"Joe.\\Blow"@example.com',
       # Balanced quoted characters
       %!"example\\\\\\""@example.com!,
-      %!"example\\\\"@example.com!
+      %!"example\\\\"@example.com!,
+      '(leading comment)email@example.com',
+      '(nested (comment))email@example.com',
+      'email(trailing comment)@example.com'
     ].each do |address|
       describe address do
         it { should_not have_errors_on_email }
@@ -123,7 +126,8 @@ describe ValidatesEmailFormatOf do
       %!"example\\\\""example.com!,
       "\nnewline@example.com",
       " spacesbefore@example.com",
-      "spacesafter@example.com "
+      "spacesafter@example.com ",
+      "(unbalancedcomment@example.com"
     ].each do |address|
       describe address do
         it { should have_errors_on_email.because("does not appear to be a valid e-mail address") }
