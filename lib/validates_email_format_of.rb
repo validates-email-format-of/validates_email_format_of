@@ -37,6 +37,24 @@ module ValidatesEmailFormatOf
   # CFWS            =   (1*([FWS] comment) [FWS]) / FWS
   CTEXT = /\A[#{Regexp.escape([33..39, 42..91, 93..126].map { |ascii_range| ascii_range.map(&:chr) }.flatten.join)}\s]/i.freeze
 
+  # https://www.rfc-editor.org/rfc/rfc5322#section-3.2.4
+  #
+  # Strings of characters that include characters other than those
+  # allowed in atoms can be represented in a quoted string format, where
+  # the characters are surrounded by quote (DQUOTE, ASCII value 34)
+  # characters.
+  #
+  # qtext           =   %d33 /             ; Printable US-ASCII
+  #                     %d35-91 /          ;  characters not including
+  #                     %d93-126 /         ;  "\" or the quote character
+  #                     obs-qtext
+  #
+  # qcontent        =   qtext / quoted-pair
+  # quoted-string   =   [CFWS]
+  #                     DQUOTE *([FWS] qcontent) [FWS] DQUOTE
+  #                     [CFWS]
+  QTEXT = /\A[#{Regexp.escape([33..33, 35..91, 93..126].map { |ascii_range| ascii_range.map(&:chr) }.flatten.join)}\s]/i.freeze
+
   # From https://datatracker.ietf.org/doc/html/rfc1035#section-2.3.1
   #
   # > The labels must follow the rules for ARPANET host names.  They must
@@ -150,6 +168,10 @@ module ValidatesEmailFormatOf
       if in_quoted_pair
         in_quoted_pair = false
         next
+      end
+
+      if in_quoted_string
+        next if local[i] =~ QTEXT
       end
 
       # opening paren to show we are going into a comment (CFWS)
