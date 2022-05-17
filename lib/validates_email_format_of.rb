@@ -238,7 +238,7 @@ module ValidatesEmailFormatOf
     #
     # We do a little bit more but not too much and validate the tokens but do not check against a list of valid TLDs.
     parts.each do |part|
-      return false if part.blank?
+      return false if part.nil? || part.empty?
       return false if part.length > 63
       return false unless part =~ DomainPartLabel
     end
