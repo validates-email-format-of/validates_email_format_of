@@ -65,6 +65,7 @@ describe ValidatesEmailFormatOf do
       'test@192.192.192.1',
       # Allow quoted characters.  Valid according to http://www.rfc-editor.org/errata_search.php?rfc=3696
       '"Abc\@def"@example.com',
+      '"Quote(Only".Chars@wier.de',
       '"Fred\ Bloggs"@example.com',
       '"Joe.\\Blow"@example.com',
       # Balanced quoted characters
