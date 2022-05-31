@@ -9,7 +9,82 @@ module ValidatesEmailFormatOf
 
   require 'resolv'
 
-  LocalPartSpecialChars = /[\!\#\$\%\&\'\*\-\/\=\?\+\^\_\`\{\|\}\~]/
+  LocalPartSpecialChars = /[\!\#\$\%\&\'\*\-\/\=\?\+\^\_\`\{\|\}\~]/.freeze
+
+  # Characters that are allowed in to appear in the local part unquoted
+  # https://www.rfc-editor.org/rfc/rfc5322#section-3.4.1
+  #
+  # An addr-spec is a specific Internet identifier that contains a
+  # locally interpreted string followed by the at-sign character ("@",
+  # ASCII value 64) followed by an Internet domain.  The locally
+  # interpreted string is either a quoted-string or a dot-atom.  If the
+  # string can be represented as a dot-atom (that is, it contains no
+  # characters other than atext characters or "." surrounded by atext
+  # characters), then the dot-atom form SHOULD be used and the quoted-
+  # string form SHOULD NOT be used.  Comments and folding white space
+  # SHOULD NOT be used around the "@" in the addr-spec.
+  #
+  #   dot-atom-text   =   1*atext *("." 1*atext)
+  #   dot-atom        =   [CFWS] dot-atom-text [CFWS]
+  ATEXT = /\A[A-Z0-9#{LocalPartSpecialChars}]\z/i
+
+  # Characters that are allowed to appear unquoted in comments
+  # https://www.rfc-editor.org/rfc/rfc5322#section-3.2.2
+  #
+  # ctext           =   %d33-39 / %d42-91 / %d93-126
+  # ccontent        =   ctext / quoted-pair / comment
+  # comment         =   "(" *([FWS] ccontent) [FWS] ")"
+  # CFWS            =   (1*([FWS] comment) [FWS]) / FWS
+  CTEXT = /\A[#{Regexp.escape([33..39, 42..91, 93..126].map { |ascii_range| ascii_range.map(&:chr) }.flatten.join)}\s]/i.freeze
+
+  # https://www.rfc-editor.org/rfc/rfc5322#section-3.2.4
+  #
+  # Strings of characters that include characters other than those
+  # allowed in atoms can be represented in a quoted string format, where
+  # the characters are surrounded by quote (DQUOTE, ASCII value 34)
+  # characters.
+  #
+  # qtext           =   %d33 /             ; Printable US-ASCII
+  #                     %d35-91 /          ;  characters not including
+  #                     %d93-126 /         ;  "\" or the quote character
+  #                     obs-qtext
+  #
+  # qcontent        =   qtext / quoted-pair
+  # quoted-string   =   [CFWS]
+  #                     DQUOTE *([FWS] qcontent) [FWS] DQUOTE
+  #                     [CFWS]
+  QTEXT = /\A[#{Regexp.escape([33..33, 35..91, 93..126].map { |ascii_range| ascii_range.map(&:chr) }.flatten.join)}\s]/i.freeze
+
+  # From https://datatracker.ietf.org/doc/html/rfc1035#section-2.3.1
+  #
+  # > The labels must follow the rules for ARPANET host names.  They must
+  # > start with a letter, end with a letter or digit, and have as interior
+  # > characters only letters, digits, and hyphen.  There are also some
+  # > restrictions on the length.  Labels must be 63 characters or less.
+  #
+  # <label> | <subdomain> "." <label>
+  # <label> ::= <letter> [ [ <ldh-str> ] <let-dig> ]
+  # <ldh-str> ::= <let-dig-hyp> | <let-dig-hyp> <ldh-str>
+  # <let-dig-hyp> ::= <let-dig> | "-"
+  # <let-dig> ::= <letter> | <digit>
+  DomainPartLabel =  /\A[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]?\Z/.freeze
+
+  IPAddressPart = /\A[0-9]+\Z/.freeze
+
+  # From https://tools.ietf.org/id/draft-liman-tld-names-00.html#rfc.section.2
+  #
+  # > A TLD label MUST be at least two characters long and MAY be as long as 63 characters -
+  # > not counting any leading or trailing periods (.). It MUST consist of only ASCII characters
+  # > from the groups "letters" (A-Z), "digits" (0-9) and "hyphen" (-), and it MUST start with an
+  # > ASCII "letter", and it MUST NOT end with a "hyphen". Upper and lower case MAY be mixed at random,
+  # > since DNS lookups are case-insensitive.
+  #
+  # tldlabel = ALPHA *61(ldh) ld
+  # ldh      = ld / "-"
+  # ld       = ALPHA / DIGIT
+  # ALPHA    = %x41-5A / %x61-7A   ; A-Z / a-z
+  # DIGIT    = %x30-39             ; 0-9
+  DomainPartTLD = /\A[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]\Z/.freeze
 
   def self.validate_email_domain(email, check_mx_timeout: 3)
     domain = email.to_s.downcase.match(/\@(.+)/)[1]
@@ -84,6 +159,7 @@ module ValidatesEmailFormatOf
   def self.validate_local_part_syntax(local)
     in_quoted_pair = false
     in_quoted_string = false
+    comment_depth = 0
 
     (0..local.length-1).each do |i|
       ord = local[i].ord
@@ -91,6 +167,23 @@ module ValidatesEmailFormatOf
       # accept anything if it's got a backslash before it
       if in_quoted_pair
         in_quoted_pair = false
+        next
+      end
+
+      if in_quoted_string
+        next if local[i] =~ QTEXT
+      end
+
+      # opening paren to show we are going into a comment (CFWS)
+      if ord == 40
+        comment_depth += 1
+        next
+      end
+
+      # closing paren
+      if ord == 41
+        comment_depth -= 1
+        return false if comment_depth < 0
         next
       end
 
@@ -107,8 +200,11 @@ module ValidatesEmailFormatOf
         next
       end
 
-      next if local[i,1] =~ /[a-z0-9]/i
-      next if local[i,1] =~ LocalPartSpecialChars
+      if comment_depth > 0
+        next if local[i]  =~ CTEXT
+      else
+        next if local[i,1] =~ ATEXT
+      end
 
       # period must be followed by something
       if ord == 46
@@ -120,6 +216,7 @@ module ValidatesEmailFormatOf
     end
 
     return false if in_quoted_string # unbalanced quotes
+    return false unless comment_depth.zero? # unbalanced comment parens
 
     return true
   end
@@ -129,20 +226,24 @@ module ValidatesEmailFormatOf
 
     return false if parts.length <= 1 # Only one domain part
 
-    # Empty parts (double period) or invalid chars
-    return false if parts.any? {
-      |part|
-        part.nil? or
-        part.empty? or
-        not part =~ /\A[[:alnum:]\-]+\Z/ or
-        part[0,1] == '-' or part[-1,1] == '-' # hyphen at beginning or end of part
-    }
-
     # ipv4
-    return true if parts.length == 4 and parts.all? { |part| part =~ /\A[0-9]+\Z/ and part.to_i.between?(0, 255) }
+    return true if parts.length == 4 && parts.all? { |part| part =~ IPAddressPart && part.to_i.between?(0, 255) }
 
-    return false if parts[-1].length < 2 or not parts[-1] =~ /[a-z\-]/ # TLD is too short or does not contain a char or hyphen
+    # From https://datatracker.ietf.org/doc/html/rfc3696#section-2 this is the recommended, pragmatic way to validate a domain name:
+    #
+    # > It is likely that the better strategy has now become to make the "at least one period" test,
+    # > to verify LDH conformance (including verification that the apparent TLD name is not all-numeric),
+    # > and then to use the DNS to determine domain name validity, rather than trying to maintain
+    # > a local list of valid TLD names.
+    #
+    # We do a little bit more but not too much and validate the tokens but do not check against a list of valid TLDs.
+    parts.each do |part|
+      return false if part.nil? || part.empty?
+      return false if part.length > 63
+      return false unless part =~ DomainPartLabel
+    end
 
+    return false unless parts[-1] =~ DomainPartTLD
     return true
   end
 end

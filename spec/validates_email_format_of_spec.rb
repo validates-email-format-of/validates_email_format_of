@@ -65,11 +65,15 @@ describe ValidatesEmailFormatOf do
       'test@192.192.192.1',
       # Allow quoted characters.  Valid according to http://www.rfc-editor.org/errata_search.php?rfc=3696
       '"Abc\@def"@example.com',
+      '"Quote(Only".Chars@wier.de',
       '"Fred\ Bloggs"@example.com',
       '"Joe.\\Blow"@example.com',
       # Balanced quoted characters
       %!"example\\\\\\""@example.com!,
-      %!"example\\\\"@example.com!
+      %!"example\\\\"@example.com!,
+      '(leading comment)email@example.com',
+      '(nested (comment))email@example.com',
+      'email(trailing comment)@example.com'
     ].each do |address|
       describe address do
         it { should_not have_errors_on_email }
@@ -123,7 +127,8 @@ describe ValidatesEmailFormatOf do
       %!"example\\\\""example.com!,
       "\nnewline@example.com",
       " spacesbefore@example.com",
-      "spacesafter@example.com "
+      "spacesafter@example.com ",
+      "(unbalancedcomment@example.com"
     ].each do |address|
       describe address do
         it { should have_errors_on_email.because("does not appear to be a valid e-mail address") }
@@ -149,10 +154,10 @@ describe ValidatesEmailFormatOf do
     end
     describe do
       shared_examples_for :domain_length_limit do |limit|
-        describe "user@#{'a' * (limit - 4)}.com" do
+        describe "user@#{'a.' * (limit / 2 - 3)}com" do
           it { should_not have_errors_on_email }
         end
-        describe "user@#{'a' * (limit - 3)}.com" do
+        describe "user@#{'a.' * (limit / 2 + 1)}com" do
           it { should have_errors_on_email.because("does not appear to be a valid e-mail address") }
         end
       end
