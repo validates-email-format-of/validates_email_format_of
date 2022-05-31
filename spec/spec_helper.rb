@@ -1,6 +1,6 @@
-require 'active_model' if Gem.loaded_specs.keys.include?('activemodel')
-require 'pry'
-require 'byebug'
+require "active_model" if Gem.loaded_specs.keys.include?("activemodel")
+require "pry"
+require "byebug"
 
 RSpec::Matchers.define :have_errors_on_email do
   match do |actual|
@@ -19,6 +19,6 @@ RSpec::Matchers.define :have_errors_on_email do
     (@reasons ||= []) << reason
   end
   match_when_negated do |actual|
-    expect(actual).to (defined?(ActiveModel) ? be_empty : be_nil)
+    expect(actual).to(defined?(ActiveModel) ? be_empty : be_nil)
   end
 end
