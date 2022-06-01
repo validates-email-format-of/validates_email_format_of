@@ -1,7 +1,7 @@
 require "validates_email_format_of"
 require "active_model"
 
-if ActiveModel::VERSION::MAJOR < 2 || (2 == ActiveModel::VERSION::MAJOR && ActiveModel::VERSION::MINOR < 1)
+if ActiveModel::VERSION::MAJOR < 2 || (ActiveModel::VERSION::MAJOR == 2 && ActiveModel::VERSION::MINOR < 1)
   puts "WARNING: ActiveModel validation helper methods in validates_email_format_of gem are not compatible with ActiveModel < 2.1.0.  Please use ValidatesEmailFormatOf::validate_email_format(email, options) or upgrade ActiveModel"
 end
 
