@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
     s.add_dependency "i18n"
   end
 
+  s.add_development_dependency "activemodel"
   s.add_development_dependency "bundler"
   s.add_development_dependency "rspec"
   s.add_development_dependency "standard"
