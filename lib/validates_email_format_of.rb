@@ -136,10 +136,10 @@ module ValidatesEmailFormatOf
     end
 
     # need local and domain parts
-    return [opts[:message]] unless local and !local.empty? and domain and !domain.empty?
+    return [opts[:message]] unless local && !local.empty? && domain && !domain.empty?
 
     # check lengths
-    return [opts[:message]] unless domain.length <= opts[:domain_length] and local.length <= opts[:local_length]
+    return [opts[:message]] unless domain.length <= opts[:domain_length] && local.length <= opts[:local_length]
 
     local.reverse!
     domain.reverse!
@@ -147,10 +147,10 @@ module ValidatesEmailFormatOf
     if opts.has_key?(:with) # holdover from versions <= 1.4.7
       return [opts[:message]] unless email&.match?(opts[:with])
     else
-      return [opts[:message]] unless validate_local_part_syntax(local) and validate_domain_part_syntax(domain)
+      return [opts[:message]] unless validate_local_part_syntax(local) && validate_domain_part_syntax(domain)
     end
 
-    if opts[:check_mx] and !validate_email_domain(email, check_mx_timeout: opts[:check_mx_timeout])
+    if opts[:check_mx] && !validate_email_domain(email, check_mx_timeout: opts[:check_mx_timeout])
       return [opts[:mx_message]]
     end
 
@@ -189,7 +189,7 @@ module ValidatesEmailFormatOf
       end
 
       # backslash signifies the start of a quoted pair
-      if ord == 92 and i < local.length - 1
+      if ord == 92 && i < local.length - 1
         return false if !in_quoted_string # must be in quoted string per http://www.rfc-editor.org/errata_search.php?rfc=3696
         in_quoted_pair = true
         next
@@ -209,7 +209,7 @@ module ValidatesEmailFormatOf
 
       # period must be followed by something
       if ord == 46
-        return false if i == 0 or i == local.length - 1 # can't be first or last char
+        return false if i == 0 || i == local.length - 1 # can't be first or last char
         next unless local[i + 1].ord == 46 # can't be followed by a period
       end
 
