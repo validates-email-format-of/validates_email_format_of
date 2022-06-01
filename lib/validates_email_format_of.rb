@@ -8,7 +8,7 @@ module ValidatesEmailFormatOf
 
   require "resolv"
 
-  LocalPartSpecialChars = /[!\#$%&'*\-\/=?+\^_`{|}~]/
+  ATEXT_SYMBOLS = /[!\#$%&'*\-\/=?+\^_`{|}~]/
 
   # Characters that are allowed in to appear in the local part unquoted
   # https://www.rfc-editor.org/rfc/rfc5322#section-3.4.1
@@ -25,7 +25,7 @@ module ValidatesEmailFormatOf
   #
   #   dot-atom-text   =   1*atext *("." 1*atext)
   #   dot-atom        =   [CFWS] dot-atom-text [CFWS]
-  ATEXT = /\A[A-Z0-9#{LocalPartSpecialChars}]\z/i
+  ATEXT = /\A[A-Z0-9#{ATEXT_SYMBOLS}]\z/i
 
   # Characters that are allowed to appear unquoted in comments
   # https://www.rfc-editor.org/rfc/rfc5322#section-3.2.2
@@ -54,6 +54,8 @@ module ValidatesEmailFormatOf
   #                     [CFWS]
   QTEXT = /\A[#{Regexp.escape([33..33, 35..91, 93..126].map { |ascii_range| ascii_range.map(&:chr) }.flatten.join)}\s]/i
 
+  IP_OCTET = /\A[0-9]+\Z/
+
   # From https://datatracker.ietf.org/doc/html/rfc1035#section-2.3.1
   #
   # > The labels must follow the rules for ARPANET host names.  They must
@@ -66,9 +68,7 @@ module ValidatesEmailFormatOf
   # <ldh-str> ::= <let-dig-hyp> | <let-dig-hyp> <ldh-str>
   # <let-dig-hyp> ::= <let-dig> | "-"
   # <let-dig> ::= <letter> | <digit>
-  DomainPartLabel = /\A[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]?\Z/
-
-  IPAddressPart = /\A[0-9]+\Z/
+  DOMAIN_PART_LABEL = /\A[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]?\Z/
 
   # From https://tools.ietf.org/id/draft-liman-tld-names-00.html#rfc.section.2
   #
@@ -83,7 +83,7 @@ module ValidatesEmailFormatOf
   # ld       = ALPHA / DIGIT
   # ALPHA    = %x41-5A / %x61-7A   ; A-Z / a-z
   # DIGIT    = %x30-39             ; 0-9
-  DomainPartTLD = /\A[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]\Z/
+  DOMAIN_PART_TLD = /\A[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]\Z/
 
   def self.validate_email_domain(email, check_mx_timeout: 3)
     domain = email.to_s.downcase.match(/@(.+)/)[1]
@@ -228,7 +228,7 @@ module ValidatesEmailFormatOf
     return false if parts.length <= 1 # Only one domain part
 
     # ipv4
-    return true if parts.length == 4 && parts.all? { |part| part =~ IPAddressPart && part.to_i.between?(0, 255) }
+    return true if parts.length == 4 && parts.all? { |part| part =~ IP_OCTET && part.to_i.between?(0, 255) }
 
     # From https://datatracker.ietf.org/doc/html/rfc3696#section-2 this is the recommended, pragmatic way to validate a domain name:
     #
@@ -241,10 +241,10 @@ module ValidatesEmailFormatOf
     parts.each do |part|
       return false if part.nil? || part.empty?
       return false if part.length > 63
-      return false unless DomainPartLabel.match?(part)
+      return false unless DOMAIN_PART_LABEL.match?(part)
     end
 
-    return false unless DomainPartTLD.match?(parts[-1])
+    return false unless DOMAIN_PART_TLD.match?(parts[-1])
     true
   end
 end
