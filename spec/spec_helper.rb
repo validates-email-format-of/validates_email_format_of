@@ -1,4 +1,4 @@
-require "active_model" if Gem.loaded_specs.keys.include?("activemodel")
+require "active_model" if Gem.loaded_specs.key?("activemodel")
 require "pry"
 require "byebug"
 
