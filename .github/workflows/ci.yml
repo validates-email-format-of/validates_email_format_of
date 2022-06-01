@@ -62,3 +62,6 @@ jobs:
 
       - name: Run specs
         run: bundle exec rspec
+
+      - name: Run standard.rb
+        run: bundle exec rake standard

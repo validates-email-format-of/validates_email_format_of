@@ -1,4 +1,4 @@
-require "#{File.expand_path(File.dirname(__FILE__))}/spec_helper"
+require "#{__dir__}/spec_helper"
 if defined?(ActiveModel)
   require "validates_email_format_of/rspec_matcher"
 
