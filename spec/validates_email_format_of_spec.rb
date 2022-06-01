@@ -10,23 +10,19 @@ end
 
 describe ValidatesEmailFormatOf do
   subject do |example|
-    if defined?(ActiveModel)
-      user = Class.new do
-        def initialize(email)
-          @email = email.freeze
-        end
-        attr_reader :email
-        include ActiveModel::Validations
-        validates_email_format_of :email, example.example_group_instance.options
-
-        def self.model_name
-          ActiveModel::Name.new(self, nil, "User")
-        end
+    user = Class.new do
+      def initialize(email)
+        @email = email.freeze
       end
-      user.new(example.example_group_instance.email).tap(&:valid?).errors.full_messages
-    else
-      ValidatesEmailFormatOf.validate_email_format(email.freeze, options)
+      attr_reader :email
+      include ActiveModel::Validations
+      validates_email_format_of :email, example.example_group_instance.options
+
+      def self.model_name
+        ActiveModel::Name.new(self, nil, "User")
+      end
     end
+    user.new(example.example_group_instance.email).tap(&:valid?).errors.full_messages
   end
   let(:options) { {} }
   let(:email) { |example| example.example_group.description }
@@ -175,7 +171,9 @@ describe ValidatesEmailFormatOf do
     describe "custom error messages" do
       describe "invalid@example." do
         let(:options) { {message: "just because I don't like you"} }
-        it { should have_errors_on_email.because("just because I don't like you") }
+        it {
+          should have_errors_on_email.because("just because I don't like you")
+        }
       end
     end
 
@@ -189,11 +187,11 @@ describe ValidatesEmailFormatOf do
         let(:a_record) { [double] }
         before(:each) do
           allow(Resolv::DNS).to receive(:open).and_yield(dns)
-          expect(dns).to receive(:"timeouts=").with(3).once
+          allow(dns).to receive(:"timeouts=").with(3).once
           allow(dns).to receive(:getresources).with(domain, Resolv::DNS::Resource::IN::MX).once.and_return(mx_record)
           allow(dns).to receive(:getresources).with(domain, Resolv::DNS::Resource::IN::A).once.and_return(a_record)
         end
-        let(:options) { {check_mx: true} }
+        let(:options) { {check_mx: true, check_mx_timeout: 3} }
         describe "and only an mx record is found" do
           let(:a_record) { [] }
           describe email do
@@ -231,22 +229,6 @@ describe ValidatesEmailFormatOf do
               let(:locale) { :pl }
               describe email do
                 it { should have_errors_on_email.because("jest nieosiągalny") }
-              end
-            end
-            unless defined?(ActiveModel)
-              describe email do
-                let(:locale) { :ir }
-                describe email do
-                  it { should have_errors_on_email.because("is not routable") }
-                end
-              end
-            end
-          end
-          unless defined?(ActiveModel)
-            describe "without i18n" do
-              before(:each) { hide_const("I18n") }
-              describe email do
-                it { should have_errors_on_email.because("is not routable") }
               end
             end
           end
@@ -294,45 +276,51 @@ describe ValidatesEmailFormatOf do
           it { should have_errors_on_email.because("nieprawidłowy adres e-mail") }
         end
       end
-      unless defined?(ActiveModel)
-        describe "missing locale" do
-          let(:locale) { :ir }
-          describe "invalid@exmaple." do
-            it { should have_errors_on_email.because("does not appear to be valid") }
-          end
-        end
-      end
-    end
-    unless defined?(ActiveModel)
-      describe "without i18n" do
-        before(:each) { hide_const("I18n") }
-        describe "invalid@exmaple." do
-          it { should have_errors_on_email.because("does not appear to be valid") }
-        end
-      end
     end
   end
   it_should_behave_like :all_specs
 
-  if defined?(ActiveModel)
-    describe "shorthand ActiveModel validation" do
-      subject do |example|
-        user = Class.new do
-          def initialize(email)
-            @email = email.freeze
-          end
-          attr_reader :email
-          include ActiveModel::Validations
-          validates :email, email_format: example.example_group_instance.options
-
-          def self.model_name
-            ActiveModel::Name.new(self, nil, "User")
-          end
-        end
-        user.new(example.example_group_instance.email).tap(&:valid?).errors.full_messages
-      end
-
-      it_should_behave_like :all_specs
+  describe "validation without ActiveModel" do
+    subject do
+      ValidatesEmailFormatOf.validate_email_format(email.freeze, options)
     end
+
+    describe "valid@example.com" do
+      it { should be_nil }
+    end
+
+    describe "custom error messages" do
+      describe "invalid@example." do
+        let(:options) { {message: "just because I don't like you"} }
+        it { should match_array(["just because I don't like you"]) }
+      end
+    end
+
+    describe "without i18n" do
+      before(:each) { hide_const("I18n") }
+      describe "invalid@exmaple." do
+        it { should match_array(["does not appear to be valid"]) }
+      end
+    end
+  end
+
+  describe "shorthand ActiveModel validation" do
+    subject do |example|
+      user = Class.new do
+        def initialize(email)
+          @email = email.freeze
+        end
+        attr_reader :email
+        include ActiveModel::Validations
+        validates :email, email_format: example.example_group_instance.options
+
+        def self.model_name
+          ActiveModel::Name.new(self, nil, "User")
+        end
+      end
+      user.new(example.example_group_instance.email).tap(&:valid?).errors.full_messages
+    end
+
+    it_should_behave_like :all_specs
   end
 end

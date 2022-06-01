@@ -1,4 +1,5 @@
-require "active_model" if Gem.loaded_specs.key?("activemodel")
+require "active_model"
+require "active_support"
 require "pry"
 require "byebug"
 
@@ -8,7 +9,7 @@ RSpec::Matchers.define :have_errors_on_email do
     expect(actual).not_to be_empty, "#{actual} should not be empty"
     expect(actual.size).to eq(@reasons.size), "#{actual} should have #{@reasons.size} elements"
     @reasons.each do |reason|
-      reason = "#{"Email " if defined?(ActiveModel)}#{reason}"
+      reason = "Email #{reason}"
       expect(actual).to include(reason), "#{actual} should contain #{reason}"
     end
   end
@@ -19,6 +20,6 @@ RSpec::Matchers.define :have_errors_on_email do
     (@reasons ||= []) << reason
   end
   match_when_negated do |actual|
-    expect(actual).to(defined?(ActiveModel) ? be_empty : be_nil)
+    expect(actual).to(be_empty)
   end
 end
