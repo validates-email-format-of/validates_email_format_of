@@ -18,8 +18,11 @@ describe ValidatesEmailFormatOf do
         attr_reader :email
         include ActiveModel::Validations
         validates_email_format_of :email, example.example_group_instance.options
+
+        def self.model_name
+          ActiveModel::Name.new(self, nil, "User")
+        end
       end
-      example.example_group_instance.class::User = user
       user.new(example.example_group_instance.email).tap(&:valid?).errors.full_messages
     else
       ValidatesEmailFormatOf.validate_email_format(email.freeze, options)
@@ -321,8 +324,11 @@ describe ValidatesEmailFormatOf do
           attr_reader :email
           include ActiveModel::Validations
           validates :email, email_format: example.example_group_instance.options
+
+          def self.model_name
+            ActiveModel::Name.new(self, nil, "User")
+          end
         end
-        example.example_group_instance.class::User = user
         user.new(example.example_group_instance.email).tap(&:valid?).errors.full_messages
       end
 
