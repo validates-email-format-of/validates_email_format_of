@@ -1,7 +1,7 @@
 $:.unshift File.expand_path("../lib", __FILE__)
 require "validates_email_format_of/version"
 
-spec = Gem::Specification.new do |s|
+Gem::Specification.new do |s|
   s.name = "validates_email_format_of"
   s.version = ValidatesEmailFormatOf::VERSION
   s.summary = "Validate e-mail addresses against RFC 2822 and RFC 3696."

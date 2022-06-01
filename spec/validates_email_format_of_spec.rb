@@ -182,7 +182,7 @@ describe ValidatesEmailFormatOf do
     describe "mx record" do
       domain = "example.com"
       email = "valid@#{domain}"
-      check_mx_timeout = 3
+
       describe "when testing" do
         let(:dns) { double(Resolv::DNS) }
         let(:mx_record) { [double] }
