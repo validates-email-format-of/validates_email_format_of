@@ -80,6 +80,7 @@ describe ValidatesEmailFormatOf do
 
     [
       "no_at_symbol",
+      "multiple@at@symbols.com",
       "invalid@example-com",
       # period can not start local part
       ".invalid@example.com",

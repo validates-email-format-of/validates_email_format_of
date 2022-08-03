@@ -8,10 +8,8 @@ module ValidatesEmailFormatOf
 
   require "resolv"
 
-  ATEXT_SYMBOLS = /[!\#$%&'*\-\/=?+\^_`{|}~]/
-
   # Characters that are allowed in to appear in the local part unquoted
-  # https://www.rfc-editor.org/rfc/rfc5322#section-3.4.1
+  # https://www.rfc-editor.org/rfc/rfc5322#section-3.2.3
   #
   # An addr-spec is a specific Internet identifier that contains a
   # locally interpreted string followed by the at-sign character ("@",
@@ -23,9 +21,13 @@ module ValidatesEmailFormatOf
   # string form SHOULD NOT be used.  Comments and folding white space
   # SHOULD NOT be used around the "@" in the addr-spec.
   #
+  #   atext           =   ALPHA / DIGIT /
+  #                       "!" / "#" / "$" / "%" / "&" / "'" / "*" /
+  #                       "+" / "-" / "/" / "=" / "?" / "^" / "_" /
+  #                       "`" / "{" / "|" / "}" / "~"
   #   dot-atom-text   =   1*atext *("." 1*atext)
   #   dot-atom        =   [CFWS] dot-atom-text [CFWS]
-  ATEXT = /\A[A-Z0-9#{ATEXT_SYMBOLS}]\z/i
+  ATEXT = /\A[A-Z0-9!\#$%&'*\-\/=?+\^_`{|}~]\z/i
 
   # Characters that are allowed to appear unquoted in comments
   # https://www.rfc-editor.org/rfc/rfc5322#section-3.2.2
