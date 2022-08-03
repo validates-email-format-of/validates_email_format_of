@@ -85,7 +85,7 @@ Yes, our Rspec syntax is that simple!
 
 == Credits
 
-Written by Alex Dunae (dunae.ca), 2006-11.
+Written by Alex Dunae (dunae.ca), 2006-22.
 
 Many thanks to the plugin's recent contributors: https://github.com/alexdunae/validates_email_format_of/contributors
 
