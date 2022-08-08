@@ -44,26 +44,18 @@ ValidatesEmailFormatOf::validate_email_format("invalid_because_there_is_no_at_sy
 
 ## Options
 
-  :message
-     String. A custom error message when the email format is invalid (default is: "does not appear to be a valid e-mail address")
-  :check_mx
-     Boolean. Check domain for a valid MX record (default is false)
-  :check_mx_timeout
-     Integer. Timeout in seconds for checking MX records before a `ResolvTimeout` is raised (default is 3).
-  :mx_message
-     String. A custom error message when the domain does not match a valid MX record (default is: "is not routable").  Ignored unless :check_mx option is true.
-  :local_length
-    Maximum number of characters allowed in the local part (everything before the '@') (default is 64)
-  :domain_length
-    Maximum number of characters allowed in the domain part (everything after the '@') (default is 255)
-  :generate_message
-    Boolean. Return the I18n key of the error message instead of the error message itself (default is false)
-  :with
-    Specify a custom Regex as the valid email format.
-  :on, :if, :unless, :allow_nil, :allow_blank, :strict
-     Standard ActiveModel validation options.  These work in the ActiveModel/ActiveRecord/Rails syntax only.
-     See http://api.rubyonrails.org/classes/ActiveModel/Validations/ClassMethods.html#method-i-validates for details.
+| Option | Type | Description |
+| --- | --- | --- |
+| `:message` | String | A custom error message when the email format is invalid (default is: "does not appear to be a valid e-mail address") |
+| `:check_mx` | Boolean | Check domain for a valid MX record (default is false) |
+| `:check_mx_timeout` | Integer | Timeout in seconds for checking MX records before a `ResolvTimeout` is raised (default is 3). |
+| `:mx_message` | String | A custom error message when the domain does not match a valid MX record (default is: "is not routable").  Ignored unless :check_mx option is true. |
+| `:local_length` | Maximum number of characters allowed in the local part (everything before the '@') (default is 64) |
+| `:domain_length` | Maximum number of characters allowed in the domain part (everything after the '@') (default is 255) |
+| `:generate_message` | Boolean Return the I18n key of the error message instead of the error message itself (default is false) |
+| `:with` | Regex | Specify a custom Regex as the valid email format. |
 
+The standard ActiveModel validation options (`:on`, `:if`, `:unless`, `:allow_nil`, `:allow_blank`, etc...) all work as well when using the gem as part of a Rails application.
 ## Testing
 
 To execute the unit tests against [all the Rails versions we support run](gemfiles/) <tt>bundle exec appraisal rspec</tt> or run against an individual version with <tt>bundle exec appraisal rails-6.0 rspec</tt>.
