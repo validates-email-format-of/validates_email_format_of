@@ -1,40 +1,48 @@
-= validates_email_format_of Gem and Rails Plugin
+# validates_email_format_of Gem and Rails Plugin
+
+[![Build Status](https://github.com/validates-email-format-of/validates_email_format_of/actions/workflows/ci.yml/badge.svg)]( https://github.com/validates-email-format-of/validates_email_format_of/actions/workflows/ci.yml?query=branch%3Amaster)
+
 
 Validate e-mail addresses against RFC 2822 and RFC 3696.
 
-== Installation
+## Installation
 
-Installing as a gem:
+Add the gem to your Gemfile with:
 
-  gem install validates_email_format_of
+```sh
+gem 'validates_email_format_of'
+```
 
-Or in your Gemfile:
+### Usage in a Rails app
 
-  gem 'validates_email_format_of'
+```ruby
+# I18n locales are loaded automatically.
+class Person < ActiveRecord::Base
+  validates_email_format_of :email, :message => 'is not looking good'
+  # OR
+  validates :email, :email_format => { :message => 'is not looking good' }
+end
+```
 
-== Usage
+You can use the included `rspec` matcher as well:
 
-  # Rails
-  # I18n locales are loaded automatically.
-  class Person < ActiveRecord::Base
-    validates_email_format_of :email, :message => 'is not looking good'
-    # OR
-    validates :email, :email_format => { :message => 'is not looking good' }
-  end
+```ruby
+require "validates_email_format_of/rspec_matcher"
+describe Person do
+  it { should validate_email_format_of(:email).with_message('is not looking good') }
+end
+```
 
-  # Now you can test your model using RSpec:
-  require "validates_email_format_of/rspec_matcher"
-  describe Person do
-    it { should validate_email_format_of(:email).with_message('is not looking good') }
-  end
+### Useage without Rails
 
-  # If you're not using Rails (which really means, if you're not using ActiveModel::Validations)
-  ValidatesEmailFormatOf::load_i18n_locales # Optional, if you want error messages to be in your language
-  I18n.locale = :pl # If, for example, you want Polish error messages.
-  ValidatesEmailFormatOf::validate_email_format("example@mydomain.com") # => nil
-  ValidatesEmailFormatOf::validate_email_format("invalid_because_there_is_no_at_symbol") # => ["does not appear to be a valid e-mail address"]
+```ruby
+ValidatesEmailFormatOf::load_i18n_locales # Optional, if you want error messages to be in your language
+I18n.locale = :pl # If, for example, you want Polish error messages.
+ValidatesEmailFormatOf::validate_email_format("example@mydomain.com") # => nil
+ValidatesEmailFormatOf::validate_email_format("invalid_because_there_is_no_at_symbol") # => ["does not appear to be a valid e-mail address"]
+```
 
-=== Options
+## Options
 
   :message
      String. A custom error message when the email format is invalid (default is: "does not appear to be a valid e-mail address")
@@ -56,34 +64,35 @@ Or in your Gemfile:
      Standard ActiveModel validation options.  These work in the ActiveModel/ActiveRecord/Rails syntax only.
      See http://api.rubyonrails.org/classes/ActiveModel/Validations/ClassMethods.html#method-i-validates for details.
 
-== Testing
+## Testing
 
 To execute the unit tests against [all the Rails versions we support run](gemfiles/) <tt>bundle exec appraisal rspec</tt> or run against an individual version with <tt>bundle exec appraisal rails-6.0 rspec</tt>.
 
-Tested in Ruby 1.8.7, 1.9.2, 1.9.3, 2.0.0, 2.1.2, JRuby and REE 1.8.7.
+You can see our [current Ruby and Rails test matrix here](./github/workflows/ci.yml).
 
-== Contributing
+## Contributing
 
-If you think we're letting some rules about valid email formats slip through the cracks, don't just update the Regex.
-Instead, add a failing test, and demonstrate that the described email address should be treated differently.  A link to an appropriate RFC is the best way to do this.
-Then change the gem code to make the test pass.
+If you think we're letting some rules about valid email formats slip through the cracks, don't just update the parser. Instead, add a failing test and demonstrate that the described email address should be treated differently.  A link to an appropriate RFC is the best way to do this. Then change the gem code to make the test pass.
 
-  describe "i_think_this_is_not_a_v@lid_email_addre.ss" do
-    # According to http://..., this email address IS NOT valid.
-    it { should have_errors_on_email.because("does not appear to be valid") }
-  end
-  describe "i_think_this_is_a_v@lid_email_addre.ss" do
-    # According to http://..., this email address IS valid.
-    it { should_not have_errors_on_email }
-  end
+```ruby
+describe "i_think_this_is_not_a_v@lid_email_addre.ss" do
+  # According to http://..., this email address IS NOT valid.
+  it { should have_errors_on_email.because("does not appear to be valid") }
+end
+
+describe "i_think_this_is_a_v@lid_email_addre.ss" do
+  # According to http://..., this email address IS valid.
+  it { should_not have_errors_on_email }
+end
+```
 
 Yes, our Rspec syntax is that simple!
 
-== Homepage
+## Homepage
 
 * https://github.com/validates-email-format-of/validates_email_format_of
 
-== Credits
+## Credits
 
 Written by Alex Dunae (dunae.ca), 2006-22.
 
