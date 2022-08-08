@@ -2,11 +2,11 @@
 
 [![Build Status](https://github.com/validates-email-format-of/validates_email_format_of/actions/workflows/ci.yml/badge.svg)]( https://github.com/validates-email-format-of/validates_email_format_of/actions/workflows/ci.yml?query=branch%3Amaster)
 
-A ruby gem to validate e-mail addresses against RFC 2822 and RFC 3696.
+A Ruby gem to validate e-mail addresses against RFC 2822 and RFC 3696.
 
 ## Why this email validator?
 
-This gem is actually the O.G. email validation gem for Rails.  It was started back in 2006.
+This gem is the O.G. email validation gem for Rails.  It was started back in 2006.
 
 Why use this validator?  Instead of trying to validate email addresses with one giant regular expression, this library parses addresses character by character.  This lets us handle weird cases likes [nested comments](https://www.rfc-editor.org/rfc/rfc5322#appendix-A.5).  Gross but technically allowed.
 
@@ -23,11 +23,12 @@ gem 'validates_email_format_of'
 ### Usage in a Rails app
 
 ```ruby
-# I18n locales are loaded automatically.
 class Person < ActiveRecord::Base
-  validates_email_format_of :email, :message => 'is not looking good'
+  validates :email, :email_format => { :message => "is not looking good" }
+
   # OR
-  validates :email, :email_format => { :message => 'is not looking good' }
+
+  validates_email_format_of :email, :message => "is not looking good"
 end
 ```
 
@@ -35,18 +36,21 @@ You can use the included `rspec` matcher as well:
 
 ```ruby
 require "validates_email_format_of/rspec_matcher"
+
 describe Person do
-  it { should validate_email_format_of(:email).with_message('is not looking good') }
+  it { should validate_email_format_of(:email).with_message("is not looking good") }
 end
 ```
 
 ### Useage without Rails
 
 ```ruby
-ValidatesEmailFormatOf::load_i18n_locales # Optional, if you want error messages to be in your language
-I18n.locale = :pl # If, for example, you want Polish error messages.
+# Optional, if you want error messages to be in your language
+ValidatesEmailFormatOf::load_i18n_locales
+I18n.locale = :pl
+
 ValidatesEmailFormatOf::validate_email_format("example@mydomain.com") # => nil
-ValidatesEmailFormatOf::validate_email_format("invalid_because_there_is_no_at_symbol") # => ["does not appear to be a valid e-mail address"]
+ValidatesEmailFormatOf::validate_email_format("invalid@") # => ["does not appear to be a valid e-mail address"]
 ```
 
 ## Options
@@ -57,9 +61,9 @@ ValidatesEmailFormatOf::validate_email_format("invalid_because_there_is_no_at_sy
 | `:check_mx` | Boolean | Check domain for a valid MX record (default is false) |
 | `:check_mx_timeout` | Integer | Timeout in seconds for checking MX records before a `ResolvTimeout` is raised (default is 3). |
 | `:mx_message` | String | A custom error message when the domain does not match a valid MX record (default is: "is not routable").  Ignored unless :check_mx option is true. |
-| `:local_length` | Maximum number of characters allowed in the local part (everything before the '@') (default is 64) |
-| `:domain_length` | Maximum number of characters allowed in the domain part (everything after the '@') (default is 255) |
-| `:generate_message` | Boolean Return the I18n key of the error message instead of the error message itself (default is false) |
+| `:local_length` |Integer | Maximum number of characters allowed in the local part (everything before the '@') (default is 64) |
+| `:domain_length` | Integer | Maximum number of characters allowed in the domain part (everything after the '@') (default is 255) |
+| `:generate_message` | Boolean | Return the I18n key of the error message instead of the error message itself (default is false) |
 | `:with` | Regex | Specify a custom Regex as the valid email format. |
 
 The standard ActiveModel validation options (`:on`, `:if`, `:unless`, `:allow_nil`, `:allow_blank`, etc...) all work as well when using the gem as part of a Rails application.
