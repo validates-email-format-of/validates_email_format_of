@@ -1,9 +1,16 @@
-# validates_email_format_of Gem and Rails Plugin
+# validates_email_format_of
 
 [![Build Status](https://github.com/validates-email-format-of/validates_email_format_of/actions/workflows/ci.yml/badge.svg)]( https://github.com/validates-email-format-of/validates_email_format_of/actions/workflows/ci.yml?query=branch%3Amaster)
 
+A ruby gem to validate e-mail addresses against RFC 2822 and RFC 3696.
 
-Validate e-mail addresses against RFC 2822 and RFC 3696.
+## Why this email validator?
+
+This gem is actually the O.G. email validation gem for Rails.  It was started back in 2006.
+
+Why use this validator?  Instead of trying to validate email addresses with one giant regular expression, this library parses addresses character by character.  This lets us handle weird cases likes [nested comments](https://www.rfc-editor.org/rfc/rfc5322#appendix-A.5).  Gross but technically allowed.
+
+In reality, most email validating scripts will get you where you need to go.  This library just aims to go all the way.
 
 ## Installation
 
