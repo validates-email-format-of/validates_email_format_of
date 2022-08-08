@@ -120,7 +120,6 @@ module ValidatesEmailFormatOf
   # * <tt>check_mx</tt> - Check for MX records (default is false)
   # * <tt>check_mx_timeout</tt> - Timeout in seconds for checking MX records before a `ResolvTimeout` is raised (default is 3)
   # * <tt>mx_message</tt> - A custom error message when an MX record validation fails (default is: "is not routable.")
-  # * <tt>with</tt> The regex to use for validating the format of the email address (deprecated)
   # * <tt>local_length</tt> Maximum number of characters allowed in the local part (default is 64)
   # * <tt>domain_length</tt> Maximum number of characters allowed in the domain part (default is 255)
   # * <tt>generate_message</tt> Return the I18n key of the error message instead of the error message itself (default is false)
@@ -154,6 +153,7 @@ module ValidatesEmailFormatOf
     domain.reverse!
 
     if opts.has_key?(:with) # holdover from versions <= 1.4.7
+      deprecation_warn(":with option is deprecated and will be removed in the next version")
       return [opts[:message]] unless email&.match?(opts[:with])
     else
       return [opts[:message]] unless validate_local_part_syntax(local) && validate_domain_part_syntax(domain)
@@ -255,6 +255,14 @@ module ValidatesEmailFormatOf
 
     return false unless DOMAIN_PART_TLD.match?(parts[-1])
     true
+  end
+
+  def self.deprecation_warn(msg)
+    if defined?(ActiveSupport::Deprecation)
+      ActiveSupport::Deprecation.warn(msg)
+    else
+      warn
+    end
   end
 end
 
