@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+* ⚠️ Deprecate `:with` option - https://github.com/validates-email-format-of/validates_email_format_of/issues/42
+
 [Unreleased]: https://github.com/validates-email-format-of/validates_email_format_of/compare/v1.7.2...master
 
 ## [1.7.2]

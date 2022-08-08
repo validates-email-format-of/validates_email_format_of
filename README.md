@@ -64,7 +64,6 @@ ValidatesEmailFormatOf::validate_email_format("invalid@") # => ["does not appear
 | `:local_length` |Integer | Maximum number of characters allowed in the local part (everything before the '@') (default is 64) |
 | `:domain_length` | Integer | Maximum number of characters allowed in the domain part (everything after the '@') (default is 255) |
 | `:generate_message` | Boolean | Return the I18n key of the error message instead of the error message itself (default is false) |
-| `:with` | Regex | Specify a custom Regex as the valid email format. |
 
 The standard ActiveModel validation options (`:on`, `:if`, `:unless`, `:allow_nil`, `:allow_blank`, etc...) all work as well when using the gem as part of a Rails application.
 ## Testing
