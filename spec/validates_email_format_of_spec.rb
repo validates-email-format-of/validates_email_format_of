@@ -35,6 +35,7 @@ describe ValidatesEmailFormatOf do
       "valid_valid123@test.example.com",
       "valid-valid+123@test.example.co.uk",
       "valid-valid+1.23@test.example.com.au",
+      "valid@1example.com",
       "valid@example.co.uk",
       "v@example.com",
       "valid@example.ca",
