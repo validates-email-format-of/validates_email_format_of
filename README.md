@@ -58,10 +58,9 @@ ValidatesEmailFormatOf::validate_email_format("invalid_because_there_is_no_at_sy
 The standard ActiveModel validation options (`:on`, `:if`, `:unless`, `:allow_nil`, `:allow_blank`, etc...) all work as well when using the gem as part of a Rails application.
 ## Testing
 
+You can see our [current Ruby and Rails test matrix here](.github/workflows/ci.yml).
+
 To execute the unit tests against [all the Rails versions we support run](gemfiles/) <tt>bundle exec appraisal rspec</tt> or run against an individual version with <tt>bundle exec appraisal rails-6.0 rspec</tt>.
-
-You can see our [current Ruby and Rails test matrix here](./github/workflows/ci.yml).
-
 ## Contributing
 
 If you think we're letting some rules about valid email formats slip through the cracks, don't just update the parser. Instead, add a failing test and demonstrate that the described email address should be treated differently.  A link to an appropriate RFC is the best way to do this. Then change the gem code to make the test pass.
