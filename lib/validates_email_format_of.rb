@@ -70,7 +70,14 @@ module ValidatesEmailFormatOf
   # <ldh-str> ::= <let-dig-hyp> | <let-dig-hyp> <ldh-str>
   # <let-dig-hyp> ::= <let-dig> | "-"
   # <let-dig> ::= <letter> | <digit>
-  DOMAIN_PART_LABEL = /\A[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]?\Z/
+  #
+  # Additionally, from https://datatracker.ietf.org/doc/html/rfc1123#section-2.1
+  #
+  # > One aspect of host name syntax is hereby changed: the
+  # > restriction on the first character is relaxed to allow either a
+  # > letter or a digit.  Host software MUST support this more liberal
+  # > syntax.
+  DOMAIN_PART_LABEL = /\A[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]?\Z/
 
   # From https://tools.ietf.org/id/draft-liman-tld-names-00.html#rfc.section.2
   #
