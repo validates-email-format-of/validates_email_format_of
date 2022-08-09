@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/validates-email-format-of/validates_email_format_of/actions/workflows/ci.yml/badge.svg)]( https://github.com/validates-email-format-of/validates_email_format_of/actions/workflows/ci.yml?query=branch%3Amaster)
 
-A Ruby gem to validate e-mail addresses against RFC 2822 and RFC 3696.
+A Ruby gem to validate e-mail addresses against RFC 2822 and RFC 5322.
 
 ## Why this email validator?
 
