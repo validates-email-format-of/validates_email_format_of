@@ -64,7 +64,12 @@ describe ValidatesEmailFormatOf do
       "test@192.192.192.1",
       # Allow quoted characters.  Valid according to http://www.rfc-editor.org/errata_search.php?rfc=3696
       '"Abc\@def"@example.com',
+      "\"quote\".dotatom.\"otherquote\"@example.com",
       '"Quote(Only".Chars@wier.de',
+      "\"much.more unusual\"@example.com",
+      "\"very.unusual.@.unusual.com\"@example.com",
+      '"very.(),:;<>[]\".VERY.\"very@\\ \"very\".unusual"@strange.example.com',
+      '"()<>[]:,;@\"!#$%&*+-/=?^_`{}| ~  ? ^_`{}|~.a"@example.org',
       '"Fred\ Bloggs"@example.com',
       '"Joe.\\Blow"@example.com',
       # Balanced quoted characters
@@ -98,6 +103,7 @@ describe ValidatesEmailFormatOf do
       "invalid@example.com-",
       "invalid-example.com",
       "invalid@example.b#r.com",
+      "just\"not\"right@example.com",
       "invalid@example.c",
       "invali d@example.com",
       # TLD can not be only numeric
