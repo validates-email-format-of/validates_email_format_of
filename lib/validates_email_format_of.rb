@@ -171,6 +171,19 @@ module ValidatesEmailFormatOf
     in_quoted_string = false
     comment_depth = 0
 
+    # The local part is made up of dot-atom and quoted-string joined together by "." characters
+    #
+    # https://www.rfc-editor.org/rfc/rfc5322#section-3.4.1
+    # > local-part      =   dot-atom / quoted-string / obs-local-part
+    #
+    # https://www.rfc-editor.org/rfc/rfc5322#section-3.2.3
+    # Both atom and dot-atom are interpreted as a single unit, comprising
+    # > the string of characters that make it up.  Semantically, the optional
+    # > comments and FWS surrounding the rest of the characters are not part
+    # > of the atom; the atom is only the run of atext characters in an atom,
+    # > or the atext and "." characters in a dot-atom.
+    joining_atoms = true
+
     (0..local.length - 1).each do |i|
       ord = local[i].ord
 
@@ -180,6 +193,32 @@ module ValidatesEmailFormatOf
         next
       end
 
+      # double quote delimits quoted strings
+      if ord == 34
+        if in_quoted_string # leaving the quoted string
+          in_quoted_string = false
+          next
+        elsif joining_atoms # are we allowed to enter a quoted string?
+          in_quoted_string = true
+          joining_atoms = false
+          next
+        else
+          return false
+        end
+      end
+
+      # period indicates we want to join atoms, e.g. `aaa.bbb."ccc"@example.com
+      if ord == 46
+        return false if i.zero?
+        return false if joining_atoms
+        joining_atoms = true
+        next
+      end
+
+      joining_atoms = false
+
+      # quoted string logic must come before comment processing since a quoted string
+      # may contain parens, e.g. `"name(a)"@example.com`
       if in_quoted_string
         next if QTEXT.match?(local[i])
       end
@@ -198,15 +237,12 @@ module ValidatesEmailFormatOf
       end
 
       # backslash signifies the start of a quoted pair
-      if ord == 92 && i < local.length - 1
-        return false if !in_quoted_string # must be in quoted string per http://www.rfc-editor.org/errata_search.php?rfc=3696
+      if ord == 92
+        # https://www.rfc-editor.org/rfc/rfc5322#section-3.2.1
+        # > The only places in this specification where quoted-pair currently appears are
+        # > ccontent, qcontent, and in obs-dtext in section 4.
+        return false unless in_quoted_string || comment_depth > 0
         in_quoted_pair = true
-        next
-      end
-
-      # double quote delimits quoted strings
-      if ord == 34
-        in_quoted_string = !in_quoted_string
         next
       end
 
@@ -216,17 +252,13 @@ module ValidatesEmailFormatOf
         next
       end
 
-      # period must be followed by something
-      if ord == 46
-        return false if i == 0 || i == local.length - 1 # can't be first or last char
-        next unless local[i + 1].ord == 46 # can't be followed by a period
-      end
-
       return false
     end
 
+    return false if in_quoted_pair # unbalanced quoted pair
     return false if in_quoted_string # unbalanced quotes
     return false unless comment_depth.zero? # unbalanced comment parens
+    return false if joining_atoms # the last char we encountered was a period
 
     true
   end
