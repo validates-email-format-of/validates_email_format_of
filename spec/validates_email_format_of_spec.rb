@@ -137,7 +137,7 @@ describe ValidatesEmailFormatOf do
       "(unbalancedcomment@example.com"
     ].each do |address|
       describe address do
-        it { should have_errors_on_email.because("does not appear to be a valid e-mail address") }
+        it { should have_errors_on_email.because("does not appear to be a valid email address") }
       end
     end
 
@@ -147,7 +147,7 @@ describe ValidatesEmailFormatOf do
           it { should_not have_errors_on_email }
         end
         describe "#{"a" * (limit + 1)}@example.com" do
-          it { should have_errors_on_email.because("does not appear to be a valid e-mail address") }
+          it { should have_errors_on_email.because("does not appear to be a valid email address") }
         end
       end
       describe "when using default" do
@@ -164,7 +164,7 @@ describe ValidatesEmailFormatOf do
           it { should_not have_errors_on_email }
         end
         describe "user@#{"a." * (limit / 2 + 1)}com" do
-          it { should have_errors_on_email.because("does not appear to be a valid e-mail address") }
+          it { should have_errors_on_email.because("does not appear to be a valid email address") }
         end
       end
       describe "when using default" do
@@ -270,7 +270,7 @@ describe ValidatesEmailFormatOf do
         it { should_not have_errors_on_email }
       end
       describe "valid@example.com" do
-        it { should have_errors_on_email.because("does not appear to be a valid e-mail address") }
+        it { should have_errors_on_email.because("does not appear to be a valid email address") }
       end
     end
 
@@ -281,7 +281,7 @@ describe ValidatesEmailFormatOf do
       describe "present locale" do
         let(:locale) { :pl }
         describe "invalid@exmaple." do
-          it { should have_errors_on_email.because("nieprawidłowy adres e-mail") }
+          it { should have_errors_on_email.because("nieprawidłowy adres email") }
         end
       end
     end

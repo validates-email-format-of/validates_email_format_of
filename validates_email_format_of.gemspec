@@ -4,7 +4,7 @@ require "validates_email_format_of/version"
 Gem::Specification.new do |s|
   s.name = "validates_email_format_of"
   s.version = ValidatesEmailFormatOf::VERSION
-  s.summary = "Validate e-mail addresses against RFC 2822 and RFC 3696."
+  s.summary = "Validate email addresses against RFC 2822 and RFC 3696."
   s.description = s.summary
   s.authors = ["Alex Dunae", "Isaac Betesh"]
   s.email = ["code@dunae.ca", "iybetesh@gmail.com"]
