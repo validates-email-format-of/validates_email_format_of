@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/validates-email-format-of/validates_email_format_of/actions/workflows/ci.yml/badge.svg)]( https://github.com/validates-email-format-of/validates_email_format_of/actions/workflows/ci.yml?query=branch%3Amaster)
 
-A Ruby gem to validate e-mail addresses against RFC 2822 and RFC 5322.
+A Ruby gem to validate email addresses against RFC 2822 and RFC 5322.
 
 ## Why this email validator?
 
@@ -50,14 +50,14 @@ ValidatesEmailFormatOf::load_i18n_locales
 I18n.locale = :pl
 
 ValidatesEmailFormatOf::validate_email_format("example@mydomain.com") # => nil
-ValidatesEmailFormatOf::validate_email_format("invalid@") # => ["does not appear to be a valid e-mail address"]
+ValidatesEmailFormatOf::validate_email_format("invalid@") # => ["does not appear to be a valid email address"]
 ```
 
 ## Options
 
 | Option | Type | Description |
 | --- | --- | --- |
-| `:message` | String | A custom error message when the email format is invalid (default is: "does not appear to be a valid e-mail address") |
+| `:message` | String | A custom error message when the email format is invalid (default is: "does not appear to be a valid email address") |
 | `:check_mx` | Boolean | Check domain for a valid MX record (default is false) |
 | `:check_mx_timeout` | Integer | Timeout in seconds for checking MX records before a `ResolvTimeout` is raised (default is 3). |
 | `:mx_message` | String | A custom error message when the domain does not match a valid MX record (default is: "is not routable").  Ignored unless :check_mx option is true. |
