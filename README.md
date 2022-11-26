@@ -42,7 +42,7 @@ describe Person do
 end
 ```
 
-### Useage without Rails
+### Usage without Rails
 
 ```ruby
 # Optional, if you want error messages to be in your language
