@@ -8,7 +8,7 @@ A Ruby gem to validate email addresses against RFC 2822 and RFC 5322.
 
 This gem is the O.G. email validation gem for Rails.  It was started back in 2006.
 
-Why use this validator?  Instead of trying to validate email addresses with one giant regular expression, this library parses addresses character by character.  This lets us handle weird cases likes [nested comments](https://www.rfc-editor.org/rfc/rfc5322#appendix-A.5).  Gross but technically allowed.
+Why use this validator?  Instead of trying to validate email addresses with one giant regular expression, this library parses addresses character by character.  This lets us handle weird cases like [nested comments](https://www.rfc-editor.org/rfc/rfc5322#appendix-A.5).  Gross but technically allowed.
 
 In reality, most email validating scripts will get you where you need to go.  This library just aims to go all the way.
 
@@ -42,7 +42,7 @@ describe Person do
 end
 ```
 
-### Useage without Rails
+### Usage without Rails
 
 ```ruby
 # Optional, if you want error messages to be in your language
