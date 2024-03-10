@@ -58,9 +58,15 @@ describe ValidatesEmailFormatOf do
       "_somename@example.com",
       # apostrophes
       "test'test@example.com",
-      # international domain names
+      # punycode domain names
       "test@xn--bcher-kva.ch",
       "test@example.xn--0zwm56d",
+
+      # IDN domains,
+      "test@exämple.com",
+      "test@пример.рф",
+      "test@почта.бел",
+
       "test@192.192.192.1",
       # Allow quoted characters.  Valid according to http://www.rfc-editor.org/errata_search.php?rfc=3696
       '"Abc\@def"@example.com',
@@ -185,6 +191,26 @@ describe ValidatesEmailFormatOf do
       end
     end
 
+    describe "when idn support is disabled" do
+      before(:each) do
+        allow(SimpleIDN).to receive(:to_ascii).never
+      end
+      let(:options) { {idn: false} }
+      describe "test@exämple.com" do
+        it { should have_errors_on_email.because("does not appear to be a valid email address") }
+      end
+    end
+
+    describe "when idn support is enabled" do
+      before(:each) do
+        allow(SimpleIDN).to receive(:to_ascii).once.with("exämple.com").and_return("xn--exmple-cua.com")
+      end
+      let(:options) { {idn: true} }
+      describe "test@exämple.com" do
+        it { should_not have_errors_on_email }
+      end
+    end
+
     describe "mx record" do
       domain = "example.com"
       email = "valid@#{domain}"
@@ -242,6 +268,7 @@ describe ValidatesEmailFormatOf do
           end
         end
       end
+
       describe "when not testing" do
         before(:each) { allow(Resolv::DNS).to receive(:open).never }
         describe "by default" do
@@ -260,6 +287,36 @@ describe ValidatesEmailFormatOf do
         describe email do
           let(:options) { {check_mx: true} }
           it { should_not have_errors_on_email }
+        end
+      end
+    end
+
+    describe "mx record for internationalized domain" do
+      domain = "пример.рф"
+      email = "valid@#{domain}"
+
+      describe "when idn support is enabled" do
+        let(:dns) { double(Resolv::DNS) }
+        let(:options) { {check_mx: true, idn: true} }
+
+        before(:each) do
+          allow(Resolv::DNS).to receive(:open).and_yield(dns)
+          allow(dns).to receive(:"timeouts=").with(3).once
+          allow(dns).to receive(:getresources).with(SimpleIDN.to_ascii(domain), Resolv::DNS::Resource::IN::A).once.and_return([double])
+          allow(dns).to receive(:getresources).with(SimpleIDN.to_ascii(domain), Resolv::DNS::Resource::IN::MX).once.and_return([double])
+        end
+
+        describe email do
+          it { should_not have_errors_on_email }
+        end
+      end
+
+      describe "when idn support is disabled" do
+        let(:options) { {check_mx: true, idn: false} }
+
+        describe "test@пример.рф" do
+          let(:domain) { "exämple.com" }
+          it { should have_errors_on_email.because("does not appear to be a valid email address") }
         end
       end
     end
