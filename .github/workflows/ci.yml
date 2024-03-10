@@ -46,7 +46,7 @@ jobs:
       RAILS_ENV: test
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: "Install Ruby ${{ matrix.ruby  }}"
         # To automatically get bug fixes and new Ruby versions for ruby/setup-ruby,
