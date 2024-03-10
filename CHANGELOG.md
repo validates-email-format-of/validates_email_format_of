@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+[Unreleased]: https://github.com/validates-email-format-of/validates_email_format_of/compare/v1.8.0...master
+
+## [1.8.0]
+
+* Add Internationalized Domain Name support - https://github.com/validates-email-format-of/validates_email_format_of/pull/103 - thanks https://github.com/sbilharz !
+* Add Turkish locale - https://github.com/validates-email-format-of/validates_email_format_of/pull/101 - thanks https://github.com/@krmbzds !
+* Added Indonesian locale - https://github.com/validates-email-format-of/validates_email_format_of/commit/129ebfc3a3b432b4df0334bcbdd74b1d17d765e0 - thanks https://github.com/khoerodin !
+* Fix inconsistent `generate_messages` behaviour - https://github.com/validates-email-format-of/validates_email_format_of/pull/105
 * ⚠️ Deprecate `:with` option - https://github.com/validates-email-format-of/validates_email_format_of/issues/42
 * Require i18n >= 0.8.0 in modern Ruby versions - https://github.com/advisories/GHSA-34hf-g744-jw64
 
