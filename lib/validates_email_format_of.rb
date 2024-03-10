@@ -1,4 +1,5 @@
 require "validates_email_format_of/version"
+require "simpleidn"
 
 module ValidatesEmailFormatOf
   def self.load_i18n_locales
@@ -77,7 +78,7 @@ module ValidatesEmailFormatOf
   # > restriction on the first character is relaxed to allow either a
   # > letter or a digit.  Host software MUST support this more liberal
   # > syntax.
-  DOMAIN_PART_LABEL = /\A[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]?\Z/
+  DOMAIN_PART_LABEL = /\A[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9]?\Z/
 
   # From https://tools.ietf.org/id/draft-liman-tld-names-00.html#rfc.section.2
   #
@@ -92,10 +93,12 @@ module ValidatesEmailFormatOf
   # ld       = ALPHA / DIGIT
   # ALPHA    = %x41-5A / %x61-7A   ; A-Z / a-z
   # DIGIT    = %x30-39             ; 0-9
-  DOMAIN_PART_TLD = /\A[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]\Z/
+  DOMAIN_PART_TLD = /\A[A-Za-z][A-Za-z0-9-]*[A-Za-z0-9]\Z/
 
-  def self.validate_email_domain(email, check_mx_timeout: 3)
+  def self.validate_email_domain(email, idn: true, check_mx_timeout: 3)
     domain = email.to_s.downcase.match(/@(.+)/)[1]
+    domain = SimpleIDN.to_ascii(domain) if idn
+
     Resolv::DNS.open do |dns|
       dns.timeouts = check_mx_timeout
       @mx = dns.getresources(domain, Resolv::DNS::Resource::IN::MX) + dns.getresources(domain, Resolv::DNS::Resource::IN::A)
@@ -119,6 +122,7 @@ module ValidatesEmailFormatOf
   # * <tt>message</tt> - A custom error message (default is: "does not appear to be valid")
   # * <tt>check_mx</tt> - Check for MX records (default is false)
   # * <tt>check_mx_timeout</tt> - Timeout in seconds for checking MX records before a `ResolvTimeout` is raised (default is 3)
+  # * <tt>idn</tt> - Enable or disable Internationalized Domain Names (default is true)
   # * <tt>mx_message</tt> - A custom error message when an MX record validation fails (default is: "is not routable.")
   # * <tt>local_length</tt> Maximum number of characters allowed in the local part (default is 64)
   # * <tt>domain_length</tt> Maximum number of characters allowed in the domain part (default is 255)
@@ -127,6 +131,7 @@ module ValidatesEmailFormatOf
     default_options = {message: options[:generate_message] ? ERROR_MESSAGE_I18N_KEY : default_message,
                        check_mx: false,
                        check_mx_timeout: 3,
+                       idn: true,
                        mx_message: if options[:generate_message]
                                      ERROR_MX_MESSAGE_I18N_KEY
                                    else
@@ -156,10 +161,10 @@ module ValidatesEmailFormatOf
       deprecation_warn(":with option is deprecated and will be removed in the next version")
       return [opts[:message]] unless email&.match?(opts[:with])
     else
-      return [opts[:message]] unless validate_local_part_syntax(local) && validate_domain_part_syntax(domain)
+      return [opts[:message]] unless validate_local_part_syntax(local) && validate_domain_part_syntax(domain, idn: opts[:idn])
     end
 
-    if opts[:check_mx] && !validate_email_domain(email, check_mx_timeout: opts[:check_mx_timeout])
+    if opts[:check_mx] && !validate_email_domain(email, check_mx_timeout: opts[:check_mx_timeout], idn: opts[:idn])
       return [opts[:mx_message]]
     end
 
@@ -263,7 +268,8 @@ module ValidatesEmailFormatOf
     true
   end
 
-  def self.validate_domain_part_syntax(domain)
+  def self.validate_domain_part_syntax(domain, idn: true)
+    domain = SimpleIDN.to_ascii(domain) if idn
     parts = domain.downcase.split(".", -1)
 
     return false if parts.length <= 1 # Only one domain part

@@ -60,6 +60,7 @@ ValidatesEmailFormatOf::validate_email_format("invalid@") # => ["does not appear
 | `:message` | String | A custom error message when the email format is invalid (default is: "does not appear to be a valid email address") |
 | `:check_mx` | Boolean | Check domain for a valid MX record (default is false) |
 | `:check_mx_timeout` | Integer | Timeout in seconds for checking MX records before a `ResolvTimeout` is raised (default is 3). |
+| `:idn` | Boolean | Allowed internationalized domain names like `test@exämple.com` and `test@пример.рф`. Otherwise only domains that have already been converted to [Punycode](https://en.wikipedia.org/wiki/Punycode) are supported. (default is true) |
 | `:mx_message` | String | A custom error message when the domain does not match a valid MX record (default is: "is not routable").  Ignored unless :check_mx option is true. |
 | `:local_length` |Integer | Maximum number of characters allowed in the local part (everything before the '@') (default is 64) |
 | `:domain_length` | Integer | Maximum number of characters allowed in the domain part (everything after the '@') (default is 255) |
