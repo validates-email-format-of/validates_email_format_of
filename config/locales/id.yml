@@ -1,0 +1,8 @@
+id:
+  activemodel: &errors
+    errors:
+      messages:
+        invalid_email_address: 'tampaknya bukan alamat email yang valid'
+        email_address_not_routable: 'tidak dapat dirutekan'
+  activerecord:
+    <<: *errors

@@ -1,5 +1,0 @@
-source "http://rubygems.org"
-
-gemspec
-
-gem 'active_model', '= 3.3.0'

@@ -2,7 +2,7 @@ pl:
   activemodel: &errors
     errors:
       messages:
-        invalid_email_address: 'nieprawidłowy adres e-mail'
+        invalid_email_address: 'nieprawidłowy adres email'
         email_address_not_routable: 'jest nieosiągalny'
   activerecord:
     <<: *errors
