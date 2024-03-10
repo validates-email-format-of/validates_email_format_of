@@ -1,0 +1,8 @@
+tr:
+  activemodel: &errors
+    errors:
+      messages:
+        invalid_email_address: 'geçerli bir eposta adresi değil'
+        email_address_not_routable: 'ulaşılabilir değil'
+  activerecord:
+    <<: *errors
