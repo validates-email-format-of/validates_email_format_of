@@ -22,7 +22,7 @@ describe ValidatesEmailFormatOf do
         ActiveModel::Name.new(self, nil, "User")
       end
     end
-    user.new(example.example_group_instance.email).tap(&:valid?).errors.full_messages
+    user.new(example.example_group_instance.email).tap(&:valid?)
   end
   let(:options) { {} }
   let(:email) { |example| example.example_group.description }
@@ -248,6 +248,9 @@ describe ValidatesEmailFormatOf do
           let(:mx_record) { [] }
           describe email do
             it { should have_errors_on_email.because("is not routable") }
+            it "adds the i18n key" do
+              subject.errors.added?(:email, ValidatesEmailFormatOf::ERROR_MX_MESSAGE_I18N_KEY)
+            end
           end
           describe "with a custom error message" do
             let(:options) { {check_mx: true, mx_message: "There ain't no such domain!"} }
@@ -255,6 +258,7 @@ describe ValidatesEmailFormatOf do
               it { should have_errors_on_email.because("There ain't no such domain!") }
             end
           end
+
           describe "i18n" do
             before(:each) do
               allow(I18n.config).to receive(:locale).and_return(locale)
@@ -383,7 +387,7 @@ describe ValidatesEmailFormatOf do
           ActiveModel::Name.new(self, nil, "User")
         end
       end
-      user.new(example.example_group_instance.email).tap(&:valid?).errors.full_messages
+      user.new(example.example_group_instance.email).tap(&:valid?)
     end
 
     it_should_behave_like :all_specs
