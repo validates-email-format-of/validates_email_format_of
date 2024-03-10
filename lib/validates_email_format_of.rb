@@ -78,7 +78,7 @@ module ValidatesEmailFormatOf
   # > restriction on the first character is relaxed to allow either a
   # > letter or a digit.  Host software MUST support this more liberal
   # > syntax.
-  DOMAIN_PART_LABEL = /\A[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]?\Z/
+  DOMAIN_PART_LABEL = /\A[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9]?\Z/
 
   # From https://tools.ietf.org/id/draft-liman-tld-names-00.html#rfc.section.2
   #
@@ -93,7 +93,7 @@ module ValidatesEmailFormatOf
   # ld       = ALPHA / DIGIT
   # ALPHA    = %x41-5A / %x61-7A   ; A-Z / a-z
   # DIGIT    = %x30-39             ; 0-9
-  DOMAIN_PART_TLD = /\A[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]\Z/
+  DOMAIN_PART_TLD = /\A[A-Za-z][A-Za-z0-9-]*[A-Za-z0-9]\Z/
 
   def self.validate_email_domain(email, idn: true, check_mx_timeout: 3)
     domain = email.to_s.downcase.match(/@(.+)/)[1]
