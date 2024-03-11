@@ -1,7 +1,5 @@
 require "active_model"
 require "active_support"
-require "pry"
-require "byebug"
 
 RSpec::Matchers.define :have_errors_on_email do
   match do |user|
