@@ -299,7 +299,7 @@ module ValidatesEmailFormatOf
     if defined?(ActiveSupport::Deprecation)
       ActiveSupport::Deprecation.warn(msg)
     else
-      warn
+      warn(msg)
     end
   end
 end
