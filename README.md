@@ -2,13 +2,13 @@
 
 [![Build Status](https://github.com/validates-email-format-of/validates_email_format_of/actions/workflows/ci.yml/badge.svg)]( https://github.com/validates-email-format-of/validates_email_format_of/actions/workflows/ci.yml?query=branch%3Amaster)
 
-A Ruby gem to validate email addresses against RFC 2822 and RFC 5322.
+A Ruby gem to validate email addresses against RFC 2822 and RFC 5322, with optional domain name lookups.
 
 ## Why this email validator?
 
 This gem is the O.G. email validation gem for Rails.  It was started back in 2006.
 
-Why use this validator?  Instead of trying to validate email addresses with one giant regular expression, this library parses addresses character by character.  This lets us handle weird cases like [nested comments](https://www.rfc-editor.org/rfc/rfc5322#appendix-A.5).  Gross but technically allowed.
+Why use this validator?  Instead of trying to validate email addresses with one giant regular expression, this library parses addresses character by character.  This lets us handle weird cases like [nested comments](https://www.rfc-editor.org/rfc/rfc5322#appendix-A.5).  Gross, but technically allowed.
 
 In reality, most email validating scripts will get you where you need to go.  This library just aims to go all the way.
 
@@ -45,13 +45,22 @@ end
 ### Usage without Rails
 
 ```ruby
+ValidatesEmailFormatOf::validate_email_format("example@mydomain.com") # => nil
+ValidatesEmailFormatOf::validate_email_format("invalid@") # => ["does not appear to be a valid email address"]
+
 # Optional, if you want error messages to be in your language
 ValidatesEmailFormatOf::load_i18n_locales
 I18n.locale = :pl
 
-ValidatesEmailFormatOf::validate_email_format("example@mydomain.com") # => nil
-ValidatesEmailFormatOf::validate_email_format("invalid@") # => ["does not appear to be a valid email address"]
+ValidatesEmailFormatOf::validate_email_format("invalid@") # => ["nieprawidłowy adres email"]
 ```
+
+## Internationalized Domain Names (IDN) and Punycode
+
+As of v1.8.0, this gem can validate email addresses using internationalized domain names (like `test@пример.рф`) as well as domains that have already been converted to Punycode code (like `test@xn--test@-3weu6azakd.xn--p1ai`).
+
+If you would like to forbid internationalized domains, you can pass the `idn: false` option.  Punycode is always accepted.
+
 
 ## Options
 
@@ -69,7 +78,7 @@ ValidatesEmailFormatOf::validate_email_format("invalid@") # => ["does not appear
 The standard ActiveModel validation options (`:on`, `:if`, `:unless`, `:allow_nil`, `:allow_blank`, etc...) all work as well when using the gem as part of a Rails application.
 ## Testing
 
-You can see our [current Ruby and Rails test matrix here](.github/workflows/ci.yml).
+The gem is tested against Rails 4.2 and onward across a bunch of Ruby versions including jruby. You can see our [current Ruby and Rails test matrix here](.github/workflows/ci.yml).
 
 To execute the unit tests against [all the Rails versions we support run](gemfiles/) <tt>bundle exec appraisal rspec</tt> or run against an individual version with <tt>bundle exec appraisal rails-6.0 rspec</tt>.
 ## Contributing
@@ -96,16 +105,16 @@ Yes, our Rspec syntax is that simple!
 
 ## Credits
 
-Written by Alex Dunae (dunae.ca), 2006-22.
+Written by [Alex Dunae](https://dunae.ca), 2006-24.
 
 Many thanks to the plugin's recent contributors: https://github.com/alexdunae/validates_email_format_of/contributors
 
-Thanks to Francis Hwang (http://fhwang.net/) at Diversion Media for creating the 1.1 update.
+Thanks to [Francis Hwang](http://fhwang.net/) at Diversion Media for creating the 1.1 update.
 
 Thanks to Travis Sinnott for creating the 1.3 update.
 
-Thanks to Denis Ahearn at Riverock Technologies (http://www.riverocktech.com/) for creating the 1.4 update.
+Thanks to Denis Ahearn at [Riverock Technologies](http://www.riverocktech.com/) for creating the 1.4 update.
 
-Thanks to George Anderson (http://github.com/george) and 'history' (http://github.com/history) for creating the 1.4.1 update.
+Thanks to [George Anderson](http://github.com/george) and ['history'](http://github.com/history) for creating the 1.4.1 update.
 
-Thanks to Isaac Betesh (https://github.com/betesh) for converting tests to Rspec and refactoring for version 1.6.0.
+Thanks to [Isaac Betesh](https://github.com/betesh) for converting tests to Rspec and refactoring for version 1.6.0.
