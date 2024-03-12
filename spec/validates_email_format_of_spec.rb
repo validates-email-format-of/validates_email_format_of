@@ -140,7 +140,8 @@ describe ValidatesEmailFormatOf do
       "\nnewline@example.com",
       " spacesbefore@example.com",
       "spacesafter@example.com ",
-      "(unbalancedcomment@example.com"
+      "(unbalancedcomment@example.com",
+      "help@.example.co.uk" # TLD can not start with a period
     ].each do |address|
       describe address do
         it { should have_errors_on_email.because("does not appear to be a valid email address") }
@@ -203,7 +204,8 @@ describe ValidatesEmailFormatOf do
 
     describe "when idn support is enabled" do
       before(:each) do
-        allow(SimpleIDN).to receive(:to_ascii).once.with("exämple.com").and_return("xn--exmple-cua.com")
+        expect(SimpleIDN).to receive(:to_ascii).with("exämple").and_return("xn--exmple-cua")
+        expect(SimpleIDN).to receive(:to_ascii).with("com").and_return("com")
       end
       let(:options) { {idn: true} }
       describe "test@exämple.com" do
