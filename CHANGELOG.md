@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+* Fix IDN->Punycode conversion when domain names start with periods - https://github.com/validates-email-format-of/validates_email_format_of/issues/109
+* Add jruby to test matrix - https://github.com/validates-email-format-of/validates_email_format_of/pull/108
+
 [Unreleased]: https://github.com/validates-email-format-of/validates_email_format_of/compare/v1.8.0...master
 
 ## [1.8.0]
@@ -13,13 +16,13 @@
 * ⚠️ Deprecate `:with` option - https://github.com/validates-email-format-of/validates_email_format_of/issues/42
 * Require i18n >= 0.8.0 in modern Ruby versions - https://github.com/advisories/GHSA-34hf-g744-jw64
 
-[Unreleased]: https://github.com/validates-email-format-of/validates_email_format_of/compare/v1.7.2...master
+[1.8.0]: https://github.com/validates-email-format-of/validates_email_format_of/compare/v1.7.2...master
 
 ## [1.7.2]
 
 * Fix regression that disallowed domains starting with number - https://github.com/validates-email-format-of/validates_email_format_of/issues/88
 
-[Unreleased]: https://github.com/validates-email-format-of/validates_email_format_of/compare/v1.7.1...v1.7.2
+[1.7.2]: https://github.com/validates-email-format-of/validates_email_format_of/compare/v1.7.1...v1.7.2
 
 ## [1.7.1] (3 Aug 2022)
 
