@@ -269,8 +269,8 @@ module ValidatesEmailFormatOf
   end
 
   def self.validate_domain_part_syntax(domain, idn: true)
-    domain = SimpleIDN.to_ascii(domain) if idn
     parts = domain.downcase.split(".", -1)
+    parts.map! { |part| SimpleIDN.to_ascii(part) } if idn
 
     return false if parts.length <= 1 # Only one domain part
 
