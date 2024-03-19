@@ -2,10 +2,14 @@
 
 ## [Unreleased]
 
+[Unreleased]: https://github.com/validates-email-format-of/validates_email_format_of/compare/v1.8.1...master
+
+## [1.8.1]
+
 * Fix IDN->Punycode conversion when domain names start with periods - https://github.com/validates-email-format-of/validates_email_format_of/issues/109
 * Add jruby to test matrix - https://github.com/validates-email-format-of/validates_email_format_of/pull/108
 
-[Unreleased]: https://github.com/validates-email-format-of/validates_email_format_of/compare/v1.8.0...master
+[Unreleased]: https://github.com/validates-email-format-of/validates_email_format_of/compare/v1.8.0...1.8.1
 
 ## [1.8.0]
 
