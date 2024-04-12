@@ -2,14 +2,20 @@
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/validates-email-format-of/validates_email_format_of/compare/v1.8.1...master
+[Unreleased]: https://github.com/validates-email-format-of/validates_email_format_of/compare/v1.8.2...master
+
+## [1.8.2]
+
+* Improve German translations - https://github.com/validates-email-format-of/validates_email_format_of/pull/111
+
+[1.8.2]: https://github.com/validates-email-format-of/validates_email_format_of/compare/v1.8.1...1.8.2
 
 ## [1.8.1]
 
 * Fix IDN->Punycode conversion when domain names start with periods - https://github.com/validates-email-format-of/validates_email_format_of/issues/109
 * Add jruby to test matrix - https://github.com/validates-email-format-of/validates_email_format_of/pull/108
 
-[Unreleased]: https://github.com/validates-email-format-of/validates_email_format_of/compare/v1.8.0...1.8.1
+[1.8.1]: https://github.com/validates-email-format-of/validates_email_format_of/compare/v1.8.0...1.8.1
 
 ## [1.8.0]
 
@@ -20,7 +26,7 @@
 * ⚠️ Deprecate `:with` option - https://github.com/validates-email-format-of/validates_email_format_of/issues/42
 * Require i18n >= 0.8.0 in modern Ruby versions - https://github.com/advisories/GHSA-34hf-g744-jw64
 
-[1.8.0]: https://github.com/validates-email-format-of/validates_email_format_of/compare/v1.7.2...master
+[1.8.0]: https://github.com/validates-email-format-of/validates_email_format_of/compare/v1.7.2...1.8.0
 
 ## [1.7.2]
 
