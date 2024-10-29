@@ -14,50 +14,10 @@ jobs:
 
     strategy:
       matrix:
-        ruby: ["2.6", "2.7", "3.0", "3.1", "3.2", "3.3", "jruby-head"]
-        gemfile: ["4.2", "5.0", "5.1", "5.2", "6.0", "6.1", "7.0", "7.1"]
+        ruby: ["3.0", "3.1", "3.2", "3.3", "jruby-head"]
+        gemfile: ["6.0", "6.1", "7.0", "7.1"]
 
         exclude:
-          - gemfile: "4.2"
-            ruby: "3.0"
-          - gemfile: "4.2"
-            ruby: "3.1"
-          - gemfile: "4.2"
-            ruby: "3.2"
-          - gemfile: "4.2"
-            ruby: "3.3"
-          - gemfile: "4.2"
-            ruby: "jruby-head"
-          - gemfile: "5.0"
-            ruby: "3.0"
-          - gemfile: "5.0"
-            ruby: "3.1"
-          - gemfile: "5.0"
-            ruby: "3.2"
-          - gemfile: "5.0"
-            ruby: "3.3"
-          - gemfile: "5.0"
-            ruby: "jruby-head"
-          - gemfile: "5.1"
-            ruby: "3.0"
-          - gemfile: "5.1"
-            ruby: "3.1"
-          - gemfile: "5.1"
-            ruby: "3.2"
-          - gemfile: "5.1"
-            ruby: "3.3"
-          - gemfile: "5.1"
-            ruby: "jruby-head"
-          - gemfile: "5.2"
-            ruby: "3.0"
-          - gemfile: "5.2"
-            ruby: "3.1"
-          - gemfile: "5.2"
-            ruby: "3.2"
-          - gemfile: "5.2"
-            ruby: "3.3"
-          - gemfile: "5.2"
-            ruby: "jruby-head"
           - gemfile: "6.0"
             ruby: "3.2"
           - gemfile: "6.0"
@@ -66,19 +26,6 @@ jobs:
             ruby: "3.2"
           - gemfile: "6.1"
             ruby: "3.3"
-          - gemfile: "7.0"
-            ruby: "2.5"
-          - gemfile: "7.0"
-            ruby: "2.6"
-          - gemfile: "7.0"
-            ruby: "2.7"
-          - gemfile: "7.1"
-            ruby: "2.5"
-          - gemfile: "7.1"
-            ruby: "2.6"
-          - gemfile: "7.1"
-            ruby: "2.7"
-
 
     env:
       BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.gemfile }}.gemfile
@@ -87,13 +34,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: "Install Ruby ${{ matrix.ruby  }}"
-        # To automatically get bug fixes and new Ruby versions for ruby/setup-ruby,
-        # change this to (see https://github.com/ruby/setup-ruby#versioning):
-        # uses: ruby/setup-ruby@v1
+      - name: "Install Ruby ${{ matrix.ruby }}"
         uses: ruby/setup-ruby@v1
         with:
-          bundler: 1
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
@@ -102,4 +45,3 @@ jobs:
 
       - name: Run standard.rb
         run: bundle exec rake standard
-        if: ${{ ! startsWith(matrix.ruby, '2.') }}

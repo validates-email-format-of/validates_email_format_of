@@ -297,10 +297,14 @@ module ValidatesEmailFormatOf
 
   def self.deprecation_warn(msg)
     if defined?(ActiveSupport::Deprecation)
-      ActiveSupport::Deprecation.warn(msg)
+      deprecator.warn(msg)
     else
       warn(msg)
     end
+  end
+
+  def self.deprecator
+    @deprecator ||= ActiveSupport::Deprecation.new("2.0", "validates_email_format_of")
   end
 end
 
