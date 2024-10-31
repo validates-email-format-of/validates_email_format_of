@@ -79,7 +79,6 @@ jobs:
           - gemfile: "7.1"
             ruby: "2.7"
 
-
     env:
       BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.gemfile }}.gemfile
       RAILS_ENV: test
@@ -93,7 +92,7 @@ jobs:
         # uses: ruby/setup-ruby@v1
         uses: ruby/setup-ruby@v1
         with:
-          bundler: 1
+          bundler: ${{ startsWith(matrix.ruby, '2.') && '1' || '2' }}
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
